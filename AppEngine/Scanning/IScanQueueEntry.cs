@@ -1,8 +1,7 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 
-namespace Mt.MediaMan.AppEngine.Catalog
+namespace Mt.MediaMan.AppEngine.Scanning
 {
   internal interface IScanQueueEntry
   {
@@ -11,6 +10,6 @@ namespace Mt.MediaMan.AppEngine.Catalog
     /// </summary>
     Task StoreAsync(IItemStorage itemStorage);
 
-    Task EnqueueChildrenAsync(Queue<IScanQueueEntry> scanQueue);
+    Task EnqueueChildrenAsync(IScanQueue scanQueue);
   }
 }

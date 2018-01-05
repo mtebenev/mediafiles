@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using OrchardCore.FileStorage;
 
-namespace Mt.MediaMan.AppEngine.Catalog
+namespace Mt.MediaMan.AppEngine.Scanning
 {
   /// <summary>
   /// Scan queue entry for FS files/folders
@@ -37,7 +36,7 @@ namespace Mt.MediaMan.AppEngine.Catalog
       {
         Name = _fileStoreEntry.Name,
         Size = 0,
-        ParentItemId = 0
+        ParentItemId = _parentItemId
       };
 
       _catalogItemId = await itemStorage.CreateItem(itemRecord);
@@ -46,7 +45,7 @@ namespace Mt.MediaMan.AppEngine.Catalog
     /// <summary>
     /// IScanQueueEntry
     /// </summary>
-    public async Task EnqueueChildrenAsync(Queue<IScanQueueEntry> scanQueue)
+    public async Task EnqueueChildrenAsync(IScanQueue scanQueue)
     {
       if(!_catalogItemId.HasValue)
         throw new InvalidOperationException("Scan queue item must be stored before enqueuing children");

@@ -1,21 +1,20 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using OrchardCore.FileStorage;
 
-namespace Mt.MediaMan.AppEngine.Catalog
+namespace Mt.MediaMan.AppEngine.Scanning
 {
-  public class ItemScannerFileSystem
+  internal class ItemScannerFileSystem
   {
     private readonly IFileStore _fileStore;
     private readonly IItemStorage _itemStorage;
-    private readonly Queue<IScanQueueEntry> _scanQueue;
+    private readonly IScanQueue _scanQueue;
 
-    public ItemScannerFileSystem(IFileStore fileStore, IItemStorage itemStorage)
+    public ItemScannerFileSystem(IFileStore fileStore, IItemStorage itemStorage, IScanQueue scanQueue)
     {
       _fileStore = fileStore;
       _itemStorage = itemStorage;
-      _scanQueue = new Queue<IScanQueueEntry>();
+      _scanQueue = scanQueue;
     }
 
     public async Task Scan()

@@ -1,6 +1,6 @@
 namespace Mt.MediaMan.AppEngine.CatalogStorage
 {
-  public class CatalogItemRecord
+  internal class CatalogItemRecord
   {
     public int CatalogItemId { get; set; }
 

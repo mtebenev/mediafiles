@@ -1,9 +1,8 @@
-using System;
 using System.Threading.Tasks;
 using Moq;
-using Mt.MediaMan.AppEngine.Catalog;
 using Mt.MediaMan.AppEngine.CatalogStorage;
-using OrchardCore.FileStorage.FileSystem;
+using Mt.MediaMan.AppEngine.Scanning;
+using OrchardCore.FileStorage;
 using Xunit;
 
 namespace Mt.MediaMan.AppEngine.Test.Catalog
@@ -11,18 +10,34 @@ namespace Mt.MediaMan.AppEngine.Test.Catalog
   public class ItemScannerFileSystemTest
   {
     [Fact]
-    public async Task SimpleTest()
+    public async Task Must_Store_Items()
     {
-      var fileStore = new FileSystemStore(@"C:\_films");
+      var fileStore = CreateTestFileStore();
       var mockItemStorage = new Mock<IItemStorage>();
-      mockItemStorage.Setup(x => x.CreateItem(It.IsAny<CatalogItemRecord>())).Callback((CatalogItemRecord record) =>
-      {
-        Console.WriteLine($"Creating record for: {record.Name}");
-      }).Returns(Task.FromResult(0));
+      var scanQueue = new ScanQueue();
+      mockItemStorage.Setup(x => x.CreateItem(It.Is<CatalogItemRecord>(r => r.Name == "[ROOT]"))).ReturnsAsync(1);
 
-      var scanner = new ItemScannerFileSystem(fileStore, mockItemStorage.Object);
+      var scanner = new ItemScannerFileSystem(fileStore, mockItemStorage.Object, scanQueue);
 
       await scanner.Scan();
+
+      mockItemStorage.Verify(x => x.CreateItem(It.Is<CatalogItemRecord>(r => r.ParentItemId == 0)), Times.Once);
+      mockItemStorage.Verify(x => x.CreateItem(It.Is<CatalogItemRecord>(r => r.ParentItemId == 1 && r.Name == "File1")), Times.Once);
+      mockItemStorage.Verify(x => x.CreateItem(It.Is<CatalogItemRecord>(r => r.ParentItemId == 1 && r.Name == "File2")), Times.Once);
+    }
+
+    private IFileStore CreateTestFileStore()
+    {
+      var mockFile1 = new Mock<IFileStoreEntry>();
+      mockFile1.SetupGet(x => x.Name).Returns("File1");
+
+      var mockFile2 = new Mock<IFileStoreEntry>();
+      mockFile2.SetupGet(x => x.Name).Returns("File2");
+
+      var mockFileStore = new Mock<IFileStore>();
+      mockFileStore.Setup(x => x.GetDirectoryContentAsync(null)).ReturnsAsync(new IFileStoreEntry[] {mockFile1.Object, mockFile2.Object});
+      
+      return mockFileStore.Object;
     }
 
   }
