@@ -4,27 +4,25 @@ using OrchardCore.FileStorage;
 
 namespace Mt.MediaMan.AppEngine.Scanning
 {
-  internal class ItemScannerFileSystem
+  internal class ItemScannerFileSystem : IItemScanner
   {
     private readonly IFileStore _fileStore;
-    private readonly IItemStorage _itemStorage;
     private readonly IScanQueue _scanQueue;
 
-    public ItemScannerFileSystem(IFileStore fileStore, IItemStorage itemStorage, IScanQueue scanQueue)
+    public ItemScannerFileSystem(IFileStore fileStore, IScanQueue scanQueue)
     {
       _fileStore = fileStore;
-      _itemStorage = itemStorage;
       _scanQueue = scanQueue;
     }
 
-    public async Task Scan()
+    public async Task Scan(IItemStorage itemStorage)
     {
       InitQueue();
       
       do
       {
         var scanQueueEntry = _scanQueue.Dequeue();
-        await scanQueueEntry.StoreAsync(_itemStorage);
+        await scanQueueEntry.StoreAsync(itemStorage);
 
         await scanQueueEntry.EnqueueChildrenAsync(_scanQueue);
       } while(_scanQueue.Count > 0);
