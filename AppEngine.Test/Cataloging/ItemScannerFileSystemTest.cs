@@ -19,7 +19,7 @@ namespace Mt.MediaMan.AppEngine.Test.Catalog
 
       var scanner = new ItemScannerFileSystem(fileStore, mockItemStorage.Object, scanQueue);
 
-      await scanner.Scan();
+      await scanner.Scan(TODO);
 
       mockItemStorage.Verify(x => x.CreateItem(It.Is<CatalogItemRecord>(r => r.ParentItemId == 0)), Times.Once);
       mockItemStorage.Verify(x => x.CreateItem(It.Is<CatalogItemRecord>(r => r.ParentItemId == 1 && r.Name == "File1")), Times.Once);

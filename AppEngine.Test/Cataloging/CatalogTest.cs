@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 
 namespace Mt.MediaMan.AppEngine.Test.Catalog
 {
@@ -7,7 +7,7 @@ namespace Mt.MediaMan.AppEngine.Test.Catalog
     [Fact]
     public void New_Catalog_Should_Provide_Root_Item()
     {
-      var catalog = new AppEngine.Catalog.Catalog();
+      var catalog = new Cataloging.Catalog();
       var rootItem = catalog.RootItem;
 
       Assert.NotNull(rootItem);
