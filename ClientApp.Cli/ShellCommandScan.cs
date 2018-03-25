@@ -17,6 +17,8 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
+      await Parent.InitializeAsync();
+
       var scanPath = @"C:\_films";
       var command = new CommandScanFiles();
       await command.Execute(Parent.ExecutionContext.Catalog, scanPath);

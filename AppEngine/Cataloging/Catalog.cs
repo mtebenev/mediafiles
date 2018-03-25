@@ -1,17 +1,18 @@
+using System;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Catalog;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Scanning;
 
 namespace Mt.MediaMan.AppEngine.Cataloging
 {
-  public class Catalog
+  public class Catalog : IDisposable
   {
     private readonly IItemStorage _itemStorage;
+    private ICatalogItem _rootItem;
 
-    public static Catalog CreateCatalog()
+    public static Catalog CreateCatalog(string connectionString)
     {
-      var itemStorage = new ItemStorage();
+      var itemStorage = new ItemStorage(connectionString);
       var catalog = new Catalog(itemStorage);
 
       return catalog;
@@ -20,10 +21,44 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     internal Catalog(IItemStorage itemStorage)
     {
       _itemStorage = itemStorage;
-      RootItem = new CatalogItem();
     }
 
-    public ICatalogItem RootItem { get; private set; }
+    public ICatalogItem RootItem
+    {
+      get
+      {
+        if(_rootItem == null)
+          throw new InvalidOperationException("OpenAsync() must be invoked to open catalog");
+
+        return _rootItem;
+      }
+    }
+
+    /// <summary>
+    /// IDisposable
+    /// </summary>
+    public void Dispose()
+    {
+      _itemStorage?.Dispose();
+    }
+
+    /// <summary>
+    /// Call to initialize necessary data in new catalog database
+    /// </summary>
+    public async Task InitializeNewCatalogAsync()
+    {
+      await SaveRootItemAsync();
+      await OpenAsync();
+    }
+
+    /// <summary>
+    /// Loads initial data from catalog (root item etc)
+    /// </summary>
+    public async Task OpenAsync()
+    {
+      var catalogItemRecord = await _itemStorage.LoadRootItemAsync();
+      _rootItem = new CatalogItem(catalogItemRecord, _itemStorage);
+    }
 
     /// <summary>
     /// Scans new item to the catalog
@@ -32,5 +67,17 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     {
       return itemScanner.Scan(_itemStorage);
     }
+
+    private Task SaveRootItemAsync()
+    {
+      var catalogItem = new CatalogItemRecord
+      {
+        ItemType = CatalogItemType.CatalogRoot,
+        Name = "[ROOT]"
+      };
+
+      return _itemStorage.CreateItemAsync(catalogItem);
+    }
+
   }
 }

@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Mt.MediaMan.AppEngine.Catalog
+namespace Mt.MediaMan.AppEngine.Cataloging
 {
   public interface ICatalogItem
   {
@@ -12,7 +13,7 @@ namespace Mt.MediaMan.AppEngine.Catalog
     string Name { get; }
 
     // Navigation
-    ICatalogItem ParentItem { get; }
-    IEnumerable<ICatalogItem> Children { get; }
+    Task<ICatalogItem> GetParentItemAsync();
+    Task<IList<ICatalogItem>> GetChildrenAsync();
   }
 }

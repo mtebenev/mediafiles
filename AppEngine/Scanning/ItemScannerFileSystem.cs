@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using OrchardCore.FileStorage;
 
@@ -7,11 +8,13 @@ namespace Mt.MediaMan.AppEngine.Scanning
   internal class ItemScannerFileSystem : IItemScanner
   {
     private readonly IFileStore _fileStore;
+    private readonly ICatalogItem _parentItem;
     private readonly IScanQueue _scanQueue;
 
-    public ItemScannerFileSystem(IFileStore fileStore, IScanQueue scanQueue)
+    public ItemScannerFileSystem(IFileStore fileStore, ICatalogItem parentItem, IScanQueue scanQueue)
     {
       _fileStore = fileStore;
+      _parentItem = parentItem;
       _scanQueue = scanQueue;
     }
 
@@ -30,7 +33,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
 
     private void InitQueue()
     {
-      var rootScanEntry = new ScanQueueEntryRoot(_fileStore);
+      var rootScanEntry = new ScanQueueEntryRoot(_fileStore, _parentItem.CatalogItemId);
       _scanQueue.Enqueue(rootScanEntry);
     }
   }

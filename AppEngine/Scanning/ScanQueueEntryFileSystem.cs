@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using OrchardCore.FileStorage;
 
@@ -12,7 +13,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
   {
     private int? _catalogItemId;
     private readonly IFileStoreEntry _fileStoreEntry;
-    private int _parentItemId;
+    private readonly int _parentItemId;
     private readonly IFileStore _fileStore;
 
     public ScanQueueEntryFileSystem(int parentItemId, IFileStore fileStore, IFileStoreEntry fileStoreEntry)
@@ -35,11 +36,12 @@ namespace Mt.MediaMan.AppEngine.Scanning
       var itemRecord = new CatalogItemRecord
       {
         Name = _fileStoreEntry.Name,
-        Size = 0,
-        ParentItemId = _parentItemId
+        Size = (int) _fileStoreEntry.Length,
+        ParentItemId = _parentItemId,
+        ItemType = _fileStoreEntry.IsDirectory ? CatalogItemType.Directory : CatalogItemType.File
       };
 
-      _catalogItemId = await itemStorage.CreateItem(itemRecord);
+      _catalogItemId = await itemStorage.CreateItemAsync(itemRecord);
     }
 
     /// <summary>
