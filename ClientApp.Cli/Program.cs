@@ -1,10 +1,29 @@
-﻿namespace Mt.MediaMan.ClientApp.Console
+using System;
+using McMaster.Extensions.CommandLineUtils;
+
+namespace Mt.MediaMan.ClientApp.Cli
 {
   class Program
   {
-    static void Main(string[] args)
+    public static int Main(string[] args) => CommandLineApplication.Execute<Program>(args);
+    public static int CommandExitResult = -1;
+
+    public int OnExecute()
     {
-      new Shell().Run();
+      int commandResult = 0;
+      do
+      {
+        var commandInput = Prompt.GetString(">", promptColor: ConsoleColor.DarkBlue);
+
+        if(!String.IsNullOrEmpty(commandInput))
+        {
+          var commandArgs = commandInput.Split(' ');
+          commandResult = CommandLineApplication.Execute<Shell>(commandArgs);
+        }
+
+      } while(commandResult != CommandExitResult);
+
+      return 1;
     }
   }
 }

@@ -1,45 +1,30 @@
-using System;
 using System.Threading.Tasks;
+using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaMan.AppEngine.Commands;
 
-namespace Mt.MediaMan.ClientApp.Console
+namespace Mt.MediaMan.ClientApp.Cli
 {
-  internal class Shell
+  [Command("mediaman")]
+  [Subcommand("scan", typeof(ShellCommandScan))]
+  [Subcommand("cls", typeof(ShellCommandCls))]
+  [Subcommand("exit", typeof(ShellCommandExit))]
+  internal class Shell : ShellCommandBase
   {
-    private readonly Catalog _catalog;
-
     public Shell()
     {
-      _catalog = Catalog.CreateCatalog();
+      var catalog = Catalog.CreateCatalog();
+
+      var progressIndicator = new ProgressIndicatorConsole();
+      ExecutionContext = new CommandExecutionContext(catalog, progressIndicator);
     }
 
-    public void Run()
+    public ICommandExecutionContext ExecutionContext { get; }
+
+    protected override Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      var isExit = false;
-
-      while(!isExit)
-      {
-        var input = ReadLine.Read(">");
-        if(input == "exit")
-          isExit = true;
-        else
-        {
-          Task.Run(async () =>
-          {
-            await ExecuteCommand(input);
-          });
-        }
-      }
-
-    }
-
-    private async Task ExecuteCommand(string input)
-    {
-      if(input == "scan")
-      {
-        var commandScan = new ShellCommandScan();
-        await commandScan.ExecuteAsync(_catalog);
-      }
+      app.ShowHelp();
+      return Task.FromResult(0);
     }
   }
 }
