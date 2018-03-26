@@ -35,6 +35,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     }
 
     /// <summary>
+    /// Use to determine if the catalog is open
+    /// </summary>
+    public bool IsOpen => _rootItem != null;
+
+    /// <summary>
     /// IDisposable
     /// </summary>
     public void Dispose()

@@ -1,3 +1,5 @@
+using Mt.MediaMan.AppEngine.Cataloging;
+
 namespace Mt.MediaMan.AppEngine.Commands
 {
   /// <summary>
@@ -6,6 +8,6 @@ namespace Mt.MediaMan.AppEngine.Commands
   public interface ICommandExecutionContext
   {
     IProgressIndicator ProgressIndicator { get; }
-    Cataloging.Catalog Catalog { get; }
+    Catalog Catalog { get; }
   }
 }
