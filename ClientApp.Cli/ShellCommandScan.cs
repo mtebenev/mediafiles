@@ -10,18 +10,18 @@ namespace Mt.MediaMan.ClientApp.Cli
   [Command(Description = "Scans files to catalog")]
   internal class ShellCommandScan : ShellCommandBase
   {
-    /// <summary>
-    /// Injected
-    /// </summary>
-    public Shell Parent { get; set; }
+    private readonly ICommandExecutionContext _executionContext;
+
+    public ShellCommandScan(ICommandExecutionContext executionContext)
+    {
+      _executionContext = executionContext;
+    }
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      await Parent.InitializeAsync();
-
       var scanPath = @"C:\_films";
       var command = new CommandScanFiles();
-      await command.Execute(Parent.ExecutionContext.Catalog, scanPath);
+      await command.Execute(_executionContext.Catalog, scanPath);
 
       return 0;
     }

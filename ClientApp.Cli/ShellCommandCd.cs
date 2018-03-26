@@ -21,8 +21,6 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      await Parent.InitializeAsync();
-
       var currentItem = Parent.CurrentItem;
       var children = await currentItem.GetChildrenAsync();
 
