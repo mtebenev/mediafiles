@@ -9,58 +9,55 @@ namespace Mt.MediaMan.ClientApp.Cli
 {
   internal class Program
   {
-    private readonly ICommandExecutionContext _executionContext;
     private static IServiceProvider _services;
+    private static ShellContext _shellContext;
 
     public static async Task<int> Main(string[] args)
     {
       var executionContext = await CreateExecutionContext();
+      _shellContext = new ShellContext(executionContext.Catalog.RootItem);
 
       // Init service container
       _services = new ServiceCollection()
         .AddSingleton(executionContext)
         .AddSingleton(PhysicalConsole.Singleton)
+        .AddSingleton(_shellContext)
         .BuildServiceProvider();
 
-      var app = new CommandLineApplication<Program>();
-
-      app.Conventions
-        .UseDefaultConventions()
-        .UseConstructorInjection(_services);
-
-      return app.Execute(args);
-    }
-
-    public const int CommandExitResult = -1;
-
-    public Program(ICommandExecutionContext executionContext)
-    {
-      _executionContext = executionContext;
-    }
-
-    public int OnExecute()
-    {
       int commandResult = 0;
-
-      // Create Shell app
-      var shellApp = new CommandLineApplication<Shell>();
-      shellApp.Conventions
-        .UseDefaultConventions()
-        .UseConstructorInjection(_services);
 
       // Do execution
       do
       {
-        var commandInput = Prompt.GetString(">", promptColor: ConsoleColor.DarkBlue);
+        var prompt = CreatePrompt(_shellContext.CurrentItem);
+        var commandInput = Prompt.GetString(prompt, promptColor: ConsoleColor.DarkBlue);
 
         if(!String.IsNullOrEmpty(commandInput))
         {
           var commandArgs = commandInput.Split(' ');
+
+          // Create Shell app
+          var shellApp = new CommandLineApplication<Shell>();
+          shellApp.Conventions
+            .UseDefaultConventions()
+            .UseConstructorInjection(_services);
+
           commandResult = shellApp.Execute(commandArgs);
         }
       } while(commandResult != CommandExitResult);
 
       return 1;
+    }
+
+    public const int CommandExitResult = -1;
+
+    /// <summary>
+    /// Creates string prompt for CLI
+    /// </summary>
+    private static string CreatePrompt(ICatalogItem currentItem)
+    {
+      var result = $"{currentItem.Name}>";
+      return result;
     }
 
     private static async Task<ICommandExecutionContext> CreateExecutionContext()

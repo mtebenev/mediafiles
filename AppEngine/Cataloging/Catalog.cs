@@ -66,6 +66,17 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     }
 
     /// <summary>
+    /// Loads an item with specified ID
+    /// </summary>
+    public async Task<ICatalogItem> GetItemByIdAsync(int itemId)
+    {
+      var catalogItemRecord = await _itemStorage.LoadItemByIdAsync(itemId);
+      var result = new CatalogItem(catalogItemRecord, _itemStorage);
+
+      return result;
+    }
+
+    /// <summary>
     /// Scans new item to the catalog
     /// </summary>
     internal Task ScanAsync(IItemScanner itemScanner)
@@ -83,6 +94,5 @@ namespace Mt.MediaMan.AppEngine.Cataloging
 
       return _itemStorage.CreateItemAsync(catalogItem);
     }
-
   }
 }

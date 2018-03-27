@@ -29,6 +29,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalogItem
     /// </summary>
+    public int Size => _catalogItemRecord.Size;
+
+    /// <summary>
+    /// ICatalogItem
+    /// </summary>
     public async Task<ICatalogItem> GetParentItemAsync()
     {
       var parentItemRecord = await _itemStorage.LoadItemByIdAsync(_catalogItemRecord.ParentItemId);

@@ -12,6 +12,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// </summary>
     string Name { get; }
 
+    /// <summary>
+    /// Size of the item (0 for directories)
+    /// </summary>
+    int Size { get; }
+
     // Navigation
     Task<ICatalogItem> GetParentItemAsync();
     Task<IList<ICatalogItem>> GetChildrenAsync();

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 
@@ -8,27 +7,30 @@ namespace Mt.MediaMan.ClientApp.Cli
   /// <summary>
   /// Scans new files to catalog
   /// </summary>
-  [Command(Description = "Prints content of the current folder")]
+  [Command("ls", Description = "Prints content of the current folder")]
   internal class ShellCommandLs : ShellCommandBase
   {
-    /// <summary>
-    /// Injected
-    /// </summary>
-    public Shell Parent { get; set; }
+    private readonly ShellContext _shellContext;
+
+    public ShellCommandLs(ShellContext shellContext)
+    {
+      _shellContext = shellContext;
+    }
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      var currentItem = Parent.CurrentItem;
+      var currentItem = _shellContext.CurrentItem;
       var children = await currentItem.GetChildrenAsync();
 
-      var printData = children
-        .Select(c => c.Name)
-        .ToList();
-      foreach(var name in printData)
-      {
-        Console.WriteLine(name);
-      }
+      TableBuilder tb = new TableBuilder();
+      tb.AddRow("ID", "Name", "Size");
+      tb.AddRow("--", "----", "----");
 
+      foreach(var catalogItem in children)
+        tb.AddRow(catalogItem.CatalogItemId, catalogItem.Name, catalogItem.Size);
+
+
+      Console.Write(tb.Output());
       return 0;
     }
   }

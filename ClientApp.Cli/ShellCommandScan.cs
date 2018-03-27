@@ -7,7 +7,7 @@ namespace Mt.MediaMan.ClientApp.Cli
   /// <summary>
   /// Scans new files to catalog
   /// </summary>
-  [Command(Description = "Scans files to catalog")]
+  [Command("scan", Description = "Scans files to catalog")]
   internal class ShellCommandScan : ShellCommandBase
   {
     private readonly ICommandExecutionContext _executionContext;
