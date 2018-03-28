@@ -52,6 +52,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// </summary>
     public async Task InitializeNewCatalogAsync()
     {
+      await _itemStorage.InitializeAsync();
       await SaveRootItemAsync();
       await OpenAsync();
     }

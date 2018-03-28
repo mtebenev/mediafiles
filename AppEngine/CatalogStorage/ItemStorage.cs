@@ -7,16 +7,30 @@ using System.Threading.Tasks;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using Mt.MediaMan.AppEngine.Cataloging;
+using YesSql;
+using YesSql.Provider.SqlServer;
 
 namespace Mt.MediaMan.AppEngine.CatalogStorage
 {
   internal class ItemStorage : IItemStorage
   {
     private readonly IDbConnection _dbConnection;
+    private readonly Store _store;
 
     public ItemStorage(string connectionString)
     {
       _dbConnection = new SqlConnection(connectionString);
+
+      // Document store
+      var storeConfiguration = new Configuration();
+      storeConfiguration.UseSqlServer(connectionString, IsolationLevel.ReadUncommitted);
+
+      _store = new Store(storeConfiguration);
+    }
+
+    public Task InitializeAsync()
+    {
+      return _store.InitializeAsync();
     }
 
     /// <summary>
@@ -64,9 +78,26 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       return itemRecords.ToList();
     }
 
+    /// <summary>
+    /// IItemStorage
+    /// </summary>
+    public Task SaveInfoPartAsync<TPart>(int itemId, TPart infoPart)
+    {
+      using(var session = _store.CreateSession())
+      {
+        session.Save(infoPart);
+      }
+
+      return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// IDisposable
+    /// </summary>
     public void Dispose()
     {
       _dbConnection?.Dispose();
+      _store?.Dispose();
     }
   }
 }

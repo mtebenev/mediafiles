@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaMan.AppEngine.Scanning;
 
 namespace Mt.MediaMan.AppEngine.Cataloging
 {
@@ -54,6 +55,14 @@ namespace Mt.MediaMan.AppEngine.Cataloging
         .ToList();
 
       return childrenItems;
+    }
+
+    /// <summary>
+    /// ICatalogItem
+    /// </summary>
+    public Task<TInfoPart> GetInfoPartAsync<TInfoPart>() where TInfoPart : IInfoPart
+    {
+      throw new System.NotImplementedException();
     }
   }
 }

@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using OrchardCore.FileStorage;
@@ -11,7 +13,10 @@ namespace Mt.MediaMan.AppEngine.Scanning
   {
     public Task<bool> IsSupportedAsync(IFileStoreEntry fileStoreEntry)
     {
-      throw new System.NotImplementedException();
+      var supportedExtensions = new[] {".mkv", ".mp4", ".avi"};
+      var result = supportedExtensions.Any(e => fileStoreEntry.Name.EndsWith(e, StringComparison.InvariantCultureIgnoreCase));
+
+      return Task.FromResult(result);
     }
 
     public Task ScanAsync(IScanContext scanContext, IFileStoreEntry fileStoreEntry, IItemStorage itemStorage)
