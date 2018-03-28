@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
@@ -13,15 +15,17 @@ namespace Mt.MediaMan.AppEngine.Scanning
   {
     private int? _catalogItemId;
     private readonly IFileStoreEntry _fileStoreEntry;
+    private readonly IScanContext _scanContext;
     private readonly int _parentItemId;
     private readonly IFileStore _fileStore;
 
-    public ScanQueueEntryFileSystem(int parentItemId, IFileStore fileStore, IFileStoreEntry fileStoreEntry)
+    public ScanQueueEntryFileSystem(IScanContext scanContext, int parentItemId, IFileStore fileStore, IFileStoreEntry fileStoreEntry)
     {
       _catalogItemId = null;
       _parentItemId = parentItemId;
       _fileStore = fileStore;
       _fileStoreEntry = fileStoreEntry;
+      _scanContext = scanContext;
     }
 
 
@@ -33,6 +37,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
       if(_catalogItemId.HasValue)
         throw new InvalidOperationException("Scan queue item already stored");
 
+      // Common file properties
       var itemRecord = new CatalogItemRecord
       {
         Name = _fileStoreEntry.Name,
@@ -41,7 +46,15 @@ namespace Mt.MediaMan.AppEngine.Scanning
         ItemType = _fileStoreEntry.IsDirectory ? CatalogItemType.Directory : CatalogItemType.File
       };
 
+      IList<IScanDriver> drivers = Enumerable.Empty<IScanDriver>().ToList();
+      if(itemRecord.ItemType == CatalogItemType.File)
+        drivers = await GetSupportedDriversAsync();
+
       _catalogItemId = await itemStorage.CreateItemAsync(itemRecord);
+
+      // TODO: make in parallel
+      foreach(var scanDriver in drivers)
+        await scanDriver.ScanAsync(_scanContext, _fileStoreEntry, itemStorage);
     }
 
     /// <summary>
@@ -57,10 +70,27 @@ namespace Mt.MediaMan.AppEngine.Scanning
         var childEntries = await _fileStore.GetDirectoryContentAsync(_fileStoreEntry.Path);
         foreach(var childFileStoreEntry in childEntries)
         {
-          var childEntry = new ScanQueueEntryFileSystem(_catalogItemId.Value, _fileStore, childFileStoreEntry);
+          var childEntry = new ScanQueueEntryFileSystem(_scanContext, _catalogItemId.Value, _fileStore, childFileStoreEntry);
           scanQueue.Enqueue(childEntry);
         }
       }
+    }
+
+    /// <summary>
+    /// Determines all supported drivers for the scan entry
+    /// TODO: make in parallel
+    /// </summary>
+    private async Task<IList<IScanDriver>> GetSupportedDriversAsync()
+    {
+      var supportedDrivers = new List<IScanDriver>();
+      foreach(var scanDriver in _scanContext.ScanDrivers)
+      {
+        var isSupported = await scanDriver.IsSupportedAsync(_fileStoreEntry);
+        if(isSupported)
+          supportedDrivers.Add(scanDriver);
+      }
+
+      return supportedDrivers;
     }
   }
 }

@@ -7,12 +7,14 @@ namespace Mt.MediaMan.AppEngine.Scanning
 {
   internal class ItemScannerFileSystem : IItemScanner
   {
+    private readonly IScanContext _scanContext;
     private readonly IFileStore _fileStore;
     private readonly ICatalogItem _parentItem;
     private readonly IScanQueue _scanQueue;
 
-    public ItemScannerFileSystem(IFileStore fileStore, ICatalogItem parentItem, IScanQueue scanQueue)
+    public ItemScannerFileSystem(IScanContext scanContext, IFileStore fileStore, ICatalogItem parentItem, IScanQueue scanQueue)
     {
+      _scanContext = scanContext;
       _fileStore = fileStore;
       _parentItem = parentItem;
       _scanQueue = scanQueue;
@@ -33,7 +35,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
 
     private void InitQueue()
     {
-      var rootScanEntry = new ScanQueueEntryRoot(_fileStore, _parentItem.CatalogItemId);
+      var rootScanEntry = new ScanQueueEntryRoot(_scanContext, _fileStore, _parentItem.CatalogItemId);
       _scanQueue.Enqueue(rootScanEntry);
     }
   }
