@@ -19,9 +19,16 @@ namespace Mt.MediaMan.AppEngine.Scanning
       return Task.FromResult(result);
     }
 
-    public Task ScanAsync(IScanContext scanContext, IFileStoreEntry fileStoreEntry, IItemStorage itemStorage)
+    public Task ScanAsync(IScanContext scanContext, int catalogItemId, IFileStoreEntry fileStoreEntry, IItemStorage itemStorage)
     {
-      throw new System.NotImplementedException();
+      var infoPartVideo = new InfoPartVideo
+      {
+        CatalogItemId = catalogItemId,
+        VideoWidth = 300,
+        VideoHeight = new Random().Next()
+      };
+
+      return itemStorage.SaveInfoPartAsync(catalogItemId, infoPartVideo);
     }
   }
 }

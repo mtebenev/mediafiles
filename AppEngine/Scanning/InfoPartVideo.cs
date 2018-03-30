@@ -5,8 +5,14 @@ namespace Mt.MediaMan.AppEngine.Scanning
   /// </summary>
   public class InfoPartVideo : IInfoPart
   {
-    public string InfoPartId => "Video";
+    public InfoPartVideo()
+    {
+      InfoPartId = "Video";
+    }
 
+    public string InfoPartId { get; set; }
+
+    public int CatalogItemId { get; set; }
     public int VideoWidth { get; set; }
     public int VideoHeight { get; set; }
   }

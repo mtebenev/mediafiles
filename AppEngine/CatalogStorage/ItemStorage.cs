@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaMan.AppEngine.Scanning;
 using YesSql;
+using YesSql.Indexes;
 using YesSql.Provider.SqlServer;
+using YesSql.Sql;
 
 namespace Mt.MediaMan.AppEngine.CatalogStorage
 {
@@ -26,11 +29,39 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       storeConfiguration.UseSqlServer(connectionString, IsolationLevel.ReadUncommitted);
 
       _store = new Store(storeConfiguration);
+      _store.RegisterIndexes<InfoPartVideoIndexProvider>();
     }
 
-    public Task InitializeAsync()
+    public async Task InitializeAsync()
     {
-      return _store.InitializeAsync();
+      // Check if catalog item table exists
+      var checkTableQuery = @"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'CatalogItem'";
+      var tables = await _dbConnection.QueryAsync(checkTableQuery);
+      if(!tables.Any())
+      {
+        // Catalog item table
+        var query = @"CREATE TABLE [dbo].[CatalogItem] (
+    [CatalogItemId] INT            IDENTITY (1, 1) NOT NULL,
+    [Name]          NVARCHAR (256) NOT NULL,
+    [Size]          INT            NULL,
+    [ParentItemId]  INT            NOT NULL,
+    [ItemType]      VARCHAR (4)    NOT NULL
+);";
+        await _dbConnection.ExecuteAsync(query);
+
+        // Document storage
+        await _store.InitializeAsync();
+
+        using(var session = _store.CreateSession())
+        {
+          new SchemaBuilder(session).CreateMapIndexTable(nameof(MapIndexCatalogItem), table => table
+            .Column<int>("CatalogItemId")
+          );
+        }
+
+        // The root item
+        await SaveRootItemAsync();
+      }
     }
 
     /// <summary>
@@ -81,7 +112,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// <summary>
     /// IItemStorage
     /// </summary>
-    public Task SaveInfoPartAsync<TPart>(int itemId, TPart infoPart)
+    public Task SaveInfoPartAsync<TPart>(int catalogItemId, TPart infoPart)
     {
       using(var session = _store.CreateSession())
       {
@@ -91,6 +122,31 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       return Task.CompletedTask;
     }
 
+    public async Task<InfoPartVideo> LoadInfoPartAsync(int catalogItemId)
+    {
+      InfoPartVideo result = null;
+
+      using(var session = _store.CreateSession())
+      {
+        var infoParts = await session.Query<InfoPartVideo, MapIndexCatalogItem>()
+          .Where(x => x.CatalogItemId == catalogItemId)
+          .ListAsync();
+
+        if(infoParts == null)
+          throw new InvalidOperationException();
+
+        var infoPartsList = infoParts.ToList();
+
+        if(infoPartsList.Count > 1)
+          throw new InvalidOperationException();
+
+
+        result = infoPartsList.FirstOrDefault();
+      }
+
+      return result;
+    }
+
     /// <summary>
     /// IDisposable
     /// </summary>
@@ -98,6 +154,17 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     {
       _dbConnection?.Dispose();
       _store?.Dispose();
+    }
+
+    private Task SaveRootItemAsync()
+    {
+      var catalogItem = new CatalogItemRecord
+      {
+        ItemType = CatalogItemType.CatalogRoot,
+        Name = "[ROOT]"
+      };
+
+      return CreateItemAsync(catalogItem);
     }
   }
 }

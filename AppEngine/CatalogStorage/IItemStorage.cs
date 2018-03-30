@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mt.MediaMan.AppEngine.Scanning;
 
 namespace Mt.MediaMan.AppEngine.CatalogStorage
 {
@@ -34,6 +35,11 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// <summary>
     /// Stores info part associated with a catalog item
     /// </summary>
-    Task SaveInfoPartAsync<TPart>(int itemId, TPart infoPart);
+    Task SaveInfoPartAsync<TPart>(int catalogItemId, TPart infoPart);
+
+    /// <summary>
+    /// Loads info part associated with a catalog item
+    /// </summary>
+    Task<InfoPartVideo> LoadInfoPartAsync(int catalogItemId);
   }
 }

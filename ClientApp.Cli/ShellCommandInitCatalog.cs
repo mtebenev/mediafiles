@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Commands;
@@ -14,11 +15,9 @@ namespace Mt.MediaMan.ClientApp.Cli
       _executionContext = executionContext;
     }
 
-    protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
+    protected override Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      await _executionContext.Catalog.InitializeNewCatalogAsync();
-      return 0;
+      throw new NotImplementedException(); // Not used yet
     }
-
   }
 }

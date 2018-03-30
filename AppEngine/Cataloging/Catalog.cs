@@ -48,20 +48,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     }
 
     /// <summary>
-    /// Call to initialize necessary data in new catalog database
-    /// </summary>
-    public async Task InitializeNewCatalogAsync()
-    {
-      await _itemStorage.InitializeAsync();
-      await SaveRootItemAsync();
-      await OpenAsync();
-    }
-
-    /// <summary>
     /// Loads initial data from catalog (root item etc)
     /// </summary>
     public async Task OpenAsync()
     {
+      await _itemStorage.InitializeAsync();
       var catalogItemRecord = await _itemStorage.LoadRootItemAsync();
       _rootItem = new CatalogItem(catalogItemRecord, _itemStorage);
     }
@@ -83,17 +74,6 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     internal Task ScanAsync(IItemScanner itemScanner)
     {
       return itemScanner.Scan(_itemStorage);
-    }
-
-    private Task SaveRootItemAsync()
-    {
-      var catalogItem = new CatalogItemRecord
-      {
-        ItemType = CatalogItemType.CatalogRoot,
-        Name = "[ROOT]"
-      };
-
-      return _itemStorage.CreateItemAsync(catalogItem);
     }
   }
 }

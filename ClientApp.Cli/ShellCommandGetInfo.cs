@@ -33,7 +33,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       if(item == null)
         throw new ArgumentException("Cannot load catalog item", nameof(ItemNameOrId));
 
-      var infoPart = await item.GetInfoPartAsync<InfoPartVideo>();
+      var infoPart = await item.GetInfoPartAsync();
       Console.WriteLine($"Width: {infoPart.VideoWidth}, Height: {infoPart.VideoHeight}");
 
       return 0;

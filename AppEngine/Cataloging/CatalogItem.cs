@@ -60,9 +60,10 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalogItem
     /// </summary>
-    public Task<TInfoPart> GetInfoPartAsync<TInfoPart>() where TInfoPart : IInfoPart
+    public async Task<InfoPartVideo> GetInfoPartAsync()
     {
-      throw new System.NotImplementedException();
+      var result = await _itemStorage.LoadInfoPartAsync(_catalogItemRecord.CatalogItemId);
+      return result;
     }
   }
 }

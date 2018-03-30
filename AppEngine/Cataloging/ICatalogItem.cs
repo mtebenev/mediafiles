@@ -23,6 +23,6 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     Task<IList<ICatalogItem>> GetChildrenAsync();
 
     // Info parts
-    Task<TInfoPart> GetInfoPartAsync<TInfoPart>() where TInfoPart : IInfoPart;
+    Task<InfoPartVideo> GetInfoPartAsync();
   }
 }

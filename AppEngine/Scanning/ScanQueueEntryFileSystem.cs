@@ -54,7 +54,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
 
       // TODO: make in parallel
       foreach(var scanDriver in drivers)
-        await scanDriver.ScanAsync(_scanContext, _fileStoreEntry, itemStorage);
+        await scanDriver.ScanAsync(_scanContext, _catalogItemId.Value, _fileStoreEntry, itemStorage);
     }
 
     /// <summary>
