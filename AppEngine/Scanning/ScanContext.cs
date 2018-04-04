@@ -8,8 +8,11 @@ namespace Mt.MediaMan.AppEngine.Scanning
 
     public ScanContext()
     {
-      _scanDrivers = new List<IScanDriver>();
-      _scanDrivers.Add(new ScanDriverVideo());
+      _scanDrivers = new List<IScanDriver>
+      {
+        new ScanDriverVideo(),
+        new ScanDriverEpub()
+      };
     }
 
     /// <summary>

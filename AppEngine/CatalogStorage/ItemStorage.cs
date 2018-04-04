@@ -9,7 +9,6 @@ using Dapper.Contrib.Extensions;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Scanning;
 using YesSql;
-using YesSql.Indexes;
 using YesSql.Provider.SqlServer;
 using YesSql.Sql;
 
@@ -30,6 +29,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
 
       _store = new Store(storeConfiguration);
       _store.RegisterIndexes<InfoPartVideoIndexProvider>();
+      _store.RegisterIndexes<InfoPartBookIndexProvider>();
     }
 
     public async Task InitializeAsync()
@@ -54,9 +54,10 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
 
         using(var session = _store.CreateSession())
         {
-          new SchemaBuilder(session).CreateMapIndexTable(nameof(MapIndexCatalogItem), table => table
-            .Column<int>("CatalogItemId")
-          );
+          var schemaBuilder = new SchemaBuilder(session);
+
+          schemaBuilder.CreateMapIndexTable(nameof(MapIndexCatalogItem), table => table
+            .Column<int>(nameof(MapIndexCatalogItem.CatalogItemId)));
         }
 
         // The root item
