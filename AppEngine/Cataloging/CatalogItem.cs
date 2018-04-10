@@ -60,9 +60,9 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalogItem
     /// </summary>
-    public async Task<InfoPartVideo> GetInfoPartAsync()
+    public async Task<TInfoPart> GetInfoPartAsync<TInfoPart>() where TInfoPart : class
     {
-      var result = await _itemStorage.LoadInfoPartAsync(_catalogItemRecord.CatalogItemId);
+      var result = await _itemStorage.LoadInfoPartAsync<TInfoPart>(_catalogItemRecord.CatalogItemId);
       return result;
     }
   }

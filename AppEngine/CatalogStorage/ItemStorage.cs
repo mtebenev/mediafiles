@@ -123,13 +123,20 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       return Task.CompletedTask;
     }
 
-    public async Task<InfoPartVideo> LoadInfoPartAsync(int catalogItemId)
+    public async Task<TInfoPart> LoadInfoPartAsync<TInfoPart>(int catalogItemId) where TInfoPart : class
     {
-      InfoPartVideo result = null;
+      TInfoPart result = null;
 
       using(var session = _store.CreateSession())
       {
-        var infoParts = await session.Query<InfoPartVideo, MapIndexCatalogItem>()
+        IQueryIndex<MapIndexCatalogItem> queryIndex = session.QueryIndex<MapIndexCatalogItem>(x => x.CatalogItemId == catalogItemId);
+        IEnumerable<MapIndexCatalogItem> mapIndexCatalogItems = await queryIndex.ListAsync();
+        List<MapIndexCatalogItem> indexCatalogItems = mapIndexCatalogItems.ToList();
+
+        IEnumerable<MapIndexCatalogItem> catalogItems = await session.Query().ForIndex<MapIndexCatalogItem>().ListAsync();
+        List<MapIndexCatalogItem> items = catalogItems.ToList();
+
+        var infoParts = await session.Query<TInfoPart, MapIndexCatalogItem>()
           .Where(x => x.CatalogItemId == catalogItemId)
           .ListAsync();
 

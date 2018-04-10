@@ -40,6 +40,6 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// <summary>
     /// Loads info part associated with a catalog item
     /// </summary>
-    Task<InfoPartVideo> LoadInfoPartAsync(int catalogItemId);
+    Task<TInfoPart> LoadInfoPartAsync<TInfoPart>(int catalogItemId) where TInfoPart : class;
   }
 }

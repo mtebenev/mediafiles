@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Scanning;
 
 namespace Mt.MediaMan.AppEngine.Cataloging
 {
@@ -23,6 +22,6 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     Task<IList<ICatalogItem>> GetChildrenAsync();
 
     // Info parts
-    Task<InfoPartVideo> GetInfoPartAsync();
+    Task<TInfoPart> GetInfoPartAsync<TInfoPart>() where TInfoPart : class;
   }
 }
