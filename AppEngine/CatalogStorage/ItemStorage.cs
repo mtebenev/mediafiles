@@ -28,8 +28,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       storeConfiguration.UseSqlServer(connectionString, IsolationLevel.ReadUncommitted);
 
       _store = new Store(storeConfiguration);
-      _store.RegisterIndexes<InfoPartVideoIndexProvider>();
-      _store.RegisterIndexes<InfoPartBookIndexProvider>();
+      _store.RegisterIndexes<CatalogItemIndexProvider>();
     }
 
     public async Task InitializeAsync()
@@ -113,43 +112,36 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// <summary>
     /// IItemStorage
     /// </summary>
-    public Task SaveInfoPartAsync<TPart>(int catalogItemId, TPart infoPart)
+    public Task SaveItemDataAsync(int catalogItemId, CatalogItemData itemData)
     {
       using(var session = _store.CreateSession())
       {
-        session.Save(infoPart);
+        session.Save(itemData);
       }
 
       return Task.CompletedTask;
     }
 
-    public async Task<TInfoPart> LoadInfoPartAsync<TInfoPart>(int catalogItemId) where TInfoPart : class
+    public async Task<CatalogItemData> LoadItemDataAsync(int catalogItemId)
     {
-      TInfoPart result = null;
+      CatalogItemData result = null;
 
       using(var session = _store.CreateSession())
       {
-        IQueryIndex<MapIndexCatalogItem> queryIndex = session.QueryIndex<MapIndexCatalogItem>(x => x.CatalogItemId == catalogItemId);
-        IEnumerable<MapIndexCatalogItem> mapIndexCatalogItems = await queryIndex.ListAsync();
-        List<MapIndexCatalogItem> indexCatalogItems = mapIndexCatalogItems.ToList();
-
-        IEnumerable<MapIndexCatalogItem> catalogItems = await session.Query().ForIndex<MapIndexCatalogItem>().ListAsync();
-        List<MapIndexCatalogItem> items = catalogItems.ToList();
-
-        var infoParts = await session.Query<TInfoPart, MapIndexCatalogItem>()
+        var itemDatas = await session.Query<CatalogItemData, MapIndexCatalogItem>()
           .Where(x => x.CatalogItemId == catalogItemId)
           .ListAsync();
 
-        if(infoParts == null)
+        if(itemDatas == null)
           throw new InvalidOperationException();
 
-        var infoPartsList = infoParts.ToList();
+        var itemDataList = itemDatas.ToList();
 
-        if(infoPartsList.Count > 1)
+        if(itemDataList.Count > 1)
           throw new InvalidOperationException();
 
 
-        result = infoPartsList.FirstOrDefault();
+        result = itemDataList.FirstOrDefault();
       }
 
       return result;

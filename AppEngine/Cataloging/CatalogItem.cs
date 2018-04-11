@@ -9,12 +9,14 @@ namespace Mt.MediaMan.AppEngine.Cataloging
   internal class CatalogItem : ICatalogItem
   {
     private readonly CatalogItemRecord _catalogItemRecord;
+    private CatalogItemData _catalogItemData;
     private readonly IItemStorage _itemStorage;
 
     public CatalogItem(CatalogItemRecord catalogItemRecord, IItemStorage itemStorage)
     {
       _catalogItemRecord = catalogItemRecord;
       _itemStorage = itemStorage;
+      _catalogItemData = null;
     }
 
     /// <summary>
@@ -60,10 +62,26 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalogItem
     /// </summary>
-    public async Task<TInfoPart> GetInfoPartAsync<TInfoPart>() where TInfoPart : class
+    public async Task<TInfoPart> GetInfoPartAsync<TInfoPart>() where TInfoPart : InfoPartBase
     {
-      var result = await _itemStorage.LoadInfoPartAsync<TInfoPart>(_catalogItemRecord.CatalogItemId);
+      await EnsureItemDataLoaded();
+
+      var result = _catalogItemData.Get<TInfoPart>();
       return result;
+    }
+
+    public async Task<IList<string>> GetInfoPartNamesAsync()
+    {
+      await EnsureItemDataLoaded();
+
+      var result = _catalogItemData.Data.Properties().Select(p => p.Name).ToList();
+      return result;
+    }
+
+    private async Task EnsureItemDataLoaded()
+    {
+      if(_catalogItemData == null)
+        _catalogItemData = await _itemStorage.LoadItemDataAsync(_catalogItemRecord.CatalogItemId);
     }
   }
 }

@@ -20,20 +20,18 @@ namespace Mt.MediaMan.AppEngine.Scanning
       return Task.FromResult(result);
     }
 
-    public async Task ScanAsync(IScanContext scanContext, int catalogItemId, FileStoreEntryContext fileStoreEntryContext, IItemStorage itemStorage)
+    public async Task ScanAsync(IScanContext scanContext, int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData)
     {
       using(var fileStream = await fileStoreEntryContext.GetFileStreamAsync())
       {
         var ebook = await EpubReader.OpenBookAsync(fileStream);
 
-        var infoPartBook = new InfoPartBook
-        {
-          CatalogItemId = catalogItemId,
-          Title = ebook.Title,
-          Authors = ebook.AuthorList.ToArray()
-        };
+        var infoPartBook = catalogItemData.GetOrCreate<InfoPartBook>();
 
-        await itemStorage.SaveInfoPartAsync(catalogItemId, infoPartBook);
+        infoPartBook.Title = ebook.Title;
+        infoPartBook.Authors = ebook.AuthorList.ToArray();
+
+        catalogItemData.Apply(infoPartBook);
       }
     }
   }

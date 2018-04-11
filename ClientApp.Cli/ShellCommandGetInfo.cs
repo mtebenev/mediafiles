@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Cataloging;
@@ -33,10 +32,36 @@ namespace Mt.MediaMan.ClientApp.Cli
       if(item == null)
         throw new ArgumentException("Cannot load catalog item", nameof(ItemNameOrId));
 
-      var infoPart = await item.GetInfoPartAsync();
-      Console.WriteLine($"Width: {infoPart.VideoWidth}, Height: {infoPart.VideoHeight}");
+      var infoParts = await item.GetInfoPartNamesAsync();
+      foreach(string partName in infoParts)
+      {
+        if(partName == nameof(InfoPartVideo))
+          await PrintVideoPartAsync(item);
+        else if(partName == nameof(InfoPartBook))
+          await PrintBookPartAsync(item);
+        else
+          throw new InvalidOperationException($"Unknown info part: {partName}");
+      }
 
       return 0;
+    }
+
+    private async Task PrintBookPartAsync(ICatalogItem catalogItem)
+    {
+      var infoPart = await catalogItem.GetInfoPartAsync<InfoPartBook>();
+      Console.WriteLine("Book");
+      Console.WriteLine($"Title: {infoPart.Title}");
+
+      var authors = string.Join(", ", infoPart.Authors);
+      Console.WriteLine($"Authors: {authors}");
+    }
+
+    private async Task PrintVideoPartAsync(ICatalogItem catalogItem)
+    {
+      var infoPart = await catalogItem.GetInfoPartAsync<InfoPartVideo>();
+      Console.WriteLine("Video");
+      Console.WriteLine($"Width: {infoPart.VideoWidth}");
+      Console.WriteLine($"Height: {infoPart.VideoHeight}");
     }
   }
 }

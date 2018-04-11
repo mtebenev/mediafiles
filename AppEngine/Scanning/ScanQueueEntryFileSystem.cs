@@ -52,12 +52,8 @@ namespace Mt.MediaMan.AppEngine.Scanning
 
       _catalogItemId = await itemStorage.CreateItemAsync(itemRecord);
 
-      // TODO: make in parallel
-      foreach(var scanDriver in drivers)
-      {
-        FileStoreEntryContext fileStoreEntryContext = new FileStoreEntryContext(_fileStoreEntry, _fileStore);
-        await scanDriver.ScanAsync(_scanContext, _catalogItemId.Value, fileStoreEntryContext, itemStorage);
-      }
+      var catalogItemData = await RunScanDrivers(drivers);
+      await itemStorage.SaveItemDataAsync(_catalogItemId.Value, catalogItemData);
     }
 
     /// <summary>
@@ -94,6 +90,20 @@ namespace Mt.MediaMan.AppEngine.Scanning
       }
 
       return supportedDrivers;
+    }
+
+    private async Task<CatalogItemData> RunScanDrivers(IList<IScanDriver> drivers)
+    {
+      var catalogItemData = new CatalogItemData(_catalogItemId.Value);
+
+      // TODO: make in parallel
+      foreach(var scanDriver in drivers)
+      {
+        FileStoreEntryContext fileStoreEntryContext = new FileStoreEntryContext(_fileStoreEntry, _fileStore);
+        await scanDriver.ScanAsync(_scanContext, _catalogItemId.Value, fileStoreEntryContext, catalogItemData);
+      }
+
+      return catalogItemData;
     }
   }
 }

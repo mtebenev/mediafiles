@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mt.MediaMan.AppEngine.Scanning;
 
 namespace Mt.MediaMan.AppEngine.Cataloging
 {
@@ -22,6 +23,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     Task<IList<ICatalogItem>> GetChildrenAsync();
 
     // Info parts
-    Task<TInfoPart> GetInfoPartAsync<TInfoPart>() where TInfoPart : class;
+    Task<TInfoPart> GetInfoPartAsync<TInfoPart>() where TInfoPart : InfoPartBase;
+
+    /// <summary>
+    /// Get names of all info parts for the item
+    /// </summary>
+    Task<IList<string>> GetInfoPartNamesAsync();
   }
 }
