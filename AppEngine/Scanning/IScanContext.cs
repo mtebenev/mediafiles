@@ -1,12 +1,15 @@
-using System.Collections.Generic;
+using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaMan.AppEngine.Search;
 
 namespace Mt.MediaMan.AppEngine.Scanning
 {
-  interface IScanContext
+  /// <summary>
+  /// Contextual objects for scan process
+  /// </summary>
+  internal interface IScanContext
   {
-    /// <summary>
-    /// Scan drivers configured for the scan session
-    /// </summary>
-    IList<IScanDriver> ScanDrivers { get; }
+    LuceneIndexManager IndexManager { get; }
+    ScanConfiguration ScanConfiguration { get; }
+    IItemStorage ItemStorage { get; }
   }
 }

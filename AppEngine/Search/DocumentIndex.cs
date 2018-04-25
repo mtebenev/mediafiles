@@ -15,9 +15,9 @@ namespace Mt.MediaMan.AppEngine.Search
     public string ItemId { get; }
     public Dictionary<string, DocumentIndexEntry> Entries { get; } = new Dictionary<string, DocumentIndexEntry>();
 
-    public void Set(string name, string value)
+    public void Set(string name, string value, DocumentIndexOptions indexOptions)
     {
-      Entries[name] = new DocumentIndexEntry(value, IndexValueType.Text);
+      Entries[name] = new DocumentIndexEntry(value, IndexValueType.Text, indexOptions);
     }
   }
 }

@@ -1,26 +1,31 @@
 using System;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaMan.AppEngine.Common;
 using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaMan.AppEngine.Search;
 
 namespace Mt.MediaMan.AppEngine.Cataloging
 {
   public class Catalog : IDisposable
   {
     private readonly IItemStorage _itemStorage;
+    private readonly LuceneIndexManager _indexManager;
     private ICatalogItem _rootItem;
 
     public static Catalog CreateCatalog(string connectionString)
     {
       var itemStorage = new ItemStorage(connectionString);
-      var catalog = new Catalog(itemStorage);
+      var indexManager = new LuceneIndexManager(new Clock());
+      var catalog = new Catalog(itemStorage, indexManager);
 
       return catalog;
     }
 
-    internal Catalog(IItemStorage itemStorage)
+    internal Catalog(IItemStorage itemStorage, LuceneIndexManager indexManager)
     {
       _itemStorage = itemStorage;
+      _indexManager = indexManager;
     }
 
     public ICatalogItem RootItem
@@ -53,6 +58,10 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     public async Task OpenAsync()
     {
       await _itemStorage.InitializeAsync();
+      if(!_indexManager.IsIndexExists("default"))
+        _indexManager.CreateIndex("default");
+
+      // Root item
       var catalogItemRecord = await _itemStorage.LoadRootItemAsync();
       _rootItem = new CatalogItem(catalogItemRecord, _itemStorage);
     }
@@ -71,9 +80,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// Scans new item to the catalog
     /// </summary>
-    internal Task ScanAsync(IItemScanner itemScanner)
+    internal Task ScanAsync(ScanConfiguration scanConfiguration, IItemScanner itemScanner)
     {
-      return itemScanner.Scan(_itemStorage);
+      // Create scan context
+      var scanContext = new ScanContext(scanConfiguration, _itemStorage, _indexManager);
+      return itemScanner.Scan(scanContext);
     }
   }
 }

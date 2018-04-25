@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.CatalogStorage;
 
 namespace Mt.MediaMan.AppEngine.Scanning
 {
@@ -8,6 +7,6 @@ namespace Mt.MediaMan.AppEngine.Scanning
   /// </summary>
   internal interface IItemScanner
   {
-    Task Scan(IItemStorage itemStorage);
+    Task Scan(IScanContext scanContext);
   }
 }

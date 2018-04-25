@@ -1,3 +1,5 @@
+using Mt.MediaMan.AppEngine.CatalogStorage;
+
 namespace Mt.MediaMan.AppEngine.Search
 {
   /// <summary>
@@ -6,13 +8,18 @@ namespace Mt.MediaMan.AppEngine.Search
   internal interface IIndexingContext
   {
     /// <summary>
-    /// Indexed document ID (catalog item ID)
-    /// </summary>
-    string Key { get; }
-
-    /// <summary>
     /// Index for the document
     /// </summary>
     DocumentIndex DocumentIndex { get; }
+
+    /// <summary>
+    /// Base item properties
+    /// </summary>
+    CatalogItemRecord ItemRecord { get; }
+
+    /// <summary>
+    /// Scanned data (info parts)
+    /// </summary>
+    CatalogItemData CatalogItemData { get; }
   }
 }

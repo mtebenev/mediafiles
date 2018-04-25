@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.CatalogStorage;
-using OrchardCore.FileStorage;
 
 namespace Mt.MediaMan.AppEngine.Scanning
 {
@@ -9,11 +8,6 @@ namespace Mt.MediaMan.AppEngine.Scanning
   /// </summary>
   internal interface IScanDriver
   {
-    /// <summary>
-    /// Call to check if the file is supported by the driver
-    /// </summary>
-    Task<bool> IsSupportedAsync(IFileStoreEntry fileStoreEntry);
-
     /// <summary>
     /// Extracts information and stores it in item storage
     /// </summary>

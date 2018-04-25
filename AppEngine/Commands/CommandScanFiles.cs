@@ -15,16 +15,10 @@ namespace Mt.MediaMan.AppEngine.Commands
       var scanQueue = new ScanQueue();
       var fileStore = new FileSystemStore(scanPath);
       var rootItem = catalog.RootItem;
-      var scanContext = CreateScanContext();
+      var scanConfiguration = new ScanConfiguration();
 
-      var scanner = new ItemScannerFileSystem(scanContext, fileStore, rootItem, scanQueue);
-      await catalog.ScanAsync(scanner);
-    }
-
-    private IScanContext CreateScanContext()
-    {
-      var result = new ScanContext();
-      return result;
+      var scanner = new ItemScannerFileSystem(fileStore, rootItem, scanQueue);
+      await catalog.ScanAsync(scanConfiguration, scanner);
     }
   }
 }

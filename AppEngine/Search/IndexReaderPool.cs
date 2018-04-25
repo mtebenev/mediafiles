@@ -1,14 +1,17 @@
-﻿using System;
+using System;
 using System.Threading;
 using Lucene.Net.Index;
 
 namespace Mt.MediaMan.AppEngine.Search
 {
+  /// <summary>
+  /// TODO MTE: update from Orchard
+  /// </summary>
   internal class IndexReaderPool : IDisposable
   {
     private bool _dirty;
     private int _count;
-    private IndexReader _reader;
+    private readonly IndexReader _reader;
 
     public IndexReaderPool(IndexReader reader)
     {
@@ -40,7 +43,7 @@ namespace Mt.MediaMan.AppEngine.Search
 
     public struct IndexReaderLease : IDisposable
     {
-      private IndexReaderPool _pool;
+      private readonly IndexReaderPool _pool;
 
       public IndexReaderLease(IndexReaderPool pool, IndexReader reader)
       {
@@ -53,7 +56,6 @@ namespace Mt.MediaMan.AppEngine.Search
 
       public void Dispose()
       {
-        var count = Interlocked.Decrement(ref _pool._count);
         _pool.Release();
       }
     }

@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
@@ -37,7 +38,7 @@ namespace Mt.MediaMan.AppEngine.Search
     public LuceneIndexManager(IClock clock)
     {
       _clock = clock;
-      _rootPath = @"C:\mssql_data\lucene";
+      _rootPath = @"C:\_mediaman_lucene";
       _rootDirectory = Directory.CreateDirectory(_rootPath);
 
       _indexPools = new ConcurrentDictionary<string, IndexReaderPool>(StringComparer.OrdinalIgnoreCase);
@@ -52,14 +53,14 @@ namespace Mt.MediaMan.AppEngine.Search
       if(!path.Exists)
         path.Create();
 
-      Write(indexName, _ => { }, true);
+      WriteIndex(indexName, _ => { }, true);
     }
 
-    public void DeleteDocuments(string indexName, IEnumerable<string> contentItemIds)
+    public void DeleteDocuments(string indexName, IEnumerable<string> catalogItemIds)
     {
-      Write(indexName, writer =>
+      WriteIndex(indexName, writer =>
       {
-        writer.DeleteDocuments(contentItemIds.Select(x => new Term("ContentItemId", x)).ToArray());
+        writer.DeleteDocuments(catalogItemIds.Select(x => new Term("CatalogItemId", x)).ToArray());
         writer.Commit();
 
         if(_indexPools.TryRemove(indexName, out var pool))
@@ -99,7 +100,10 @@ namespace Mt.MediaMan.AppEngine.Search
       }
     }
 
-    public bool Exists(string indexName)
+    /// <summary>
+    /// Checks if a specified index exists
+    /// </summary>
+    public bool IsIndexExists(string indexName)
     {
       var result = false;
 
@@ -118,7 +122,7 @@ namespace Mt.MediaMan.AppEngine.Search
 
     public void StoreDocuments(string indexName, IEnumerable<DocumentIndex> indexDocuments)
     {
-      Write(indexName, writer =>
+      WriteIndex(indexName, writer =>
       {
         foreach(var indexDocument in indexDocuments)
           writer.AddDocument(CreateLuceneDocument(indexDocument));
@@ -164,12 +168,12 @@ namespace Mt.MediaMan.AppEngine.Search
       var doc = new Document
       {
         // Always store the content item id
-        new StringField("ContentItemId", documentIndex.ContentItemId.ToString(), Field.Store.YES)
+        new StringField("CatalogItemId", documentIndex.ItemId, Field.Store.YES)
       };
 
       foreach(var entry in documentIndex.Entries)
       {
-        var store = entry.Value.Options.HasFlag(DocumentIndexOptions.Store)
+        var store = entry.Value.IndexOptions.HasFlag(DocumentIndexOptions.Store)
           ? Field.Store.YES
           : Field.Store.NO;
 
@@ -178,42 +182,13 @@ namespace Mt.MediaMan.AppEngine.Search
           continue;
         }
 
-        switch(entry.Value.Type)
+        switch(entry.Value.IndexValueType)
         {
-          case DocumentIndex.Types.Boolean:
-            // store "true"/"false" for booleans
-            doc.Add(new StringField(entry.Key, Convert.ToString(entry.Value.Value).ToLowerInvariant(), store));
-            break;
-
-          case DocumentIndex.Types.DateTime:
-            if(entry.Value.Value is DateTimeOffset)
-            {
-              doc.Add(new StringField(entry.Key, DateTools.DateToString(((DateTimeOffset) entry.Value.Value).UtcDateTime, DateTools.Resolution.SECOND), store));
-            }
-            else
-            {
-              doc.Add(new StringField(entry.Key, DateTools.DateToString(((DateTime) entry.Value.Value).ToUniversalTime(), DateTools.Resolution.SECOND), store));
-            }
-
-            break;
-
-          case DocumentIndex.Types.Integer:
-            doc.Add(new Int32Field(entry.Key, Convert.ToInt32(entry.Value.Value), store));
-            break;
-
-          case DocumentIndex.Types.Number:
-            doc.Add(new DoubleField(entry.Key, Convert.ToDouble(entry.Value.Value), store));
-            break;
-
-          case DocumentIndex.Types.Text:
-            if(entry.Value.Options.HasFlag(DocumentIndexOptions.Analyze))
-            {
+          case IndexValueType.Text:
+            if(entry.Value.IndexOptions.HasFlag(DocumentIndexOptions.Analyze))
               doc.Add(new TextField(entry.Key, Convert.ToString(entry.Value.Value), store));
-            }
             else
-            {
               doc.Add(new StringField(entry.Key, Convert.ToString(entry.Value.Value), store));
-            }
 
             break;
         }
@@ -235,7 +210,7 @@ namespace Mt.MediaMan.AppEngine.Search
       }
     }
 
-    private void Write(string indexName, Action<IndexWriter> action, bool close = false)
+    private void WriteIndex(string indexName, Action<IndexWriter> action, bool close = false)
     {
       if(!_writers.TryGetValue(indexName, out var writer))
       {

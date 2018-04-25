@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaMan.AppEngine.FileHandlers;
+using Mt.MediaMan.AppEngine.Search;
 using OrchardCore.FileStorage;
 
 namespace Mt.MediaMan.AppEngine.Scanning
@@ -46,14 +48,19 @@ namespace Mt.MediaMan.AppEngine.Scanning
         ItemType = _fileStoreEntry.IsDirectory ? CatalogItemType.Directory : CatalogItemType.File
       };
 
-      IList<IScanDriver> drivers = Enumerable.Empty<IScanDriver>().ToList();
+      IList<IFileHandler> fileHandlers = new List<IFileHandler>();
+
       if(itemRecord.ItemType == CatalogItemType.File)
-        drivers = await GetSupportedDriversAsync();
+        fileHandlers = await GetSupportedFileHandlersAsync();
 
       _catalogItemId = await itemStorage.CreateItemAsync(itemRecord);
 
-      var catalogItemData = await RunScanDrivers(drivers);
+      // Drivers
+      var catalogItemData = await RunScanDriversAsync(fileHandlers);
       await itemStorage.SaveItemDataAsync(_catalogItemId.Value, catalogItemData);
+
+      // Indexers
+      await RunItemIndexersAsync(fileHandlers, itemRecord, catalogItemData);
     }
 
     /// <summary>
@@ -79,31 +86,51 @@ namespace Mt.MediaMan.AppEngine.Scanning
     /// Determines all supported drivers for the scan entry
     /// TODO: make in parallel
     /// </summary>
-    private async Task<IList<IScanDriver>> GetSupportedDriversAsync()
+    private async Task<IList<IFileHandler>> GetSupportedFileHandlersAsync()
     {
-      var supportedDrivers = new List<IScanDriver>();
-      foreach(var scanDriver in _scanContext.ScanDrivers)
+      var supportedHandlers = new List<IFileHandler>();
+      foreach(var fileHandler in _scanContext.ScanConfiguration.FileHandlers)
       {
-        var isSupported = await scanDriver.IsSupportedAsync(_fileStoreEntry);
+        var isSupported = await fileHandler.IsSupportedAsync(_fileStoreEntry);
         if(isSupported)
-          supportedDrivers.Add(scanDriver);
+          supportedHandlers.Add(fileHandler);
       }
 
-      return supportedDrivers;
+      return supportedHandlers;
     }
 
-    private async Task<CatalogItemData> RunScanDrivers(IList<IScanDriver> drivers)
+    private async Task<CatalogItemData> RunScanDriversAsync(IList<IFileHandler> fileHandlers)
     {
       var catalogItemData = new CatalogItemData(_catalogItemId.Value);
 
       // TODO: make in parallel
-      foreach(var scanDriver in drivers)
+      foreach(var fileHandler in fileHandlers)
       {
         FileStoreEntryContext fileStoreEntryContext = new FileStoreEntryContext(_fileStoreEntry, _fileStore);
-        await scanDriver.ScanAsync(_scanContext, _catalogItemId.Value, fileStoreEntryContext, catalogItemData);
+        await fileHandler.ScanDriver.ScanAsync(_scanContext, _catalogItemId.Value, fileStoreEntryContext, catalogItemData);
       }
 
       return catalogItemData;
     }
+
+    private async Task RunItemIndexersAsync(IList<IFileHandler> fileHandlers, CatalogItemRecord itemRecord, CatalogItemData catalogItemData)
+    {
+      DocumentIndex documentIndex = new DocumentIndex(itemRecord.CatalogItemId.ToString());
+      var indexingContext = new IndexingContext(documentIndex, itemRecord, catalogItemData);
+
+      // Perform indexing
+      foreach(var fileHandler in fileHandlers)
+      {
+        await fileHandler.CatalogItemIndexer.IndexItemAsync(indexingContext);
+      }
+
+      // Store index document
+      foreach(var index in _scanContext.IndexManager.List())
+      {
+        _scanContext.IndexManager.DeleteDocuments(index, new string[] {indexingContext.ItemRecord.CatalogItemId.ToString()});
+        _scanContext.IndexManager.StoreDocuments(index, new DocumentIndex[] {indexingContext.DocumentIndex});
+      }
+    }
+
   }
 }
