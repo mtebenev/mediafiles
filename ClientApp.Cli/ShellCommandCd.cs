@@ -1,8 +1,6 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
 
 namespace Mt.MediaMan.ClientApp.Cli
@@ -14,12 +12,12 @@ namespace Mt.MediaMan.ClientApp.Cli
   internal class ShellCommandCd : ShellCommandBase
   {
     private readonly ICommandExecutionContext _executionContext;
-    private readonly ShellContext _shellContext;
+    private readonly ShellAppContext _shellAppContext;
 
-    public ShellCommandCd(ICommandExecutionContext executionContext, ShellContext shellContext)
+    public ShellCommandCd(ICommandExecutionContext executionContext, ShellAppContext shellAppContext)
     {
       _executionContext = executionContext;
-      _shellContext = shellContext;
+      _shellAppContext = shellAppContext;
     }
 
     [Argument(0, "itemNameOrId")]
@@ -27,12 +25,12 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      var item = await GetItemByNameOrIdAsync(_shellContext, _executionContext, ItemNameOrId);
+      var item = await GetItemByNameOrIdAsync(_shellAppContext, _executionContext, ItemNameOrId);
 
       if(item == null)
         throw new ArgumentException("Cannot load catalog item", nameof(ItemNameOrId));
       
-      _shellContext.CurrentItem = item;
+      _shellAppContext.CurrentItem = item;
 
       return 0;
     }

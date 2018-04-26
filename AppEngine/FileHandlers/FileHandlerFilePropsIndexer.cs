@@ -13,7 +13,7 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
     public FileHandlerFilePropsIndexer()
     {
       ScanDriver = new ScanDriverNull();
-      CatalogItemIndexer = new CatalogImteIndexerFileProps();
+      CatalogItemIndexer = new CatalogItemIndexerFileProps();
     }
 
     public string Id => "FilePropsIndexer";

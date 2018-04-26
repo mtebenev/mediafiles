@@ -10,18 +10,18 @@ namespace Mt.MediaMan.ClientApp.Cli
   internal class Program
   {
     private static IServiceProvider _services;
-    private static ShellContext _shellContext;
+    private static ShellAppContext _shellAppContext;
 
     public static async Task<int> Main(string[] args)
     {
       var executionContext = await CreateExecutionContext();
-      _shellContext = new ShellContext(executionContext.Catalog.RootItem);
+      _shellAppContext = new ShellAppContext(executionContext.Catalog.RootItem);
 
       // Init service container
       _services = new ServiceCollection()
         .AddSingleton(executionContext)
         .AddSingleton(PhysicalConsole.Singleton)
-        .AddSingleton(_shellContext)
+        .AddSingleton(_shellAppContext)
         .BuildServiceProvider();
 
       int commandResult = 0;
@@ -29,7 +29,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       // Do execution
       do
       {
-        var prompt = CreatePrompt(_shellContext.CurrentItem);
+        var prompt = CreatePrompt(_shellAppContext.CurrentItem);
         var commandInput = Prompt.GetString(prompt, promptColor: ConsoleColor.DarkBlue);
 
         if(!String.IsNullOrEmpty(commandInput))

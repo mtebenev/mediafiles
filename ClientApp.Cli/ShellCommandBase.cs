@@ -18,7 +18,7 @@ namespace Mt.MediaMan.ClientApp.Cli
     /// <summary>
     /// Load a catalog item by name (among current children) or ID (if parameter starts with ':')
     /// </summary>
-    protected async Task<ICatalogItem> GetItemByNameOrIdAsync(ShellContext shellContext, ICommandExecutionContext executionContext, string itemNameOrId)
+    protected async Task<ICatalogItem> GetItemByNameOrIdAsync(ShellAppContext shellContext, ICommandExecutionContext executionContext, string itemNameOrId)
     {
       var currentItem = shellContext.CurrentItem;
 

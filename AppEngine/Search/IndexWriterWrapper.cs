@@ -1,4 +1,5 @@
-﻿using Lucene.Net.Index;
+using Lucene.Net.Index;
+using LDirectory = Lucene.Net.Store.Directory;
 
 namespace Mt.MediaMan.AppEngine.Search
 {

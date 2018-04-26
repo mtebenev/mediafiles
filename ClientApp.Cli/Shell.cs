@@ -11,6 +11,7 @@ namespace Mt.MediaMan.ClientApp.Cli
   [Subcommand("cls", typeof(ShellCommandCls))]
   [Subcommand("exit", typeof(ShellCommandExit))]
   [Subcommand("get-info", typeof(ShellCommandGetInfo))]
+  [Subcommand("search", typeof(ShellCommandSearch))]
   internal class Shell : ShellCommandBase
   {
     protected override Task<int> OnExecuteAsync(CommandLineApplication app)

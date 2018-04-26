@@ -8,18 +8,18 @@ using Mt.MediaMan.AppEngine.Scanning;
 namespace Mt.MediaMan.ClientApp.Cli
 {
   /// <summary>
-  /// Scans new files to catalog
+  /// Retrieves item info by name or id
   /// </summary>
   [Command("get-info", Description = "Prints full information on a catalog item")]
   internal class ShellCommandGetInfo : ShellCommandBase
   {
     private readonly ICommandExecutionContext _executionContext;
-    private readonly ShellContext _shellContext;
+    private readonly ShellAppContext _shellAppContext;
 
-    public ShellCommandGetInfo(ICommandExecutionContext executionContext, ShellContext shellContext)
+    public ShellCommandGetInfo(ICommandExecutionContext executionContext, ShellAppContext shellAppContext)
     {
       _executionContext = executionContext;
-      _shellContext = shellContext;
+      _shellAppContext = shellAppContext;
     }
 
     [Argument(0, "itemNameOrId")]
@@ -27,7 +27,7 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      var item = await GetItemByNameOrIdAsync(_shellContext, _executionContext, ItemNameOrId);
+      var item = await GetItemByNameOrIdAsync(_shellAppContext, _executionContext, ItemNameOrId);
 
       if(item == null)
         throw new ArgumentException("Cannot load catalog item", nameof(ItemNameOrId));

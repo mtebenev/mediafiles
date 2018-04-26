@@ -1,5 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Lucene.Net.Analysis.Core;
+using Lucene.Net.QueryParsers.Classic;
+using Lucene.Net.QueryParsers.Simple;
+using Lucene.Net.Search;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Common;
 using Mt.MediaMan.AppEngine.Scanning;
@@ -85,6 +91,46 @@ namespace Mt.MediaMan.AppEngine.Cataloging
       // Create scan context
       var scanContext = new ScanContext(scanConfiguration, _itemStorage, _indexManager);
       return itemScanner.Scan(scanContext);
+    }
+
+    /// <summary>
+    /// Performs search and returns list of found item IDs
+    /// TODO MTE: check how orchard performs search, it uses MultiFieldQueryParser
+    /// </summary>
+    internal async Task<IList<int>> SearchAsync(string query)
+    {
+      var catalogItemIdStrings = new List<string>();
+      var idSet = new HashSet<string>(new[] {"CatalogItemId"});
+
+      // TODO MTE: it works only for file names, need to check other analyzers
+      var analyzer = new KeywordAnalyzer();
+      var queryParser = new SimpleQueryParser(analyzer, "CatalogItem.Name");
+
+      string escapedQuery = QueryParser.Escape(query);
+      var luceneQuery = queryParser.Parse(escapedQuery);
+
+      await _indexManager.SearchAsync("default", searcher =>
+      {
+        // Fetch one more result than PageSize to generate "More" links
+        var collector = TopScoreDocCollector.Create(100, true);
+
+        searcher.Search(luceneQuery, collector);
+        var hits = collector.GetTopDocs(0);
+
+        foreach(var hit in hits.ScoreDocs)
+        {
+          var d = searcher.Doc(hit.Doc);
+          catalogItemIdStrings.Add(d.GetField("CatalogItemId").GetStringValue());
+        }
+
+        return Task.CompletedTask;
+      });
+
+      var result = catalogItemIdStrings
+        .Select(idString => int.Parse(idString))
+        .ToList();
+
+      return result;
     }
   }
 }

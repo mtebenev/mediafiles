@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 
@@ -10,27 +9,19 @@ namespace Mt.MediaMan.ClientApp.Cli
   [Command("ls", Description = "Prints content of the current folder")]
   internal class ShellCommandLs : ShellCommandBase
   {
-    private readonly ShellContext _shellContext;
+    private readonly ShellAppContext _shellAppContext;
 
-    public ShellCommandLs(ShellContext shellContext)
+    public ShellCommandLs(ShellAppContext shellAppContext)
     {
-      _shellContext = shellContext;
+      _shellAppContext = shellAppContext;
     }
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      var currentItem = _shellContext.CurrentItem;
+      var currentItem = _shellAppContext.CurrentItem;
       var children = await currentItem.GetChildrenAsync();
 
-      TableBuilder tb = new TableBuilder();
-      tb.AddRow("ID", "Name", "Size");
-      tb.AddRow("--", "----", "----");
-
-      foreach(var catalogItem in children)
-        tb.AddRow(catalogItem.CatalogItemId, catalogItem.Name, catalogItem.Size);
-
-
-      Console.Write(tb.Output());
+      ShellConsoleUtils.PrintItemsTable(_shellAppContext.Console, children);
       return 0;
     }
   }

@@ -167,7 +167,7 @@ namespace Mt.MediaMan.AppEngine.Search
     {
       var doc = new Document
       {
-        // Always store the content item id
+        // Always store the catalog item id
         new StringField("CatalogItemId", documentIndex.ItemId, Field.Store.YES)
       };
 
@@ -185,10 +185,15 @@ namespace Mt.MediaMan.AppEngine.Search
         switch(entry.Value.IndexValueType)
         {
           case IndexValueType.Text:
+
+            Field field = null;
+
             if(entry.Value.IndexOptions.HasFlag(DocumentIndexOptions.Analyze))
-              doc.Add(new TextField(entry.Key, Convert.ToString(entry.Value.Value), store));
+              field = new TextField(entry.Key, Convert.ToString(entry.Value.Value), store);
             else
-              doc.Add(new StringField(entry.Key, Convert.ToString(entry.Value.Value), store));
+              field = new StringField(entry.Key, Convert.ToString(entry.Value.Value), store);
+
+            doc.Add(field);
 
             break;
         }
