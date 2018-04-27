@@ -132,5 +132,13 @@ namespace Mt.MediaMan.AppEngine.Cataloging
 
       return result;
     }
+
+    /// <summary>
+    /// Search in item storage by file name, return item IDs
+    /// </summary>
+    internal Task<IList<int>> SearchFilesAsync(string query)
+    {
+      return _itemStorage.SearchItemsAsync(query);
+    }
   }
 }

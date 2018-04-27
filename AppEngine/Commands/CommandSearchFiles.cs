@@ -5,13 +5,13 @@ using Mt.MediaMan.AppEngine.Cataloging;
 namespace Mt.MediaMan.AppEngine.Commands
 {
   /// <summary>
-  /// Performs search in catalog
+  /// Performs search for files in catalog
   /// </summary>
-  public class CommandSearch
+  public class CommandSearchFiles
   {
     public Task<IList<int>> ExecuteAsync(Catalog catalog, string query)
     {
-      return catalog.SearchAsync(query);
+      return catalog.SearchFilesAsync(query);
     }
   }
 }

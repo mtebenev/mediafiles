@@ -40,5 +40,10 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// Loads info part associated with a catalog item
     /// </summary>
     Task<CatalogItemData> LoadItemDataAsync(int catalogItemId);
+
+    /// <summary>
+    /// Search items by name (with wildcards)
+    /// </summary>
+    Task<IList<int>> SearchItemsAsync(string whereFilter);
   }
 }

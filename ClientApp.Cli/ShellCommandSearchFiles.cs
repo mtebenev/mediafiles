@@ -9,13 +9,13 @@ namespace Mt.MediaMan.ClientApp.Cli
   /// <summary>
   /// Scans new files to catalog
   /// </summary>
-  [Command("search", Description = "Searches in catalog")]
-  internal class ShellCommandSearch : ShellCommandBase
+  [Command("search-files", Description = "Searches for files in catalog")]
+  internal class ShellCommandSearchFiles : ShellCommandBase
   {
     private readonly ICommandExecutionContext _executionContext;
     private readonly ShellAppContext _shellAppContext;
 
-    public ShellCommandSearch(ICommandExecutionContext executionContext, ShellAppContext shellAppContext)
+    public ShellCommandSearchFiles(ICommandExecutionContext executionContext, ShellAppContext shellAppContext)
     {
       _executionContext = executionContext;
       _shellAppContext = shellAppContext;
@@ -26,7 +26,7 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      var command = new CommandSearch();
+      var command = new CommandSearchFiles();
       var itemIds = await command.ExecuteAsync(_executionContext.Catalog, Query);
 
       var items = new List<ICatalogItem>();

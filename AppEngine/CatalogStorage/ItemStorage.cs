@@ -122,6 +122,9 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// IItemStorage
+    /// </summary>
     public async Task<CatalogItemData> LoadItemDataAsync(int catalogItemId)
     {
       CatalogItemData result = null;
@@ -145,6 +148,22 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       }
 
       return result;
+    }
+
+    /// <summary>
+    /// IItemStorage
+    /// </summary>
+    public async Task<IList<int>> SearchItemsAsync(string whereFilter)
+    {
+      var query = @"select [CatalogItemId] from CatalogItem where [Name] like @NameFilter";
+      var escapedFilter = whereFilter
+        .Replace("_", "[_]")
+        .Replace('?', '_')
+        .Replace('*', '%');
+
+      var result = await _dbConnection.QueryAsync<int>(query, new {NameFilter = escapedFilter});
+
+      return result.ToList();
     }
 
     /// <summary>
