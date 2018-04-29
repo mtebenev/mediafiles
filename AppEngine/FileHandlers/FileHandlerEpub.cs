@@ -15,7 +15,7 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
     public FileHandlerEpub()
     {
       ScanDriver = new ScanDriverEpub();
-      CatalogItemIndexer = new CatalogItemIndexerNull();
+      CatalogItemIndexer = new InfoPartIndexerBook();
     }
 
     public string Id => "Epub";

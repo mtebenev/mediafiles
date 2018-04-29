@@ -11,7 +11,6 @@ namespace Mt.MediaMan.AppEngine.Scanning
     {
       _fileHandlers = new List<IFileHandler>
       {
-        new FileHandlerFilePropsIndexer(),
         new FileHandlerVideo(),
         new FileHandlerEpub()
       };

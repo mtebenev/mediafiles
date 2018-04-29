@@ -51,9 +51,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       var infoPart = await catalogItem.GetInfoPartAsync<InfoPartBook>();
       Console.WriteLine("Book");
       Console.WriteLine($"Title: {infoPart.Title}");
-
-      var authors = string.Join(", ", infoPart.Authors);
-      Console.WriteLine($"Authors: {authors}");
+      Console.WriteLine($"Authors: {infoPart.GetAuthorsString()}");
     }
 
     private async Task PrintVideoPartAsync(ICatalogItem catalogItem)
