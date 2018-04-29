@@ -25,5 +25,14 @@ namespace Mt.MediaMan.AppEngine.Scanning
     {
       return FileStore.GetFileStreamAsync(FileStoreEntry.Path);
     }
+
+    /// <summary>
+    /// Provides physical file path to the file
+    /// Note: this may involve unpacking
+    /// </summary>
+    public Task<string> AccessFilePathAsync()
+    {
+      return FileStoreEntry.AccessFileAsync();
+    }
   }
 }
