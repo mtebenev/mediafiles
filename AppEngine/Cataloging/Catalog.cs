@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Lucene.Net.Analysis.Core;
+using Lucene.Net.Analysis.Standard;
 using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.QueryParsers.Simple;
 using Lucene.Net.Search;
@@ -103,8 +103,8 @@ namespace Mt.MediaMan.AppEngine.Cataloging
       var idSet = new HashSet<string>(new[] {"CatalogItemId"});
 
       // TODO MTE: it works only for file names, need to check other analyzers
-      var analyzer = new KeywordAnalyzer();
-      var queryParser = new SimpleQueryParser(analyzer, "CatalogItem.Name");
+      var analyzer = new StandardAnalyzer(SearchConstants.LuceneVersion);
+      var queryParser = new SimpleQueryParser(analyzer, "Book.Title");
 
       string escapedQuery = QueryParser.Escape(query);
       var luceneQuery = queryParser.Parse(escapedQuery);

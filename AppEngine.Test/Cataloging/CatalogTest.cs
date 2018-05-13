@@ -1,16 +1,8 @@
 using Xunit;
 
-namespace Mt.MediaMan.AppEngine.Test.Catalog
+namespace Mt.MediaMan.AppEngine.Test.Cataloging
 {
   public class CatalogTest
   {
-    [Fact]
-    public void New_Catalog_Should_Provide_Root_Item()
-    {
-      var catalog = new Cataloging.Catalog();
-      var rootItem = catalog.RootItem;
-
-      Assert.NotNull(rootItem);
-    }
   }
 }
