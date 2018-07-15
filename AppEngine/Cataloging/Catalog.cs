@@ -16,22 +16,24 @@ namespace Mt.MediaMan.AppEngine.Cataloging
   public class Catalog : IDisposable
   {
     private readonly IItemStorage _itemStorage;
+    private readonly IStorageManager _storageManager;
     private readonly LuceneIndexManager _indexManager;
     private ICatalogItem _rootItem;
 
     public static Catalog CreateCatalog(string connectionString)
     {
-      var itemStorage = new ItemStorage(connectionString);
+      var storageManager = new StorageManager(connectionString);
       var indexManager = new LuceneIndexManager(new Clock());
-      var catalog = new Catalog(itemStorage, indexManager);
+      var catalog = new Catalog(storageManager, indexManager);
 
       return catalog;
     }
 
-    internal Catalog(IItemStorage itemStorage, LuceneIndexManager indexManager)
+    internal Catalog(IStorageManager storageManager, LuceneIndexManager indexManager)
     {
-      _itemStorage = itemStorage;
+      _storageManager = storageManager;
       _indexManager = indexManager;
+      _itemStorage = new ItemStorage(storageManager);
     }
 
     public ICatalogItem RootItem
@@ -55,15 +57,15 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// </summary>
     public void Dispose()
     {
-      _itemStorage?.Dispose();
+      _storageManager?.Dispose();
     }
 
     /// <summary>
     /// Loads initial data from catalog (root item etc)
     /// </summary>
-    public async Task OpenAsync()
+    public async Task OpenAsync(StorageConfiguration storageConfiguration)
     {
-      await _itemStorage.InitializeAsync();
+      await _itemStorage.InitializeAsync(storageConfiguration.ModuleStorageProviders);
       if(!_indexManager.IsIndexExists("default"))
         _indexManager.CreateIndex("default");
 
@@ -139,6 +141,12 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     internal Task<IList<int>> SearchFilesAsync(string query)
     {
       return _itemStorage.SearchItemsAsync(query);
+    }
+
+    public ModuleStorage CreateModuleStorage()
+    {
+      var result = new ModuleStorage(_storageManager.Store);
+      return result;
     }
   }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
@@ -38,6 +40,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
       };
 
       _catalogItemId = await itemStorage.CreateItemAsync(itemRecord);
+      await StoreScanRootPart(itemStorage);
     }
 
     public async Task EnqueueChildrenAsync(IScanQueue scanQueue)
@@ -52,6 +55,30 @@ namespace Mt.MediaMan.AppEngine.Scanning
         var childEntry = new ScanQueueEntryFileSystem(_scanContext, _catalogItemId.Value, _fileStore, entry);
         scanQueue.Enqueue(childEntry);
       }
+    }
+
+    /// <summary>
+    /// Stores catalog item data for scan root
+    /// </summary>
+    private async Task StoreScanRootPart(IItemStorage itemStorage)
+    {
+      var catalogItemData = new CatalogItemData(_catalogItemId.Value);
+
+      var fileStoreEntry = await _fileStore.GetDirectoryInfoAsync("");
+      var fileStoreEntryContext = new FileStoreEntryContext(fileStoreEntry, _fileStore);
+      var filePath = await fileStoreEntryContext.AccessFilePathAsync();
+      var filePathRoot = Path.GetPathRoot(filePath);
+      var infoPartScanRoot = catalogItemData.GetOrCreate<InfoPartScanRoot>();
+
+      var drives = DriveInfo.GetDrives();
+      var driveInfo = drives.First(di => di.RootDirectory.FullName == filePathRoot);
+
+      infoPartScanRoot.RootPath = filePath;
+      infoPartScanRoot.DriveType = driveInfo.DriveType.ToString();
+
+      // TODO: write IMAPI worker to determine media type
+
+      await itemStorage.SaveItemDataAsync(_catalogItemId.Value, catalogItemData);
     }
   }
 }

@@ -5,4 +5,12 @@
     <RootNamespace>Mt.MediaMan.AppEngine.Ebooks</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Interactive.Async" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppEngine\AppEngine.csproj" />
+  </ItemGroup>
+
 </Project>

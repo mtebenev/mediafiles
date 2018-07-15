@@ -1,3 +1,5 @@
+using System.IO.Abstractions;
+using System.Linq;
 using System.Threading.Tasks;
 using MediaToolkit;
 using MediaToolkit.Model;
@@ -16,18 +18,33 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
       var infoPartVideo = catalogItemData.GetOrCreate<InfoPartVideo>();
 
       var filePath = await fileStoreEntryContext.AccessFilePathAsync();
-      var inputFile = new MediaFile(filePath);
-      using(var engine = new Engine(@"C:\ffmpeg\FFmpeg.exe"))
+      var fileSystem = new FileSystem();
+      FfprobeType ffProbeOutput;
+      using(var engine = new Engine(@"C:\ffmpeg\FFmpeg.exe", fileSystem))
       {
-        engine.GetMetadata(inputFile);
+        ffProbeOutput = await engine.GetMetadataAsync(filePath);
       }
 
-      var tokens = inputFile.Metadata.VideoData.FrameSize.Split('x');
-
-      infoPartVideo.VideoWidth = int.Parse(tokens[0]);
-      infoPartVideo.VideoHeight = int.Parse(tokens[1]);
+      infoPartVideo.Duration = ffProbeOutput.Format.Duration;
+      FillVideoStreamInfo(ffProbeOutput, infoPartVideo);
 
       catalogItemData.Apply(infoPartVideo);
     }
+
+    /// <summary>
+    /// Finds first video stream and extracts information for that
+    /// </summary>
+    private void FillVideoStreamInfo(FfprobeType ffProbeOutput, InfoPartVideo infoPartVideo)
+    {
+      var videoStream = ffProbeOutput.Streams.FirstOrDefault(s => s.Codec_Type == "video");
+      if(videoStream != null)
+      {
+        infoPartVideo.VideoHeight = videoStream.Height;
+        infoPartVideo.VideoWidth = videoStream.Width;
+        infoPartVideo.VideoCodecName = videoStream.Codec_Name;
+        infoPartVideo.VideoCodecLongName = videoStream.Codec_Long_Name;
+      }
+    }
   }
 }
+

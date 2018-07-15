@@ -1,15 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Mt.MediaMan.AppEngine.CatalogStorage
 {
-  internal interface IItemStorage : IDisposable
+  internal interface IItemStorage
   {
     /// <summary>
     /// Invoke the first thing to initialize document storage
     /// </summary>
-    Task InitializeAsync();
+    Task InitializeAsync(IReadOnlyList<IModuleStorageProvider> moduleStorageProviders);
 
     /// <summary>
     /// Saves a new item in the storage. Returns ID of the saved record

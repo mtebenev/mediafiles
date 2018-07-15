@@ -6,7 +6,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
   /// Contains info parts associated with catalog item. Stored as YesSql document.
   /// Example of info parts are: video, book, scan root etc
   /// </summary>
-  internal class CatalogItemData
+  public class CatalogItemData
   {
     public CatalogItemData(int catalogItemId)
     {
@@ -14,7 +14,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       Data = new JObject();
     }
 
-    public int CatalogItemId { get; private set; }
+    public int CatalogItemId { get; }
     public JObject Data { get; set; }
   }
 }

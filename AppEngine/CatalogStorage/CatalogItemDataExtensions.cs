@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Mt.MediaMan.AppEngine.CatalogStorage
 {
-  internal static class CatalogItemDataExtensions
+  public static class CatalogItemDataExtensions
   {
     /// <summary>
     /// Gets a info part by its name.

@@ -1,41 +1,33 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Scanning;
 using YesSql;
-using YesSql.Provider.SqlServer;
 using YesSql.Sql;
 
 namespace Mt.MediaMan.AppEngine.CatalogStorage
 {
   internal class ItemStorage : IItemStorage
   {
-    private readonly IDbConnection _dbConnection;
-    private readonly Store _store;
+    private readonly IStorageManager _storageManager;
 
-    public ItemStorage(string connectionString)
+    private IDbConnection DbConnection => _storageManager.DbConnection;
+    private Store Store => _storageManager.Store;
+
+    public ItemStorage(IStorageManager storageManager)
     {
-      _dbConnection = new SqlConnection(connectionString);
-
-      // Document store
-      var storeConfiguration = new Configuration();
-      storeConfiguration.UseSqlServer(connectionString, IsolationLevel.ReadUncommitted);
-
-      _store = new Store(storeConfiguration);
-      _store.RegisterIndexes<CatalogItemIndexProvider>();
+      _storageManager = storageManager;
     }
 
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(IReadOnlyList<IModuleStorageProvider> moduleStorageProviders)
     {
       // Check if catalog item table exists
       var checkTableQuery = @"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'CatalogItem'";
-      var tables = await _dbConnection.QueryAsync(checkTableQuery);
+      var tables = await DbConnection.QueryAsync(checkTableQuery);
       if(!tables.Any())
       {
         // Catalog item table
@@ -46,18 +38,10 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     [ParentItemId]  INT            NOT NULL,
     [ItemType]      VARCHAR (4)    NOT NULL
 );";
-        await _dbConnection.ExecuteAsync(query);
+        await DbConnection.ExecuteAsync(query);
 
         // Document storage
-        await _store.InitializeAsync();
-
-        using(var session = _store.CreateSession())
-        {
-          var schemaBuilder = new SchemaBuilder(session);
-
-          schemaBuilder.CreateMapIndexTable(nameof(MapIndexCatalogItem), table => table
-            .Column<int>(nameof(MapIndexCatalogItem.CatalogItemId)));
-        }
+        await InitializeStoreAsync(moduleStorageProviders);
 
         // The root item
         await SaveRootItemAsync();
@@ -69,7 +53,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// </summary>
     public async Task<int> CreateItemAsync(CatalogItemRecord itemRecord)
     {
-      int itemId = await _dbConnection.InsertAsync(itemRecord);
+      int itemId = await DbConnection.InsertAsync(itemRecord);
       return itemId;
     }
 
@@ -79,7 +63,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     public async Task<CatalogItemRecord> LoadRootItemAsync()
     {
       var query = @"select * from CatalogItem where [ItemType]=@ItemType";
-      var rootItemRecord = await _dbConnection.QueryFirstOrDefaultAsync<CatalogItemRecord>(query, new {ItemType = CatalogItemType.CatalogRoot});
+      var rootItemRecord = await DbConnection.QueryFirstOrDefaultAsync<CatalogItemRecord>(query, new {ItemType = CatalogItemType.CatalogRoot});
 
       if(rootItemRecord == null)
         throw new InvalidOperationException("Cannot load root item in the catalog");
@@ -93,7 +77,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     public async Task<CatalogItemRecord> LoadItemByIdAsync(int catalogItemId)
     {
       var query = @"select * from CatalogItem where [CatalogItemId]=@CatalogItemId";
-      var itemRecord = await _dbConnection.QueryFirstAsync<CatalogItemRecord>(query, new {CatalogItemId = catalogItemId});
+      var itemRecord = await DbConnection.QueryFirstAsync<CatalogItemRecord>(query, new {CatalogItemId = catalogItemId});
 
       return itemRecord;
     }
@@ -104,7 +88,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     public async Task<IList<CatalogItemRecord>> LoadChildrenAsync(int parentItemId)
     {
       var query = @"select * from CatalogItem where [ParentItemId]=@ParentItemId";
-      var itemRecords = await _dbConnection.QueryAsync<CatalogItemRecord>(query, new {ParentItemId = parentItemId});
+      var itemRecords = await DbConnection.QueryAsync<CatalogItemRecord>(query, new {ParentItemId = parentItemId});
 
       return itemRecords.ToList();
     }
@@ -114,7 +98,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// </summary>
     public Task SaveItemDataAsync(int catalogItemId, CatalogItemData itemData)
     {
-      using(var session = _store.CreateSession())
+      using(var session = Store.CreateSession())
       {
         session.Save(itemData);
       }
@@ -129,7 +113,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     {
       CatalogItemData result = null;
 
-      using(var session = _store.CreateSession())
+      using(var session = Store.CreateSession())
       {
         var itemDatas = await session.Query<CatalogItemData, MapIndexCatalogItem>()
           .Where(x => x.CatalogItemId == catalogItemId)
@@ -161,18 +145,9 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
         .Replace('?', '_')
         .Replace('*', '%');
 
-      var result = await _dbConnection.QueryAsync<int>(query, new {NameFilter = escapedFilter});
+      var result = await DbConnection.QueryAsync<int>(query, new {NameFilter = escapedFilter});
 
       return result.ToList();
-    }
-
-    /// <summary>
-    /// IDisposable
-    /// </summary>
-    public void Dispose()
-    {
-      _dbConnection?.Dispose();
-      _store?.Dispose();
     }
 
     private Task SaveRootItemAsync()
@@ -184,6 +159,24 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       };
 
       return CreateItemAsync(catalogItem);
+    }
+
+    private async Task InitializeStoreAsync(IReadOnlyList<IModuleStorageProvider> moduleStorageProviders)
+    {
+      await Store.InitializeAsync();
+
+      using(var session = Store.CreateSession())
+      {
+        var schemaBuilder = new SchemaBuilder(session);
+
+        schemaBuilder.CreateMapIndexTable(nameof(MapIndexCatalogItem), table => table
+          .Column<int>(nameof(MapIndexCatalogItem.CatalogItemId)));
+
+        foreach(var provider in moduleStorageProviders)
+        {
+          await provider.InitializeStoreAsync(session, schemaBuilder);
+        }
+      }
     }
   }
 }
