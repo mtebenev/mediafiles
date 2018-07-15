@@ -13,6 +13,8 @@ namespace Mt.MediaMan.ClientApp.Cli
   [Subcommand("get-info", typeof(ShellCommandGetInfo))]
   [Subcommand("search", typeof(ShellCommandSearch))]
   [Subcommand("search-files", typeof(ShellCommandSearchFiles))]
+  [Subcommand("create-book", typeof(ShellCommandCreateBook))]
+  [Subcommand("search-book", typeof(ShellCommandSearchBook))]
   internal class Shell : ShellCommandBase
   {
     protected override Task<int> OnExecuteAsync(CommandLineApplication app)

@@ -7,7 +7,7 @@ using Mt.MediaMan.AppEngine.Commands;
 namespace Mt.MediaMan.ClientApp.Cli
 {
   /// <summary>
-  /// Scans new files to catalog
+  /// Searches for files in catalog
   /// </summary>
   [Command("search", Description = "Searches in catalog")]
   internal class ShellCommandSearch : ShellCommandBase

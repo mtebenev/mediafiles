@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AppEngine.Ebooks\AppEngine.Ebooks.csproj" />
     <ProjectReference Include="..\AppEngine\AppEngine.csproj" />
   </ItemGroup>
 

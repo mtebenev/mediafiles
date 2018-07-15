@@ -4,6 +4,7 @@ using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
+using Mt.MediaMan.AppEngine.Ebooks;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -62,10 +63,13 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     private static async Task<ICommandExecutionContext> CreateExecutionContext()
     {
+      var storageConfiguration = new StorageConfiguration();
+      EbooksModule.CreateStorageConfiguration(storageConfiguration);
+
       // Open catalog
-      var connectionString = @"Data Source=(localdb)\ProjectsV13;Initial Catalog=mediaman;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+      var connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=mediaman;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
       var catalog = Catalog.CreateCatalog(connectionString);
-      await catalog.OpenAsync();
+      await catalog.OpenAsync(storageConfiguration);
 
       // Init execution context
       var progressIndicator = new ProgressIndicatorConsole();

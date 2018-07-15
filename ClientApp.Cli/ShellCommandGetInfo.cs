@@ -49,17 +49,19 @@ namespace Mt.MediaMan.ClientApp.Cli
     private async Task PrintBookPartAsync(ICatalogItem catalogItem)
     {
       var infoPart = await catalogItem.GetInfoPartAsync<InfoPartBook>();
-      Console.WriteLine("Book");
-      Console.WriteLine($"Title: {infoPart.Title}");
-      Console.WriteLine($"Authors: {infoPart.GetAuthorsString()}");
+      _shellAppContext.Console.WriteLine("Book");
+      _shellAppContext.Console.WriteLine($"Title: {infoPart.Title}");
+      _shellAppContext.Console.WriteLine($"Authors: {infoPart.GetAuthorsString()}");
     }
 
     private async Task PrintVideoPartAsync(ICatalogItem catalogItem)
     {
       var infoPart = await catalogItem.GetInfoPartAsync<InfoPartVideo>();
-      Console.WriteLine("Video");
-      Console.WriteLine($"Width: {infoPart.VideoWidth}");
-      Console.WriteLine($"Height: {infoPart.VideoHeight}");
+      _shellAppContext.Console.WriteLine("Video");
+      _shellAppContext.Console.WriteLine($"Duration: {TimeSpan.FromSeconds(infoPart.Duration)}");
+      _shellAppContext.Console.WriteLine($"Width: {infoPart.VideoWidth}");
+      _shellAppContext.Console.WriteLine($"Height: {infoPart.VideoHeight}");
+      _shellAppContext.Console.WriteLine($"Codec: {infoPart.VideoCodecLongName}");
     }
   }
 }
