@@ -15,6 +15,8 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     public static async Task<int> Main(string[] args)
     {
+      Console.SetWindowSize(220, 54);
+
       var executionContext = await CreateExecutionContext();
       _shellAppContext = new ShellAppContext(executionContext.Catalog.RootItem);
 

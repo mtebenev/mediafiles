@@ -16,11 +16,11 @@ namespace Mt.MediaMan.AppEngine.Ebooks.Commands
       var moduleStorage = catalog.CreateModuleStorage();
       var ebookStorage = new EbookStorage(moduleStorage);
 
-      var walker = CatalogTreeWalker.CreateDefaultWalker(catalog, catalogItemId, item => ProcessItem(item, ebookStorage));
+      var walker = CatalogTreeWalker.CreateDefaultWalker(catalog, catalogItemId, item => ProcessItemAsync(item, ebookStorage));
       await walker.ForEachAsync(item => {});
     }
 
-    private async Task ProcessItem(ICatalogItem item, EbookStorage ebookStorage)
+    private async Task ProcessItemAsync(ICatalogItem item, EbookStorage ebookStorage)
     {
       var infoPartBook = await item.GetInfoPartAsync<InfoPartBook>();
       if(infoPartBook != null)
