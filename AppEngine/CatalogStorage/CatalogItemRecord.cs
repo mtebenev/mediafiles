@@ -21,7 +21,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// <summary>
     /// Size in bytes for files
     /// </summary>
-    public int Size { get; set; }
+    public long Size { get; set; }
 
     public int ParentItemId { get; set; }
 

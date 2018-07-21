@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
@@ -43,7 +42,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
       var itemRecord = new CatalogItemRecord
       {
         Name = _fileStoreEntry.Name,
-        Size = (int) _fileStoreEntry.Length,
+        Size = _fileStoreEntry.Length,
         ParentItemId = _parentItemId,
         ItemType = _fileStoreEntry.IsDirectory ? CatalogItemType.Directory : CatalogItemType.File
       };

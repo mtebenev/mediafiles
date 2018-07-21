@@ -34,7 +34,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
         var query = @"CREATE TABLE [dbo].[CatalogItem] (
     [CatalogItemId] INT            IDENTITY (1, 1) NOT NULL,
     [Name]          NVARCHAR (256) NOT NULL,
-    [Size]          INT            NULL,
+    [Size]          BIGINT            NULL,
     [ParentItemId]  INT            NOT NULL,
     [ItemType]      VARCHAR (4)    NOT NULL
 );";

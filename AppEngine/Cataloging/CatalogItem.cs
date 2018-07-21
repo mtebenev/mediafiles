@@ -32,7 +32,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalogItem
     /// </summary>
-    public int Size => _catalogItemRecord.Size;
+    public long Size => _catalogItemRecord.Size;
 
     /// <summary>
     /// ICatalogItem
