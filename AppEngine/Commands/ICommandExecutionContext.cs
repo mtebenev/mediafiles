@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.Cataloging;
 
 namespace Mt.MediaMan.AppEngine.Commands
@@ -9,5 +10,6 @@ namespace Mt.MediaMan.AppEngine.Commands
   {
     IProgressIndicator ProgressIndicator { get; }
     Catalog Catalog { get; }
+    ILoggerFactory LoggerFactory { get; }
   }
 }

@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Scanning;
 using OrchardCore.FileStorage.FileSystem;
 
@@ -10,15 +9,15 @@ namespace Mt.MediaMan.AppEngine.Commands
   /// </summary>
   public class CommandScanFiles
   {
-    public async Task Execute(Catalog catalog, string scanPath)
+    public async Task Execute(ICommandExecutionContext executionContext, string scanPath)
     {
       var scanQueue = new ScanQueue();
       var fileStore = new FileSystemStore(scanPath);
-      var rootItem = catalog.RootItem;
+      var rootItem = executionContext.Catalog.RootItem;
       var scanConfiguration = new ScanConfiguration();
 
-      var scanner = new ItemScannerFileSystem(fileStore, rootItem, scanQueue);
-      await catalog.ScanAsync(scanConfiguration, scanner);
+      var scanner = new ItemScannerFileSystem(fileStore, rootItem, scanQueue, executionContext.LoggerFactory);
+      await executionContext.Catalog.ScanAsync(scanConfiguration, scanner);
     }
   }
 }

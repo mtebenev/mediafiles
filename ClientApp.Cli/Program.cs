@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Ebooks;
@@ -17,12 +18,15 @@ namespace Mt.MediaMan.ClientApp.Cli
     {
       Console.SetWindowSize(220, 54);
 
-      var executionContext = await CreateExecutionContext();
-      _shellAppContext = new ShellAppContext(executionContext.Catalog.RootItem);
+      var catalog = await OpenCatalog();
+      _shellAppContext = new ShellAppContext(catalog.RootItem);
 
       // Init service container
       _services = new ServiceCollection()
-        .AddSingleton(executionContext)
+        .AddLogging(config => config.AddConsole())
+        .AddSingleton(catalog)
+        .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
+        .AddSingleton<ICommandExecutionContext, CommandExecutionContext>()
         .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton(_shellAppContext)
         .BuildServiceProvider();
@@ -63,7 +67,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       return result;
     }
 
-    private static async Task<ICommandExecutionContext> CreateExecutionContext()
+    private static async Task<Catalog> OpenCatalog()
     {
       var storageConfiguration = new StorageConfiguration();
       EbooksModule.CreateStorageConfiguration(storageConfiguration);
@@ -73,11 +77,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       var catalog = Catalog.CreateCatalog(connectionString);
       await catalog.OpenAsync(storageConfiguration);
 
-      // Init execution context
-      var progressIndicator = new ProgressIndicatorConsole();
-      ICommandExecutionContext executionContext = new CommandExecutionContext(catalog, progressIndicator);
-
-      return executionContext;
+      return catalog;
     }
   }
 }

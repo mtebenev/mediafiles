@@ -31,7 +31,7 @@ namespace Mt.MediaMan.ClientApp.Cli
         : @"C:\_books_cat";
 
       var command = new CommandScanFiles();
-      await command.Execute(_executionContext.Catalog, scanPath);
+      await command.Execute(_executionContext, scanPath);
 
       return 0;
     }
