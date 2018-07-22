@@ -1,11 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Ebooks;
+using NLog.Extensions.Logging;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -17,13 +19,22 @@ namespace Mt.MediaMan.ClientApp.Cli
     public static async Task<int> Main(string[] args)
     {
       Console.SetWindowSize(220, 54);
+      NLog.LogManager.LoadConfiguration("nlog.config");
 
-      var catalog = await OpenCatalog();
+      var configuration = new ConfigurationBuilder()
+        .SetBasePath(AppContext.BaseDirectory)
+        .AddJsonFile("appsettings.json")
+        .Build();
+      var appSettings = configuration.Get<AppSettings>();
+
+      var catalog = await OpenCatalog(appSettings);
       _shellAppContext = new ShellAppContext(catalog.RootItem);
-
+      
       // Init service container
       _services = new ServiceCollection()
-        .AddLogging(config => config.AddConsole())
+        .AddLogging(config => config
+          .SetMinimumLevel(LogLevel.Trace)
+          .AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true }))
         .AddSingleton(catalog)
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton<ICommandExecutionContext, CommandExecutionContext>()
@@ -49,12 +60,13 @@ namespace Mt.MediaMan.ClientApp.Cli
             .UseDefaultConventions()
             .UseConstructorInjection(_services);
 
-          commandResult = shellApp.Execute(commandArgs);
+          commandResult = ExecuteShellCommand(shellApp, commandArgs);
         }
       } while(commandResult != CommandExitResult);
 
       return 1;
     }
+
 
     public const int CommandExitResult = -1;
 
@@ -67,17 +79,34 @@ namespace Mt.MediaMan.ClientApp.Cli
       return result;
     }
 
-    private static async Task<Catalog> OpenCatalog()
+    private static async Task<Catalog> OpenCatalog(AppSettings appSettings)
     {
       var storageConfiguration = new StorageConfiguration();
       EbooksModule.CreateStorageConfiguration(storageConfiguration);
 
       // Open catalog
-      var connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=mediaman;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-      var catalog = Catalog.CreateCatalog(connectionString);
+      var catalog = Catalog.CreateCatalog(appSettings.ConnectionString);
       await catalog.OpenAsync(storageConfiguration);
 
       return catalog;
+    }
+
+    private static int ExecuteShellCommand(CommandLineApplication<Shell> shellApp, string[] commandArgs)
+    {
+      int commandResult = CommandExitResult;
+
+      try
+      {
+        commandResult = shellApp.Execute(commandArgs);
+        return commandResult;
+      }
+      catch (Exception e)
+      {
+        var logger = _services.GetService<ILogger<Program>>();
+        logger.LogError(e, "Error occurred during shell command execution:");
+      }
+
+      return commandResult;
     }
   }
 }
