@@ -4,7 +4,7 @@ using McMaster.Extensions.CommandLineUtils;
 namespace Mt.MediaMan.ClientApp.Cli
 {
   [Command("mediaman")]
-  [Subcommand("init-catalog", typeof(ShellCommandInitCatalog))]
+  [Subcommand("reset-catalog", typeof(ShellCommandResetCatalog))]
   [Subcommand("ls", typeof(ShellCommandLs))]
   [Subcommand("cd", typeof(ShellCommandCd))]
   [Subcommand("scan", typeof(ShellCommandScan))]

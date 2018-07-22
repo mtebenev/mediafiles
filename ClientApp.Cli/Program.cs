@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
-using Mt.MediaMan.AppEngine.Ebooks;
 using NLog.Extensions.Logging;
 
 namespace Mt.MediaMan.ClientApp.Cli
@@ -25,21 +24,19 @@ namespace Mt.MediaMan.ClientApp.Cli
         .SetBasePath(AppContext.BaseDirectory)
         .AddJsonFile("appsettings.json")
         .Build();
-      var appSettings = configuration.Get<AppSettings>();
 
-      var catalog = await OpenCatalog(appSettings);
-      _shellAppContext = new ShellAppContext(catalog.RootItem);
+      var appSettings = configuration.Get<AppSettings>();
+      _shellAppContext = new ShellAppContext(appSettings);
+      await _shellAppContext.OpenCatalog();
       
       // Init service container
       _services = new ServiceCollection()
         .AddLogging(config => config
           .SetMinimumLevel(LogLevel.Trace)
           .AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true }))
-        .AddSingleton(catalog)
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
-        .AddSingleton<ICommandExecutionContext, CommandExecutionContext>()
-        .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton(_shellAppContext)
+        .AddTransient<ICommandExecutionContext, CommandExecutionContext>()
         .BuildServiceProvider();
 
       int commandResult = 0;
@@ -69,6 +66,7 @@ namespace Mt.MediaMan.ClientApp.Cli
 
 
     public const int CommandExitResult = -1;
+    public const int CommandResultContinue = 0;
 
     /// <summary>
     /// Creates string prompt for CLI
@@ -77,18 +75,6 @@ namespace Mt.MediaMan.ClientApp.Cli
     {
       var result = $"{currentItem.Name}>";
       return result;
-    }
-
-    private static async Task<Catalog> OpenCatalog(AppSettings appSettings)
-    {
-      var storageConfiguration = new StorageConfiguration();
-      EbooksModule.CreateStorageConfiguration(storageConfiguration);
-
-      // Open catalog
-      var catalog = Catalog.CreateCatalog(appSettings.ConnectionString);
-      await catalog.OpenAsync(storageConfiguration);
-
-      return catalog;
     }
 
     private static int ExecuteShellCommand(CommandLineApplication<Shell> shellApp, string[] commandArgs)

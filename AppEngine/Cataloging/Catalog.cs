@@ -20,6 +20,9 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     private readonly LuceneIndexManager _indexManager;
     private ICatalogItem _rootItem;
 
+    /// <summary>
+    /// Open/create catalog
+    /// </summary>
     public static Catalog CreateCatalog(string connectionString)
     {
       var storageManager = new StorageManager(connectionString);
@@ -27,6 +30,16 @@ namespace Mt.MediaMan.AppEngine.Cataloging
       var catalog = new Catalog(storageManager, indexManager);
 
       return catalog;
+    }
+
+    /// <summary>
+    /// Reset catalog storage
+    /// </summary>
+    public static async Task ResetCatalogStorage(string connectionString)
+    {
+      await StorageManager.ResetStorage(connectionString);
+      var indexManager = new LuceneIndexManager(new Clock());
+      indexManager.DeleteIndex("default");
     }
 
     internal Catalog(IStorageManager storageManager, LuceneIndexManager indexManager)

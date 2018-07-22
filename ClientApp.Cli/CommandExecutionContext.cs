@@ -5,11 +5,11 @@ using Mt.MediaMan.AppEngine.Commands;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
-  public class CommandExecutionContext : ICommandExecutionContext, IDisposable
+  internal class CommandExecutionContext : ICommandExecutionContext, IDisposable
   {
-    public CommandExecutionContext(Catalog catalog, IProgressIndicator progressIndicator, ILoggerFactory loggerFactory)
+    public CommandExecutionContext(ShellAppContext shellAppContext, IProgressIndicator progressIndicator, ILoggerFactory loggerFactory)
     {
-      Catalog = catalog;
+      Catalog = shellAppContext.Catalog;
       ProgressIndicator = progressIndicator;
       LoggerFactory = loggerFactory;
     }
