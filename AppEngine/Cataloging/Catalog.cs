@@ -6,6 +6,7 @@ using Lucene.Net.Analysis.Standard;
 using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.QueryParsers.Simple;
 using Lucene.Net.Search;
+using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Common;
 using Mt.MediaMan.AppEngine.Scanning;
@@ -101,10 +102,10 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// Scans new item to the catalog
     /// </summary>
-    internal Task ScanAsync(ScanConfiguration scanConfiguration, IItemScanner itemScanner)
+    internal Task ScanAsync(ScanConfiguration scanConfiguration, IItemScanner itemScanner, ILoggerFactory loggerFactory)
     {
       // Create scan context
-      var scanContext = new ScanContext(scanConfiguration, _itemStorage, _indexManager);
+      var scanContext = new ScanContext(scanConfiguration, _itemStorage, _indexManager, loggerFactory);
       return itemScanner.Scan(scanContext);
     }
 

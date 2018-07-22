@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.FileHandlers;
@@ -101,15 +102,27 @@ namespace Mt.MediaMan.AppEngine.Scanning
     private async Task<CatalogItemData> RunScanDriversAsync(IList<IFileHandler> fileHandlers)
     {
       var catalogItemData = new CatalogItemData(_catalogItemId.Value);
+      var fileStoreEntryContext = new FileStoreEntryContext(_fileStoreEntry, _fileStore);
 
       // TODO: make in parallel
-      foreach(var fileHandler in fileHandlers)
+      foreach (var fileHandler in fileHandlers)
       {
-        var fileStoreEntryContext = new FileStoreEntryContext(_fileStoreEntry, _fileStore);
-        await fileHandler.ScanDriver.ScanAsync(_scanContext, _catalogItemId.Value, fileStoreEntryContext, catalogItemData);
+        await RunSingleScanDriverAsync(fileHandler, catalogItemData, fileStoreEntryContext);
       }
 
       return catalogItemData;
+    }
+
+    private async Task RunSingleScanDriverAsync(IFileHandler fileHandler, CatalogItemData catalogItemData, FileStoreEntryContext storeEntryContext)
+    {
+      try
+      {
+        await fileHandler.ScanDriver.ScanAsync(_scanContext, _catalogItemId.Value, storeEntryContext, catalogItemData);
+      }
+      catch (Exception e)
+      {
+        _scanContext.Logger.LogError(e, "Error occurred during invoking scan driver:");
+      }
     }
 
     private async Task RunItemIndexersAsync(IList<IFileHandler> fileHandlers, CatalogItemRecord itemRecord, CatalogItemData catalogItemData)

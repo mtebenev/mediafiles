@@ -28,7 +28,8 @@ namespace Mt.MediaMan.ClientApp.Cli
 
       var scanPath = PathAlias.Equals("video", StringComparison.InvariantCultureIgnoreCase)
         ? @"C:\_films"
-        : @"C:\_books_cat";
+        : PathAlias.Equals("video", StringComparison.InvariantCultureIgnoreCase) ? @"C:\_books_cat"
+        : PathAlias;
 
       var command = new CommandScanFiles();
       await command.Execute(_executionContext, scanPath);

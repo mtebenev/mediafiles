@@ -70,11 +70,18 @@ namespace Mt.MediaMan.AppEngine.Scanning
       var filePathRoot = Path.GetPathRoot(filePath);
       var infoPartScanRoot = catalogItemData.GetOrCreate<InfoPartScanRoot>();
 
-      var drives = DriveInfo.GetDrives();
-      var driveInfo = drives.First(di => di.RootDirectory.FullName == filePathRoot);
+      // Check for UNC
+      var pathUri = new Uri(filePathRoot);
+      if (pathUri.IsUnc)
+        infoPartScanRoot.DriveType = DriveType.Network.ToString();
+      else
+      {
+        var drives = DriveInfo.GetDrives();
+        var driveInfo = drives.First(di => di.RootDirectory.FullName == filePathRoot);
+        infoPartScanRoot.DriveType = driveInfo.DriveType.ToString();
+      }
 
       infoPartScanRoot.RootPath = filePath;
-      infoPartScanRoot.DriveType = driveInfo.DriveType.ToString();
 
       // TODO: write IMAPI worker to determine media type
 

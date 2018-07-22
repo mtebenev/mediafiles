@@ -17,7 +17,7 @@ namespace Mt.MediaMan.AppEngine.Commands
       var scanConfiguration = new ScanConfiguration();
 
       var scanner = new ItemScannerFileSystem(fileStore, rootItem, scanQueue, executionContext.LoggerFactory);
-      await executionContext.Catalog.ScanAsync(scanConfiguration, scanner);
+      await executionContext.Catalog.ScanAsync(scanConfiguration, scanner, executionContext.LoggerFactory);
     }
   }
 }
