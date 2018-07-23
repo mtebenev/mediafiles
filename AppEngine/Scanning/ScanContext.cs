@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Search;
 
 namespace Mt.MediaMan.AppEngine.Scanning
@@ -7,11 +8,12 @@ namespace Mt.MediaMan.AppEngine.Scanning
   internal class ScanContext : IScanContext
   {
 
-    public ScanContext(ScanConfiguration scanConfiguration, IItemStorage itemStorage, LuceneIndexManager indexManager, ILoggerFactory loggerFactory)
+    public ScanContext(ScanConfiguration scanConfiguration, IItemStorage itemStorage, LuceneIndexManager indexManager, ILoggerFactory loggerFactory, IProgressOperation progressOperation)
     {
       ScanConfiguration = scanConfiguration;
       ItemStorage = itemStorage;
       IndexManager = indexManager;
+      ProgressOperation = progressOperation;
       Logger = loggerFactory.CreateLogger("Scanning");
     }
 
@@ -34,5 +36,10 @@ namespace Mt.MediaMan.AppEngine.Scanning
     /// IScanContext
     /// </summary>
     public LuceneIndexManager IndexManager { get; }
+
+    /// <summary>
+    /// IScanContext
+    /// </summary>
+    public IProgressOperation ProgressOperation { get; }
   }
 }

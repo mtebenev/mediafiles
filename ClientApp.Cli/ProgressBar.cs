@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Threading;
+using McMaster.Extensions.CommandLineUtils;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -9,6 +10,7 @@ namespace Mt.MediaMan.ClientApp.Cli
   /// </summary>
   public class ProgressBar : IDisposable, IProgress<double>
   {
+    private readonly IConsole _console;
     private const int BlockCount = 10;
     private readonly TimeSpan _animationInterval = TimeSpan.FromSeconds(1.0 / 8);
     private const string Animation = @"|/-\";
@@ -21,8 +23,9 @@ namespace Mt.MediaMan.ClientApp.Cli
     private bool _disposed = false;
     private int _animationIndex = 0;
 
-    public ProgressBar(bool usePercentage)
+    public ProgressBar(bool usePercentage, IConsole console)
     {
+      _console = console;
       _timer = usePercentage
         ? new Timer(TimerHandler)
         : new Timer(TimerHandlerTextual);
@@ -30,7 +33,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       // A progress bar is only for temporary display in a console window.
       // If the console output is redirected to a file, draw nothing.
       // Otherwise, we'll end up with a lot of garbage in the target file.
-      if (!Console.IsOutputRedirected)
+      if(!Console.IsOutputRedirected)
       {
         ResetTimer();
       }
@@ -51,9 +54,9 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     private void TimerHandler(object state)
     {
-      lock (_timer)
+      lock(_timer)
       {
-        if (_disposed)
+        if(_disposed)
           return;
 
         int progressBlockCount = (int) (_currentProgress * BlockCount);
@@ -70,9 +73,9 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     private void TimerHandlerTextual(object state)
     {
-      lock (_timer)
+      lock(_timer)
       {
-        if (_disposed)
+        if(_disposed)
           return;
 
         string text = string.Format("{0} {1}",
@@ -89,7 +92,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       // Get length of common portion
       int commonPrefixLength = 0;
       int commonLength = Math.Min(_currentText.Length, text.Length);
-      while (commonPrefixLength < commonLength && text[commonPrefixLength] == _currentText[commonPrefixLength])
+      while(commonPrefixLength < commonLength && text[commonPrefixLength] == _currentText[commonPrefixLength])
       {
         commonPrefixLength++;
       }
@@ -103,13 +106,13 @@ namespace Mt.MediaMan.ClientApp.Cli
 
       // If the new text is shorter than the old one: delete overlapping characters
       int overlapCount = _currentText.Length - text.Length;
-      if (overlapCount > 0)
+      if(overlapCount > 0)
       {
         outputBuilder.Append(' ', overlapCount);
         outputBuilder.Append('\b', overlapCount);
       }
 
-      Console.Write(outputBuilder);
+      _console.Write(outputBuilder);
       _currentText = text;
     }
 
@@ -120,7 +123,7 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     public void Dispose()
     {
-      lock (_timer)
+      lock(_timer)
       {
         _disposed = true;
         UpdateText(string.Empty);

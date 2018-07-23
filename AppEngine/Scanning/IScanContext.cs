@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Search;
 
 namespace Mt.MediaMan.AppEngine.Scanning
@@ -13,5 +14,6 @@ namespace Mt.MediaMan.AppEngine.Scanning
     ScanConfiguration ScanConfiguration { get; }
     IItemStorage ItemStorage { get; }
     ILogger Logger { get; }
+    IProgressOperation ProgressOperation { get; }
   }
 }

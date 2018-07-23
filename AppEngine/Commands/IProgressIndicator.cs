@@ -6,8 +6,8 @@ namespace Mt.MediaMan.AppEngine.Commands
   public interface IProgressIndicator
   {
     /// <summary>
-    /// Use to update UI with ongoing status
+    /// Use to start a UI operation. status can be null
     /// </summary>
-    void WriteStatus(string status);
+    IProgressOperation StartOperation(string status);
   }
 }

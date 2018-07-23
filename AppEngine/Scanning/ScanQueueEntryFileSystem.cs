@@ -39,6 +39,8 @@ namespace Mt.MediaMan.AppEngine.Scanning
       if(_catalogItemId.HasValue)
         throw new InvalidOperationException("Scan queue item already stored");
 
+      _scanContext.ProgressOperation.UpdateStatus(_fileStoreEntry.Path);
+
       // Common file properties
       var itemRecord = new CatalogItemRecord
       {
@@ -105,7 +107,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
       var fileStoreEntryContext = new FileStoreEntryContext(_fileStoreEntry, _fileStore);
 
       // TODO: make in parallel
-      foreach (var fileHandler in fileHandlers)
+      foreach(var fileHandler in fileHandlers)
       {
         await RunSingleScanDriverAsync(fileHandler, catalogItemData, fileStoreEntryContext);
       }
@@ -119,7 +121,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
       {
         await fileHandler.ScanDriver.ScanAsync(_scanContext, _catalogItemId.Value, storeEntryContext, catalogItemData);
       }
-      catch (Exception e)
+      catch(Exception e)
       {
         _scanContext.Logger.LogError(e, "Error occurred during invoking scan driver:");
       }
@@ -143,6 +145,5 @@ namespace Mt.MediaMan.AppEngine.Scanning
         _scanContext.IndexManager.StoreDocuments(index, new DocumentIndex[] {indexingContext.DocumentIndex});
       }
     }
-
   }
 }

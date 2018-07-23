@@ -28,14 +28,15 @@ namespace Mt.MediaMan.ClientApp.Cli
       var appSettings = configuration.Get<AppSettings>();
       _shellAppContext = new ShellAppContext(appSettings);
       await _shellAppContext.OpenCatalog();
-      
+
       // Init service container
       _services = new ServiceCollection()
         .AddLogging(config => config
           .SetMinimumLevel(LogLevel.Trace)
-          .AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true }))
+          .AddNLog(new NLogProviderOptions {CaptureMessageTemplates = true, CaptureMessageProperties = true}))
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton(_shellAppContext)
+        .AddSingleton(PhysicalConsole.Singleton)
         .AddTransient<ICommandExecutionContext, CommandExecutionContext>()
         .BuildServiceProvider();
 
@@ -86,7 +87,7 @@ namespace Mt.MediaMan.ClientApp.Cli
         commandResult = shellApp.Execute(commandArgs);
         return commandResult;
       }
-      catch (Exception e)
+      catch(Exception e)
       {
         var logger = _services.GetService<ILogger<Program>>();
         logger.LogError(e, "Error occurred during shell command execution:");

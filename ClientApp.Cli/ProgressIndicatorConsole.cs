@@ -1,4 +1,5 @@
 using System;
+using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Commands;
 
 namespace Mt.MediaMan.ClientApp.Cli
@@ -8,9 +9,19 @@ namespace Mt.MediaMan.ClientApp.Cli
   /// </summary>
   internal class ProgressIndicatorConsole : IProgressIndicator
   {
-    public void WriteStatus(string status)
+    private readonly IConsole _console;
+
+    public ProgressIndicatorConsole(IConsole console)
     {
-      Console.WriteLine(status);
+      _console = console;
+    }
+
+    public IProgressOperation StartOperation(string status)
+    {
+      if(!String.IsNullOrWhiteSpace(status))
+        _console.WriteLine(status);
+
+      return new ProgressOperationConsole(_console);
     }
   }
 }

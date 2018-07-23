@@ -11,13 +11,16 @@ namespace Mt.MediaMan.AppEngine.Commands
   {
     public async Task Execute(ICommandExecutionContext executionContext, string scanPath)
     {
-      var scanQueue = new ScanQueue();
-      var fileStore = new FileSystemStore(scanPath);
-      var rootItem = executionContext.Catalog.RootItem;
-      var scanConfiguration = new ScanConfiguration();
+      using(var progressOperation = executionContext.ProgressIndicator.StartOperation($"Scanning files: {scanPath}"))
+      {
+        var scanQueue = new ScanQueue();
+        var fileStore = new FileSystemStore(scanPath);
+        var rootItem = executionContext.Catalog.RootItem;
+        var scanConfiguration = new ScanConfiguration();
 
-      var scanner = new ItemScannerFileSystem(fileStore, rootItem, scanQueue, executionContext.LoggerFactory);
-      await executionContext.Catalog.ScanAsync(scanConfiguration, scanner, executionContext.LoggerFactory);
+        var scanner = new ItemScannerFileSystem(fileStore, rootItem, scanQueue, executionContext.LoggerFactory);
+        await executionContext.Catalog.ScanAsync(scanConfiguration, scanner, executionContext.LoggerFactory, progressOperation);
+      }
     }
   }
 }
