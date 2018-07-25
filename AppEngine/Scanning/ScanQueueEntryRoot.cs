@@ -33,7 +33,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
 
       var itemRecord = new CatalogItemRecord
       {
-        Name = "[SCAN_ROOT]",
+        Name = String.IsNullOrWhiteSpace(_scanContext.ScanConfiguration.ScanRootItemName) ? "[SCAN_ROOT]" : _scanContext.ScanConfiguration.ScanRootItemName,
         Size = 0,
         ParentItemId = _parentItemId,
         ItemType = CatalogItemType.ScanRoot

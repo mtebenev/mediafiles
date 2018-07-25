@@ -123,7 +123,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
       }
       catch(Exception e)
       {
-        _scanContext.Logger.LogError(e, "Error occurred during invoking scan driver:");
+        _scanContext.Logger.LogError(e, $"Scan error file: {storeEntryContext.FileStoreEntry.Path} ({catalogItemData.CatalogItemId}): ");
       }
     }
 

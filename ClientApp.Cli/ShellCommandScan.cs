@@ -21,6 +21,12 @@ namespace Mt.MediaMan.ClientApp.Cli
     [Argument(0, "pathAlias")]
     public string PathAlias { get; set; }
 
+    /// <summary>
+    /// Name for scan root. If not set, then '[SCAN_ROOT]' by default
+    /// </summary>
+    [Option(LongName = "name", ShortName = "n")]
+    public string Name { get; set; }
+
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
       if(String.IsNullOrWhiteSpace(PathAlias))
@@ -32,7 +38,7 @@ namespace Mt.MediaMan.ClientApp.Cli
         : PathAlias;
 
       var command = new CommandScanFiles();
-      await command.Execute(_executionContext, scanPath);
+      await command.Execute(_executionContext, scanPath, Name);
 
       return 0;
     }

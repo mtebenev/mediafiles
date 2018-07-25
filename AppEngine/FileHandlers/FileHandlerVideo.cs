@@ -24,7 +24,7 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
 
     public Task<bool> IsSupportedAsync(IFileStoreEntry fileStoreEntry)
     {
-      var supportedExtensions = new[] {".mkv", ".mp4", ".avi"};
+      var supportedExtensions = new[] {".mkv", ".mp4", ".avi", ".wmv", ".mpg", ".flv", ".m4v", ".gp3"};
       var result = supportedExtensions.Any(e => fileStoreEntry.Name.EndsWith(e, StringComparison.InvariantCultureIgnoreCase));
 
       return Task.FromResult(result);

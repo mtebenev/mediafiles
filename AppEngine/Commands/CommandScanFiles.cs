@@ -9,14 +9,14 @@ namespace Mt.MediaMan.AppEngine.Commands
   /// </summary>
   public class CommandScanFiles
   {
-    public async Task Execute(ICommandExecutionContext executionContext, string scanPath)
+    public async Task Execute(ICommandExecutionContext executionContext, string scanPath, string name)
     {
       using(var progressOperation = executionContext.ProgressIndicator.StartOperation($"Scanning files: {scanPath}"))
       {
         var scanQueue = new ScanQueue();
         var fileStore = new FileSystemStore(scanPath);
         var rootItem = executionContext.Catalog.RootItem;
-        var scanConfiguration = new ScanConfiguration();
+        var scanConfiguration = new ScanConfiguration(name);
 
         var scanner = new ItemScannerFileSystem(fileStore, rootItem, scanQueue, executionContext.LoggerFactory);
         await executionContext.Catalog.ScanAsync(scanConfiguration, scanner, executionContext.LoggerFactory, progressOperation);
