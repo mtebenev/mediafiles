@@ -42,18 +42,32 @@ namespace Mt.MediaMan.ClientApp.Cli
     /// <summary>
     /// Opens catalog
     /// </summary>
-    public async Task OpenCatalog()
+    public async Task<bool> OpenCatalog(string catalogName)
     {
-      if(_catalog != null)
-        throw new InvalidOperationException("Catalog is already open");
+      bool result = false;
 
-      var storageConfiguration = new StorageConfiguration();
-      EbooksModule.CreateStorageConfiguration(storageConfiguration);
+      // Check if catalog with such name exists in configuration
+      if(_appSettings.Catalogs.ContainsKey(catalogName))
+      {
+        // Open the new catalog
+        var storageConfiguration = new StorageConfiguration();
+        EbooksModule.CreateStorageConfiguration(storageConfiguration);
 
-      // Open catalog
-      _catalog = Catalog.CreateCatalog(_appSettings.ConnectionString);
-      await _catalog.OpenAsync(storageConfiguration);
-      CurrentItem = _catalog.RootItem;
+        var catalog = Catalog.CreateCatalog(catalogName, _appSettings.Catalogs[catalogName]);
+        await catalog.OpenAsync(storageConfiguration);
+
+        // Close current catalog
+        _catalog?.Close();
+
+        _catalog = catalog;
+        CurrentItem = _catalog.RootItem;
+
+        this.Console.WriteLine($"Opened catalog: {catalogName}");
+
+        result = true;
+      }
+
+      return result;
     }
 
     /// <summary>
@@ -61,13 +75,15 @@ namespace Mt.MediaMan.ClientApp.Cli
     /// </summary>
     public async Task ResetCatalogStorage()
     {
+      var catalogName = _catalog.CatalogName;
+
       // Close current catalog in the shell context
       CurrentItem = null;
       _catalog = null;
 
       // Reset storage
-      await Catalog.ResetCatalogStorage(_appSettings.ConnectionString);
-      await OpenCatalog();
+      await Catalog.ResetCatalogStorage(catalogName, _appSettings.Catalogs[catalogName]);
+      await OpenCatalog(catalogName);
     }
   }
 }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Mt.MediaMan.ClientApp.Cli
 {
   /// <summary>
@@ -5,6 +7,14 @@ namespace Mt.MediaMan.ClientApp.Cli
   /// </summary>
   public class AppSettings
   {
-    public string ConnectionString { get; set; }
+    /// <summary>
+    /// Catalog to open on startup
+    /// </summary>
+    public string StartupCatalog { get; set; }
+
+    /// <summary>
+    /// Catalog name -> connection string
+    /// </summary>
+    public Dictionary<string, string> Catalogs { get; set; }
   }
 }

@@ -25,11 +25,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// Open/create catalog
     /// </summary>
-    public static Catalog CreateCatalog(string connectionString)
+    public static Catalog CreateCatalog(string catalogName, string connectionString)
     {
       var storageManager = new StorageManager(connectionString);
       var indexManager = new LuceneIndexManager(new Clock());
-      var catalog = new Catalog(storageManager, indexManager);
+      var catalog = new Catalog(catalogName, storageManager, indexManager);
 
       return catalog;
     }
@@ -37,20 +37,22 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// Reset catalog storage
     /// </summary>
-    public static async Task ResetCatalogStorage(string connectionString)
+    public static async Task ResetCatalogStorage(string catalogName, string connectionString)
     {
       await StorageManager.ResetStorage(connectionString);
       var indexManager = new LuceneIndexManager(new Clock());
-      indexManager.DeleteIndex("default");
+      indexManager.DeleteIndex(catalogName);
     }
 
-    internal Catalog(IStorageManager storageManager, LuceneIndexManager indexManager)
+    internal Catalog(string catalogName, IStorageManager storageManager, LuceneIndexManager indexManager)
     {
+      CatalogName = catalogName;
       _storageManager = storageManager;
       _indexManager = indexManager;
       _itemStorage = new ItemStorage(storageManager);
     }
 
+    public string CatalogName { get; }
     public ICatalogItem RootItem
     {
       get
@@ -81,13 +83,22 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     public async Task OpenAsync(StorageConfiguration storageConfiguration)
     {
       await _itemStorage.InitializeAsync(storageConfiguration.ModuleStorageProviders);
-      if(!_indexManager.IsIndexExists("default"))
-        _indexManager.CreateIndex("default");
+      if(!_indexManager.IsIndexExists(CatalogName))
+        _indexManager.CreateIndex(CatalogName);
 
       // Root item
       var catalogItemRecord = await _itemStorage.LoadRootItemAsync();
       _rootItem = new CatalogItem(catalogItemRecord, _itemStorage);
     }
+
+    public void Close()
+    {
+      if(_indexManager == null)
+        throw new InvalidOperationException("Catalog is not open");
+
+      _rootItem = null;
+    }
+
 
     /// <summary>
     /// Loads an item with specified ID

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +28,16 @@ namespace Mt.MediaMan.ClientApp.Cli
 
       var appSettings = configuration.Get<AppSettings>();
       _shellAppContext = new ShellAppContext(appSettings);
-      await _shellAppContext.OpenCatalog();
+
+      // Open startup or first catalog
+      if(appSettings.Catalogs.Count == 0)
+        throw new InvalidOperationException("No catalogs defined");
+
+      var catalogName = appSettings.Catalogs.ContainsKey(appSettings.StartupCatalog)
+        ? appSettings.StartupCatalog
+        : appSettings.Catalogs.First().Key;
+
+      await _shellAppContext.OpenCatalog(catalogName);
 
       // Init service container
       _services = new ServiceCollection()
