@@ -5,6 +5,8 @@ namespace Mt.MediaMan.AppEngine.Scanning
   /// </summary>
   public class InfoPartVideo : InfoPartBase
   {
+    public string Title { get; set; }
+
     public int VideoWidth { get; set; }
     public int VideoHeight { get; set; }
 

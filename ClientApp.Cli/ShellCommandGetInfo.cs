@@ -58,6 +58,7 @@ namespace Mt.MediaMan.ClientApp.Cli
     {
       var infoPart = await catalogItem.GetInfoPartAsync<InfoPartVideo>();
       _shellAppContext.Console.WriteLine("Video");
+      _shellAppContext.Console.WriteLine($"Title: {infoPart.Title}");
       _shellAppContext.Console.WriteLine($"Duration: {TimeSpan.FromSeconds(infoPart.Duration)}");
       _shellAppContext.Console.WriteLine($"Width: {infoPart.VideoWidth}");
       _shellAppContext.Console.WriteLine($"Height: {infoPart.VideoHeight}");

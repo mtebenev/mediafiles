@@ -36,6 +36,7 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
     /// </summary>
     private void FillVideoStreamInfo(FfprobeType ffProbeOutput, InfoPartVideo infoPartVideo)
     {
+      // Stream-specific properties
       var videoStream = ffProbeOutput.Streams.FirstOrDefault(s => s.Codec_Type == "video");
       if(videoStream != null)
       {
@@ -44,6 +45,11 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
         infoPartVideo.VideoCodecName = videoStream.Codec_Name;
         infoPartVideo.VideoCodecLongName = videoStream.Codec_Long_Name;
       }
+
+      // Format tags
+      var tagTitle = ffProbeOutput.Format.Tag.FirstOrDefault(t => t.Key == "title");
+      if(tagTitle != null)
+        infoPartVideo.Title = tagTitle.Value;
     }
   }
 }
