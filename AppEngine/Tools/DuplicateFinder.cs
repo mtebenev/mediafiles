@@ -22,7 +22,7 @@ namespace Mt.MediaMan.AppEngine.Tools
       var itemHashes = await CollectHashesAsync();
       var candidates = CollectCandidates(itemHashes);
 
-      var result = CreateResult(candidates);
+      var result = await CreateResultAsync(candidates);
       return result;
     }
 
@@ -37,15 +37,18 @@ namespace Mt.MediaMan.AppEngine.Tools
       return result;
     }
 
-    private IList<DuplicateFindResult> CreateResult(List<List<ItemHashInfo>> candidates)
+    private async Task<IList<DuplicateFindResult>> CreateResultAsync(List<List<ItemHashInfo>> candidates)
     {
-      var result = candidates.Select(c =>
-      {
-        var itemIds = c.Select(i => i.CatalogItemId).ToList();
-        var duplicateFindResult = new DuplicateFindResult(itemIds);
+      var result = new List<DuplicateFindResult>();
 
-        return duplicateFindResult;
-      }).ToList();
+      // TODOA: async select
+      foreach(var candidate in candidates)
+      {
+        var itemIds = candidate.Select(i => i.CatalogItemId).ToList();
+        var duplicateFindResult = await DuplicateFindResult.Create(_catalog, itemIds);
+
+        result.Add(duplicateFindResult);
+      }
 
       return result;
     }

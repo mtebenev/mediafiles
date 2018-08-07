@@ -82,6 +82,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
       }
 
       infoPartScanRoot.RootPath = filePath;
+      catalogItemData.Apply(infoPartScanRoot);
 
       // TODO: write IMAPI worker to determine media type
 

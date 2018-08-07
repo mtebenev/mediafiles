@@ -1,6 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Commands;
+using Mt.MediaMan.AppEngine.Tools;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -25,16 +27,25 @@ namespace Mt.MediaMan.ClientApp.Cli
       var result = await command.Execute(_executionContext.Catalog);
 
       _shellAppContext.Console.WriteLine($"{result.Count} duplicates found:");
-      var index = 1;
-      foreach (var duplicates in result)
+      foreach(var duplicates in result)
+        await ProcessDuplicates(duplicates);
+
+      return Program.CommandResultContinue;
+    }
+
+    private async Task ProcessDuplicates(DuplicateFindResult duplicateResult)
+    {
+      var console = _shellAppContext.Console;
+      var firstItem = await _executionContext.Catalog.GetItemByIdAsync(duplicateResult.CatalogItemIds[0]);
+
+      console.ForegroundColor = ConsoleColor.Yellow;
+      console.WriteLine($"{firstItem.Name}");
+      console.ResetColor();
+
+      for(int i = 0; i < duplicateResult.FilePaths.Count; i++)
       {
-        var firstItem = await _executionContext.Catalog.GetItemByIdAsync(duplicates.CatalogItemIds[0]);
-        _shellAppContext.Console.WriteLine($"{index}: {firstItem.Name}");
-
-        index++;
+        console.WriteLine($"{i + 1}: {duplicateResult.FilePaths[i]}");
       }
-
-      return 0;
     }
   }
 }
