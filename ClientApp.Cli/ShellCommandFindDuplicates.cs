@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Commands;
+using Mt.MediaMan.AppEngine.Common;
 using Mt.MediaMan.AppEngine.Tools;
 
 namespace Mt.MediaMan.ClientApp.Cli
@@ -26,26 +27,42 @@ namespace Mt.MediaMan.ClientApp.Cli
       var command = new CommandFindDuplicates();
       var result = await command.Execute(_executionContext.Catalog);
 
+      long totalWastedSize = 0;
       _shellAppContext.Console.WriteLine($"{result.Count} duplicates found:");
       foreach(var duplicates in result)
-        await ProcessDuplicates(duplicates);
+      {
+        var wastedSize = await ProcessDuplicates(duplicates);
+        totalWastedSize += wastedSize;
+      }
+
+      _shellAppContext.Console.WriteLine($"Total wasted size: {StringUtils.BytesToString(totalWastedSize)}");
 
       return Program.CommandResultContinue;
     }
 
-    private async Task ProcessDuplicates(DuplicateFindResult duplicateResult)
+    /// <summary>
+    /// Prints duplicate info and returns wasted file size in bytes
+    /// </summary>
+    private async Task<long> ProcessDuplicates(DuplicateFindResult duplicateResult)
     {
       var console = _shellAppContext.Console;
-      var firstItem = await _executionContext.Catalog.GetItemByIdAsync(duplicateResult.CatalogItemIds[0]);
+      var firstItem = await _executionContext.Catalog.GetItemByIdAsync(duplicateResult.FileInfos[0].CatalogItemId);
+
+      long wastedSize = 0; // Total wasted size in bytes
 
       console.ForegroundColor = ConsoleColor.Yellow;
       console.WriteLine($"{firstItem.Name}");
       console.ResetColor();
 
-      for(int i = 0; i < duplicateResult.FilePaths.Count; i++)
+      for(int i = 0; i < duplicateResult.FileInfos.Count; i++)
       {
-        console.WriteLine($"{i + 1}: {duplicateResult.FilePaths[i]}");
+        if(i > 0)
+          wastedSize += duplicateResult.FileInfos[i].FileSize;
+
+        console.WriteLine($"{i + 1}: {duplicateResult.FileInfos[i].FilePath}");
       }
+
+      return wastedSize;
     }
   }
 }

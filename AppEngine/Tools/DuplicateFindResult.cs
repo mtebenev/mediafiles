@@ -9,10 +9,9 @@ namespace Mt.MediaMan.AppEngine.Tools
   /// </summary>
   public class DuplicateFindResult
   {
-    private DuplicateFindResult(IList<int> catalogItemIds, List<string> filePaths)
+    private DuplicateFindResult(IList<BriefFileInfo> fileInfos)
     {
-      CatalogItemIds = catalogItemIds;
-      FilePaths = filePaths;
+      FileInfos = fileInfos;
     }
 
     /// <summary>
@@ -24,27 +23,21 @@ namespace Mt.MediaMan.AppEngine.Tools
 
       // TODOA: tuples?
       // TODOA: async select
-      List<int> itemIds = new List<int>();
-      List<string> paths = new List<string>();
+      List<BriefFileInfo> fileInfos = new List<BriefFileInfo>();
 
       foreach(var catalogItem in catalogItems)
       {
         var fsPath = await CatalogItemUtils.ComposeFsPathAsync(catalogItem);
+        var brifFileInfo = new BriefFileInfo(catalogItem.CatalogItemId, fsPath, catalogItem.Size);
 
-        itemIds.Add(catalogItem.CatalogItemId);
-        paths.Add(fsPath);
+        fileInfos.Add(brifFileInfo);
       }
 
-      var result = new DuplicateFindResult(itemIds, paths);
+      var result = new DuplicateFindResult(fileInfos);
       return result;
     }
 
-    public IList<int> CatalogItemIds { get; }
-
-    /// <summary>
-    /// Duplicate file paths
-    /// </summary>
-    public IList<string> FilePaths { get; }
+    public IList<BriefFileInfo> FileInfos { get; }
 
     /// <summary>
     /// Detailed property differences
