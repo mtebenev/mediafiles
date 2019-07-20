@@ -1,0 +1,3 @@
+rootProject.name = 'ArtefactUi'
+
+include ':app'
