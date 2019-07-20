@@ -3,12 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "node node_modules/react-native-windows/Scripts/cli.js start",
     "test": "jest"
   },
   "dependencies": {
     "react": "16.8.3",
-    "react-native": "0.59.10"
+    "react-native": "^0.59.0",
+    "react-native-windows": "0.59.0-vnext.96",
+    "rnpm-plugin-windows": "^0.2.11"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
