@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using react.uwp;
+using AppCoreLib;
+using ArtefactUi.Core;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -42,6 +44,11 @@ namespace ArtefactUi
 
       //instantiate sample module for registering callbacks for live reload, JS error handling etc.,
       instance.RegisterModule(new SampleModule());
+
+      var appModule = new AppModule();
+      var appModuleWrapper = new RnWrapperModule(appModule);
+      instance.RegisterModule(appModuleWrapper);
+
       instance.Start(settings);
 
       RootElement.Instance = instance;
