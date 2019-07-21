@@ -49,7 +49,7 @@ namespace AppCoreLib
         {
           int a = 4;
           a++;
-          callback(new string[] { "\"SUPER DUPER!\"" });
+          callback(new string[] { "[\"Item 1\", \"Item 2\", \"Item 3\"]" });
         }));
     }
   }
