@@ -8,7 +8,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
 {
   internal class CatalogItemEnumerator : IAsyncEnumerator<ICatalogItem>
   {
-    private readonly Catalog _catalog;
+    private readonly ICatalog _catalog;
     private readonly Func<ICatalogItem, Task> _processFunc;
     private readonly Queue<int> _idQueue;
     private ICatalogItem _currentCatalogItem;
@@ -16,7 +16,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// processFunc will be awaited after the item has been retrieved
     /// </summary>
-    public CatalogItemEnumerator(Catalog catalog, int rootCatalogItemId, Func<ICatalogItem, Task> processFunc)
+    public CatalogItemEnumerator(ICatalog catalog, int rootCatalogItemId, Func<ICatalogItem, Task> processFunc)
     {
       _catalog = catalog;
       _processFunc = processFunc;
@@ -29,6 +29,9 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     {
     }
 
+    /// <summary>
+    /// IAsyncEnumerator
+    /// </summary>
     public async Task<bool> MoveNext(CancellationToken cancellationToken)
     {
       if(_idQueue.Count == 0)
@@ -46,7 +49,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
         // Execute an action during for this iteration
         await _processFunc(_currentCatalogItem);
 
-        return _idQueue.Count > 0;
+        return true;
       }
     }
 

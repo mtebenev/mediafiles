@@ -7,7 +7,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
   /// <summary>
   /// Various utilities for working with catalog
   /// </summary>
-  internal static class CatalogItemUtils
+  public static class CatalogItemUtils
   {
     /// <summary>
     /// Use to load multiple catalog items at once
