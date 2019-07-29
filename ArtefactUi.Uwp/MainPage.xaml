@@ -9,6 +9,24 @@
   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
   <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition />
+      <RowDefinition />
+    </Grid.RowDefinitions>
 
+    <!-- Toolbar -->
+    <local:MainToolbarControl Grid.Row="0"></local:MainToolbarControl>
+    <!-- Main content -->
+    <Grid
+      Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+
+      <local:ExplorerControl
+        Grid.Column="0" />
+
+    </Grid>
   </Grid>
 </Page>
