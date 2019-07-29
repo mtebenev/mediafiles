@@ -15,7 +15,7 @@ using Mt.MediaMan.AppEngine.Search;
 
 namespace Mt.MediaMan.AppEngine.Cataloging
 {
-  public class Catalog : IDisposable
+  public class Catalog : ICatalog, IDisposable
   {
     private readonly IItemStorage _itemStorage;
     private readonly IStorageManager _storageManager;
@@ -101,7 +101,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
 
 
     /// <summary>
-    /// Loads an item with specified ID
+    /// ICatalog
     /// </summary>
     public async Task<ICatalogItem> GetItemByIdAsync(int itemId)
     {
