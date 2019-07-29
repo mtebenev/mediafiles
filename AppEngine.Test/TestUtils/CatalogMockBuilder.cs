@@ -1,6 +1,8 @@
 using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaMan.AppEngine.Scanning;
 using Newtonsoft.Json.Linq;
 using NSubstitute;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Mt.MediaMan.AppEngine.Test.TestUtils
@@ -68,10 +70,16 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
     private int _nextItemId;
     private string _catalogDef;
 
+    /// <summary>
+    /// Item name -> info part.
+    /// </summary>
+    private Dictionary<string, InfoPartVideo> _infoPartsVideo;
+
     public CatalogMockBuilder(string catalogDef)
     {
       this._nextItemId = 1;
       this._catalogDef = catalogDef;
+      this._infoPartsVideo = new Dictionary<string, InfoPartVideo>();
     }
 
     /// <summary>
@@ -92,6 +100,18 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
       return builder;
     }
 
+    /// <summary>
+    /// Add an info part to item with given name.
+    /// </summary>
+    public CatalogMockBuilder WithInfoPartVideo(string itemName, InfoPartVideo infoPart)
+    {
+      this._infoPartsVideo[itemName] = infoPart;
+      return this;
+    }
+
+    /// <summary>
+    /// Final call.
+    /// </summary>
     public ICatalog Build()
     {
       var mockCatalog = Substitute.For<ICatalog>();
@@ -103,14 +123,19 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
 
     private ICatalogItem DeserializeItemDef(ICatalog mockCatalog, JObject itemDef)
     {
+      // Base properties
       var mockCatalogItem = Substitute.For<ICatalogItem>();
       var itemId = this._nextItemId++;
       mockCatalogItem.CatalogItemId.Returns(itemId);
-      mockCatalogItem.Name.Returns((string)itemDef["name"]);
+      var itemName = (string)itemDef["name"];
+      mockCatalogItem.Name.Returns(itemName);
+
+      // Info parts
+      this.BuildItemInfoParts<InfoPartVideo>(mockCatalogItem, this._infoPartsVideo);
 
       mockCatalog.GetItemByIdAsync(itemId).Returns(mockCatalogItem);
 
-      if (itemDef["children"] != null)
+      if(itemDef["children"] != null)
       {
         var children = itemDef["children"]
         .Select(c => this.DeserializeItemDef(mockCatalog, (JObject)c))
@@ -119,6 +144,15 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
       }
 
       return mockCatalogItem;
+    }
+
+    private void BuildItemInfoParts<TInfoPart>(ICatalogItem catalogItem, Dictionary<string, TInfoPart> infoParts) where TInfoPart : InfoPartBase
+    {
+      TInfoPart ip;
+      if(infoParts.TryGetValue(catalogItem.Name, out ip))
+      {
+        catalogItem.GetInfoPartAsync<TInfoPart>().Returns(ip);
+      }
     }
   }
 }
