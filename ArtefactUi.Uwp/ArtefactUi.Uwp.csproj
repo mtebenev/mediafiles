@@ -7,8 +7,8 @@
     <ProjectGuid>{BBC1439C-6893-4687-ADF8-B18D62976541}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mt.MediaMan.Artefactory.Uwp</RootNamespace>
-    <AssemblyName>Artefactory.Uwp</AssemblyName>
+    <RootNamespace>Mt.MediaMan.ArtefactUi.Uwp</RootNamespace>
+    <AssemblyName>ArtefactUi.Uwp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
