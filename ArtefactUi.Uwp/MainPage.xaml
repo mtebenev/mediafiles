@@ -11,15 +11,18 @@
 
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition />
+      <RowDefinition
+        Height="Auto" />
       <RowDefinition
         Height="*" />
     </Grid.RowDefinitions>
 
     <components:MainToolbar
-      Grid.Row="0" />
+      Grid.Row="0"
+      AppContext="{x:Bind AppContext}" />
 
-    <Grid Grid.Row="1">
+    <Grid
+      Grid.Row="1">
       <Grid.ColumnDefinitions>
         <ColumnDefinition />
         <ColumnDefinition />
@@ -28,7 +31,8 @@
       <components:Explorer
         Grid.Column="0" />
       <components:MediaViewer
-        Grid.Column="1" />
+        Grid.Column="1"
+        MediaItem="{x:Bind AppContext.CurrentItem, Mode=OneWay}"/>
     </Grid>
   </Grid>
 </Page>

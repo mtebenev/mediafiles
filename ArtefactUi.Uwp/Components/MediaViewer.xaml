@@ -5,20 +5,21 @@
   xmlns:local="using:Mt.MediaMan.ArtefactUi.Uwp.Components"
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
   mc:Ignorable="d"
   d:DesignHeight="300"
   d:DesignWidth="400">
 
-  <Grid>
+  <Grid BorderThickness="1" BorderBrush="Red">
     <Grid.RowDefinitions>
-      <RowDefinition />
       <RowDefinition
         Height="*" />
     </Grid.RowDefinitions>
 
-    <Button
-      Grid.Row="0"
-      Click="HandleOpenClick">Open</Button>
+    <lvs:VideoView
+      x:Name="videoView"
+      Grid.Row="1">
+    </lvs:VideoView>
 
   </Grid>
 </UserControl>
