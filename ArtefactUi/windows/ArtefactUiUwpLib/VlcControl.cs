@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-
 using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
 using System;
@@ -10,9 +7,9 @@ using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace ExtLib
+namespace ArtefactUiUwpLib
 {
-  public sealed class CustomUserControlCS : Control
+  public sealed class VlcControl : Control
   {
     private LibVLC _libVLC;
     private MediaPlayer _mediaPlayer;
@@ -32,30 +29,30 @@ namespace ExtLib
       }
     }
 
-    static CustomUserControlCS()
+    static VlcControl()
     {
       LabelProperty = DependencyProperty.Register(
           nameof(Label),
           typeof(string),
-          typeof(CustomUserControlCS),
+          typeof(VlcControl),
           new PropertyMetadata(default(string))
           );
     }
 
-    public CustomUserControlCS()
+    public VlcControl()
     {
-      DefaultStyleKey = typeof(CustomUserControlCS);
+      DefaultStyleKey = typeof(VlcControl);
     }
 
     internal void InitPlayer()
     {
       Core.Initialize();
-      this.videoView = (VideoView) this.GetTemplateChild("videoView");
-      _libVLC = new LibVLC(this.videoView.SwapChainOptions);
+      videoView = (VideoView)GetTemplateChild("videoView");
+      _libVLC = new LibVLC(videoView.SwapChainOptions);
       _mediaPlayer = new MediaPlayer(_libVLC);
-      this.videoView.MediaPlayer = _mediaPlayer;
+      videoView.MediaPlayer = _mediaPlayer;
 
-      this.OpenMedia();
+      OpenMedia();
     }
 
     private async void OpenMedia()
@@ -73,7 +70,7 @@ namespace ExtLib
       var fileStream = await file.OpenReadAsync();
       var readStream = fileStream.AsStreamForRead();
       var media = new Media(_libVLC, readStream);
-      this._mediaPlayer.Play(media);
+      _mediaPlayer.Play(media);
 
     }
   }

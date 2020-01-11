@@ -1,3 +1,4 @@
+using ArtefactUiUwpLib;
 using Microsoft.ReactNative;
 
 namespace ArtefactUiCs
@@ -33,10 +34,8 @@ namespace ArtefactUiCs
             InstanceSettings.EnableDeveloperMenu = false;
 #endif
 
-      PackageProviders.Add(new Microsoft.ReactNative.Managed.ReactPackageProvider()); // Includes any modules in this project
-      PackageProviders.Add(new ExtLib.AppPackageProvider()); // Includes any modules in this project
-      //PackageProviders.Add(new SampleLibraryCS.ReactPackageProvider());
-      //PackageProviders.Add(new SampleLibraryCPP.ReactPackageProvider());
+      PackageProviders.Add(new Microsoft.ReactNative.Managed.ReactPackageProvider());
+      PackageProviders.Add(new ArtefactUiUwpLib.ReactPackageProvider());
 
       InitializeComponent();
     }

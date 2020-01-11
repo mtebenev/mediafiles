@@ -1,7 +1,3 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
-
-using System;
 using System.Diagnostics;
 
 using Windows.UI.Xaml;
@@ -9,18 +5,17 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Controls;
 
 using Microsoft.ReactNative.Managed;
-using Microsoft.ReactNative;
 
-namespace ExtLib
+namespace ArtefactUiUwpLib
 {
-  internal class CustomUserControlViewManagerCS : AttributedViewManager<CustomUserControlCS>
+  internal class VlcControlViewManager : AttributedViewManager<VlcControl>
   {
     public override FrameworkElement CreateView()
     {
-      var view = new CustomUserControlCS();
-      view.RegisterPropertyChangedCallback(CustomUserControlCS.LabelProperty, (obj, prop) =>
+      var view = new VlcControl();
+      view.RegisterPropertyChangedCallback(VlcControl.LabelProperty, (obj, prop) =>
       {
-        if(obj is CustomUserControlCS c)
+        if(obj is VlcControl c)
         {
           LabelChanged(c, c.Label);
         }
@@ -30,20 +25,20 @@ namespace ExtLib
     }
 
     [ViewManagerProperty("label")]
-    public void SetLabel(CustomUserControlCS view, string value)
+    public void SetLabel(VlcControl view, string value)
     {
       if(null != value)
       {
-        view.SetValue(CustomUserControlCS.LabelProperty, value);
+        view.SetValue(VlcControl.LabelProperty, value);
       }
       else
       {
-        view.ClearValue(CustomUserControlCS.LabelProperty);
+        view.ClearValue(VlcControl.LabelProperty);
       }
     }
 
     [ViewManagerProperty("color")]
-    public void SetColor(CustomUserControlCS view, Brush value)
+    public void SetColor(VlcControl view, Brush value)
     {
       if(null != value)
       {
@@ -56,7 +51,7 @@ namespace ExtLib
     }
 
     [ViewManagerProperty("backgroundColor")]
-    public void SetBackgroundColor(CustomUserControlCS view, Brush value)
+    public void SetBackgroundColor(VlcControl view, Brush value)
     {
       if(null != value)
       {
@@ -69,7 +64,7 @@ namespace ExtLib
     }
 
     [ViewManagerCommand]
-    public void CustomCommand(CustomUserControlCS view, string arg)
+    public void CustomCommand(VlcControl view, string arg)
     {
       Debug.WriteLine($"{Name}.{nameof(CustomCommand)}({view.Tag}, \"{arg}\")");
       view.InitPlayer();
@@ -77,6 +72,6 @@ namespace ExtLib
     }
 
     [ViewManagerExportedDirectEventTypeConstant]
-    public ViewManagerEvent<CustomUserControlCS, string> LabelChanged;
+    public ViewManagerEvent<VlcControl, string> LabelChanged;
   }
 }

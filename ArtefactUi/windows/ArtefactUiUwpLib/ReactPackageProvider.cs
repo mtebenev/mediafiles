@@ -1,9 +1,9 @@
 using Microsoft.ReactNative;
 using Microsoft.ReactNative.Managed;
 
-namespace ExtLib
+namespace ArtefactUiUwpLib
 {
-  public class AppPackageProvider : IReactPackageProvider
+  public class ReactPackageProvider : IReactPackageProvider
   {
     public void CreatePackage(IReactPackageBuilder packageBuilder)
     {

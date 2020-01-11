@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {NativeModules, NativeEventEmitter, requireNativeComponent, findNodeHandle} from 'react-native';
 //let VideoPlayer = requireNativeComponent('VideoPlayer');
-const CustomUserControlCS = requireNativeComponent('CustomUserControlCS');
+const VlcControl = requireNativeComponent('VlcControl');
 
 import {
   Header,
@@ -36,16 +36,16 @@ export class App extends React.Component {
           <Button title="TEST" onPress={() => {
             // Invoke component command
             const tag = findNodeHandle(this._ctrlRef);
-            UIManager.dispatchViewManagerCommand(tag, UIManager.getViewManagerConfig('CustomUserControlCS').Commands.CustomCommand, ['some_arg']);
+            UIManager.dispatchViewManagerCommand(tag, UIManager.getViewManagerConfig('VlcControl').Commands.CustomCommand, ['some_arg']);
 
 
           }}>
           </Button>
         </View>
         <View style={{ backgroundColor: 'Gray', flex: 1 }}>
-          <CustomUserControlCS
+          <VlcControl
             style={styles.customcontrol}
-            label="CustomUserControlCS!"
+            label="VlcControl!"
             ref={(ref) => {
               this._ctrlRef = ref;
             }}

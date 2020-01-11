@@ -120,10 +120,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AppPackageProvider.cs" />
-    <Compile Include="Class1.cs" />
-    <Compile Include="CustomUserControlCS.cs" />
-    <Compile Include="CustomUserControlViewManagerCS.cs" />
+    <Compile Include="ReactPackageProvider.cs" />
+    <Compile Include="VlcControl.cs" />
+    <Compile Include="VlcControlViewManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\ArtefactUiUwpLib.rd.xml" />
   </ItemGroup>

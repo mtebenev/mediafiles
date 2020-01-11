@@ -1,20 +1,21 @@
 <ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:ExtLib"
-    xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
-  >
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:local="using:ArtefactUiUwpLib"
+  xmlns:lvs="using:LibVLCSharp.Platforms.UWP">
 
-    <Style TargetType="local:CustomUserControlCS" >
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:CustomUserControlCS">
+  <Style
+    TargetType="local:VlcControl">
+    <Setter
+      Property="Template">
+      <Setter.Value>
+        <ControlTemplate
+          TargetType="local:VlcControl">
           <lvs:VideoView
-            x:Name="videoView"
-            >
+            x:Name="videoView">
           </lvs:VideoView>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 </ResourceDictionary>
