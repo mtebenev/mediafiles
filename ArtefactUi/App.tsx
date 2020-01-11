@@ -1,13 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React, {Fragment} from 'react';
 import {
   SafeAreaView,
@@ -16,7 +6,13 @@ import {
   View,
   Text,
   StatusBar,
+  Button,
+  Alert,
+  UIManager
 } from 'react-native';
+import {NativeModules, NativeEventEmitter, requireNativeComponent, findNodeHandle} from 'react-native';
+//let VideoPlayer = requireNativeComponent('VideoPlayer');
+const CustomUserControlCS = requireNativeComponent('CustomUserControlCS');
 
 import {
   Header,
@@ -26,55 +22,47 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const App = () => {
-  return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
-  );
-};
+export class App extends React.Component {
+  private _ctrlRef: any;
+
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  public render() {
+    return (
+      <Fragment>
+        <View style={styles.body}>
+          <Button title="TEST" onPress={() => {
+            // Invoke component command
+            const tag = findNodeHandle(this._ctrlRef);
+            UIManager.dispatchViewManagerCommand(tag, UIManager.getViewManagerConfig('CustomUserControlCS').Commands.CustomCommand, ['some_arg']);
+
+
+          }}>
+          </Button>
+        </View>
+        <View style={{ backgroundColor: 'Gray', flex: 1 }}>
+          <CustomUserControlCS
+            style={styles.customcontrol}
+            label="CustomUserControlCS!"
+            ref={(ref) => {
+              this._ctrlRef = ref;
+            }}
+          />
+        </View>
+      </Fragment>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
+  customcontrol: {
+    color: '#333333',
+    backgroundColor: '#006666',
+    flex: 1,
+    margin: 10,
+  },
   scrollView: {
     backgroundColor: Colors.lighter,
   },

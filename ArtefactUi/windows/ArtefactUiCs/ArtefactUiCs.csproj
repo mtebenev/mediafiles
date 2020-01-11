@@ -149,11 +149,18 @@
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.3.191129002</Version>
     </PackageReference>
+    <PackageReference Include="VideoLAN.LibVLC.UWP">
+      <Version>3.2.0</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\node_modules\react-native-windows\Microsoft.ReactNative\Microsoft.ReactNative.vcxproj">
       <Project>{f7d32bd0-2749-483e-9a0d-1635ef7e3136}</Project>
       <Name>Microsoft.ReactNative</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ArtefactUiUwpLib\ArtefactUiUwpLib.csproj">
+      <Project>{f38157a2-fd34-40ff-ba12-2a3fcb7d85f9}</Project>
+      <Name>ArtefactUiUwpLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\node_modules\react-native-windows\Microsoft.ReactNative.SharedManaged\Microsoft.ReactNative.SharedManaged.projitems" Label="Shared" />
@@ -161,15 +168,13 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-
   <PropertyGroup>
     <BundleCommand>
       cd $(SolutionDir)..
       react-native bundle --platform windows --entry-file index.js --bundle-output windows/$(SolutionName)/Bundle/index.windows.bundle --assets-dest windows/$(SolutionName)/Bundle
     </BundleCommand>
   </PropertyGroup>
-  <Import Project="..\..\node_modules\react-native-windows\PropertySheets\Bundle.targets"/>
-
+  <Import Project="..\..\node_modules\react-native-windows\PropertySheets\Bundle.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
