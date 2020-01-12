@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, { Fragment } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -10,7 +10,7 @@ import {
   Alert,
   UIManager
 } from 'react-native';
-import {NativeModules, NativeEventEmitter, requireNativeComponent, findNodeHandle} from 'react-native';
+import { NativeModules, NativeEventEmitter, requireNativeComponent, findNodeHandle } from 'react-native';
 //let VideoPlayer = requireNativeComponent('VideoPlayer');
 const VlcControl = requireNativeComponent('VlcControl');
 
@@ -22,12 +22,16 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-export class App extends React.Component {
+interface IState {
+  result: string;
+}
+
+export class App extends React.Component<{}, IState> {
   private _ctrlRef: any;
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { result: '' };
   }
   public render() {
     return (
@@ -41,6 +45,24 @@ export class App extends React.Component {
 
           }}>
           </Button>
+          <Button title="TEST ALERT" onPress={() => {
+            console.error('TEETSTSETSET');
+            Alert.alert('TITLE', `TEST ALERT`);
+            this.setState({...this.state, result: 'BBBBBBB'});
+          }}>
+          </Button>
+          <Button title="TEST2" onPress={() => {
+            NativeModules.FsModule.getContents().then((r) => {
+              this.setState({...this.state, result: JSON.stringify(r)});
+              // Alert.alert('TITLE', `GOT SOME RESULT`);
+              //Alert.alert('TITLE', `AFTER CALL`);
+            });
+          }}>
+
+          </Button>
+          <View>
+            <Text>{this.state.result}</Text>
+          </View>
         </View>
         <View style={{ backgroundColor: 'Gray', flex: 1 }}>
           <VlcControl

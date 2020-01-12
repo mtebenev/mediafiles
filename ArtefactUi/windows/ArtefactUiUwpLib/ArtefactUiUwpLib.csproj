@@ -120,6 +120,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="FsModule.cs" />
     <Compile Include="ReactPackageProvider.cs" />
     <Compile Include="VlcControl.cs" />
     <Compile Include="VlcControlViewManager.cs" />
