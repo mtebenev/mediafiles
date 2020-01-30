@@ -17,12 +17,18 @@
     </Grid.RowDefinitions>
 
     <Grid
+      Grid.Row="0">
+      <Button
+        Click="HandleOpenClick">Open Folder</Button>
+      
+    </Grid>
+    <Grid
       Grid.Row="1">
       <Grid.ColumnDefinitions>
         <ColumnDefinition />
         <ColumnDefinition />
       </Grid.ColumnDefinitions>
-      <mv:ExplorerPane
+      <mv:ExplorerPane BoundProp="{x:Bind BoundPropSource, Mode=OneWay}"
         Grid.Column="0">
       </mv:ExplorerPane>
       <mv:ViewerPane

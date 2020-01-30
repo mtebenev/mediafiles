@@ -10,6 +10,10 @@
   d:DesignWidth="400">
 
   <Grid>
-    <TextBlock>I am explorer pane</TextBlock>
+    <StackPanel>
+      <TextBlock>I am explorer pane</TextBlock>
+      <TextBlock
+        Text="{x:Bind BoundProp, Mode=OneWay}"></TextBlock>
+    </StackPanel>
   </Grid>
 </UserControl>
