@@ -18,8 +18,9 @@ import {
   StatusBar,
   Button,
   NativeModules,
-  Alert
+  Alert,
 } from 'react-native';
+import {MediaExplorerView} from './app/media-explorer/media-explorer.view';
 
 import {
   Header,
@@ -44,7 +45,7 @@ const App = () => {
                  Alert.alert(`Restult: ${r}`);
                });
             }}/>
-
+            <MediaExplorerView/>
           </View>
         </ScrollView>
       </SafeAreaView>
