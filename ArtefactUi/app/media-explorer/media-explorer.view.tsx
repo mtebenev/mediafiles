@@ -3,9 +3,12 @@ import {
   Text, FlatList, TouchableOpacity, Alert,
 } from 'react-native';
 import { MockMediaExplorerModule, IMediaLocation } from './media-explorer.mock';
+import { SelectableList } from '../selectable-list.component';
 
 interface IState {
   mediaLocations: IMediaLocation[];
+  folders: string[];
+  files: string[];
   selectedLocationId?: string;
 }
 
@@ -13,7 +16,11 @@ export class MediaExplorerView extends React.Component<{}, IState> {
   private readonly mediaExplorerModule = new MockMediaExplorerModule();
   constructor(props: {}) {
     super(props);
-    this.state = { mediaLocations: [] };
+    this.state = {
+      mediaLocations: [],
+      folders: ['folder 1', 'folder 2', 'folder 3'],
+      files: ['file 1', 'file 2', 'file 3']
+    };
   }
 
   public async componentDidMount(): Promise<void> {
@@ -25,68 +32,48 @@ export class MediaExplorerView extends React.Component<{}, IState> {
       <>
         <Text>I am explorer view</Text>
         <Text>Media locations:</Text>
-        <FlatList
+        <SelectableList
           data={this.state.mediaLocations}
           renderItem={({ item }) => (
-            <MediaLocationListItem
-              location={item}
-              isSelected={this.state.selectedLocationId === item.id}
-              onSelect={(id) => {
-                this.setState({ ...this.state, selectedLocationId: id });
-              }}
-            />
+            <MediaLocationListItem location={item} />
           )}
           keyExtractor={item => item.id.toString()}
-          extraData={this.state.selectedLocationId}
-        >
-        </FlatList>
+        />
         <Text>Folders</Text>
-        <FlatList
-          data={this.state.mediaLocations}
+        <SelectableList
+          data={this.state.folders}
           renderItem={({ item }) => (
-            <MediaLocationListItem
-              location={item}
-              isSelected={this.state.selectedLocationId === item.id}
-              onSelect={(id) => {
-                this.setState({ ...this.state, selectedLocationId: id });
-              }}
-            />
+            <FolderListItem folder={item} />
           )}
-          keyExtractor={item => item.id.toString()}
-          extraData={this.state.selectedLocationId}
-        >
-        </FlatList>
+          keyExtractor={item => item}
+        />
         <Text>Files</Text>
-        <FlatList
-          data={this.state.mediaLocations}
+        <SelectableList
+          data={this.state.files}
           renderItem={({ item }) => (
-            <MediaLocationListItem
-              location={item}
-              isSelected={this.state.selectedLocationId === item.id}
-              onSelect={(id) => {
-                this.setState({ ...this.state, selectedLocationId: id });
-              }}
-            />
+            <FileListItem file={item} />
           )}
-          keyExtractor={item => item.id.toString()}
-          extraData={this.state.selectedLocationId}
-        >
-        </FlatList>
+          keyExtractor={item => item}
+        />
       </>
     )
   }
 }
 
 const MediaLocationListItem: React.FC<{
-  location: IMediaLocation,
-  isSelected: boolean,
-  onSelect: (id: string) => void
+  location: IMediaLocation
 }> = props => (
-  <TouchableOpacity
-    onPress={() => {
-      props.onSelect(props.location.id);
-    }}
-    style={{ backgroundColor: props.isSelected ? '#6e3b6e' : '#f9c2ff' }}>
-    <Text>{props.location.name}</Text>
-  </TouchableOpacity>
+  <Text>{props.location.name}</Text>
+);
+
+const FolderListItem: React.FC<{
+  folder: string
+}> = props => (
+  <Text>{props.folder}</Text>
+);
+
+const FileListItem: React.FC<{
+  file: string
+}> = props => (
+  <Text>{props.file}</Text>
 );
