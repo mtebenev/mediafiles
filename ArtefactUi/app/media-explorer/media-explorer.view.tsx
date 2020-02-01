@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { ComponentType } from 'react';
 import {
-  Text, FlatList, TouchableOpacity, Alert,
+  Text
 } from 'react-native';
-import { MockMediaExplorerModule, IMediaLocation } from './media-explorer.mock';
-import { SelectableList } from '../selectable-list.component';
+import { MockMediaExplorerModule, IMediaLocation, IMediaExplorerModule } from './media-explorer.mock';
+import { SelectableList } from '../common/selectable-list.component';
+import { withDataConnector, IDataConnector } from '../common/data-connector';
 
 interface IState {
   mediaLocations: IMediaLocation[];
@@ -13,9 +14,20 @@ interface IState {
 }
 
 export class MediaExplorerView extends React.Component<{}, IState> {
-  private readonly mediaExplorerModule = new MockMediaExplorerModule();
+  private readonly mediaExplorerModule: IMediaExplorerModule;
+  private readonly mediaExplorerConnector: IDataConnector<IMediaLocation[]>;
+
   constructor(props: {}) {
     super(props);
+
+    this.mediaExplorerModule = new MockMediaExplorerModule();
+    this.mediaExplorerConnector = {
+      fetch: () =>  {
+        return this.mediaExplorerModule.getMediaLocations();
+      }
+    }
+
+
     this.state = {
       mediaLocations: [],
       folders: ['folder 1', 'folder 2', 'folder 3'],
@@ -32,13 +44,7 @@ export class MediaExplorerView extends React.Component<{}, IState> {
       <>
         <Text>I am explorer view</Text>
         <Text>Media locations:</Text>
-        <SelectableList
-          data={this.state.mediaLocations}
-          renderItem={({ item }) => (
-            <MediaLocationListItem location={item} />
-          )}
-          keyExtractor={item => item.id.toString()}
-        />
+        <MediaLocationList connector={this.mediaExplorerConnector} />
         <Text>Folders</Text>
         <SelectableList
           data={this.state.folders}
@@ -59,6 +65,21 @@ export class MediaExplorerView extends React.Component<{}, IState> {
     )
   }
 }
+
+const MediaLocationListImpl: React.FC<{
+  connector: IDataConnector<IMediaLocation[]>;
+  data?: IMediaLocation[];
+}> = props => (
+  <SelectableList
+    data={props.data}
+    renderItem={({ item }) => (
+      <MediaLocationListItem location={item} />
+    )}
+    keyExtractor={item => item.id.toString()}
+  />
+);
+
+const MediaLocationList = withDataConnector()(MediaLocationListImpl);
 
 const MediaLocationListItem: React.FC<{
   location: IMediaLocation

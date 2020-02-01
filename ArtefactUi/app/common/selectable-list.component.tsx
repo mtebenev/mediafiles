@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, FlatList, ListRenderItem, TouchableOpacity, Alert, ListRenderItemInfo } from 'react-native';
+import { FlatList, ListRenderItem, TouchableOpacity, ListRenderItemInfo } from 'react-native';
 
 interface IProps<TItem> {
   data: TItem[];
@@ -35,7 +35,7 @@ export class SelectableList<T> extends React.Component<IProps<T>, IState> {
                 renderItem={this.props.renderItem}
                 isSelected={this.state.selectedItemId === this.props.keyExtractor(item.item, item.index)}
                 onSelect={item => {
-                  const itemId = this.props.keyExtractor(item, 0);
+                  const itemId = this.props.keyExtractor(item.item, item.index);
                   this.setState({ ...this.state, selectedItemId: itemId });
                 }}
               />
@@ -47,17 +47,17 @@ export class SelectableList<T> extends React.Component<IProps<T>, IState> {
   }
 }
 
-interface IItemProps {
-  item: ListRenderItemInfo<any>;
-  renderItem: ListRenderItem<any>;
+interface IItemProps<TItem> {
+  item: ListRenderItemInfo<TItem>;
+  renderItem: ListRenderItem<TItem>;
   isSelected: boolean;
-  onSelect: (item: any) => void;
+  onSelect: (item: ListRenderItemInfo<TItem>) => void;
 }
 
-const SelectableItem: React.FC<IItemProps> = props => (
+const SelectableItem = <T extends {}>(props: IItemProps<T>) => (
   <TouchableOpacity
     onPress={() => {
-      props.onSelect(props.item.item);
+      props.onSelect(props.item);
     }}
     style={{ backgroundColor: props.isSelected ? '#6e3b6e' : '#f9c2ff' }}
   >
