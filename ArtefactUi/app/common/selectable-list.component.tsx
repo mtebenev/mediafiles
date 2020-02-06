@@ -5,6 +5,7 @@ interface IProps<TItem> {
   data: TItem[];
   renderItem: ListRenderItem<TItem>;
   keyExtractor: (item: TItem, index: number) => string;
+  onSelectionChanged: (item: TItem) => void;
 }
 
 interface IState {
@@ -37,6 +38,7 @@ export class SelectableList<T> extends React.Component<IProps<T>, IState> {
                 onSelect={item => {
                   const itemId = this.props.keyExtractor(item.item, item.index);
                   this.setState({ ...this.state, selectedItemId: itemId });
+                  this.props.onSelectionChanged(item.item);
                 }}
               />
             )}
