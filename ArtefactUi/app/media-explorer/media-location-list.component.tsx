@@ -2,13 +2,12 @@ import React, { ComponentType } from 'react';
 import {
   Text
 } from 'react-native';
-import { IDataConnector, withDataConnector } from '../common/data-connector';
+import { withDataConnectorProps } from '../common/data-connector';
 import { IMediaLocation } from './media-explorer.mock';
 import { SelectableList } from '../common/selectable-list.component';
 
 interface IProps {
-  connector: IDataConnector<IMediaLocation[]>;
-  data?: IMediaLocation[];
+  data: IMediaLocation[];
   onSelectionChanged: (mediaLocation: IMediaLocation) => void;
 }
 
@@ -31,4 +30,4 @@ const MediaLocationListItem: React.FC<{
   <Text>{props.location.name}</Text>
 );
 
-export const MediaLocationList = withDataConnector()(MediaLocationListImpl);
+export const MediaLocationList = withDataConnectorProps(MediaLocationListImpl);

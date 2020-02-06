@@ -28,7 +28,6 @@ export class MediaExplorerView extends React.Component<{}, IState> {
       }
     }
 
-
     this.state = {
       folders: ['folder 1', 'folder 2', 'folder 3'],
       files: ['file 1', 'file 2', 'file 3']
@@ -45,7 +44,7 @@ export class MediaExplorerView extends React.Component<{}, IState> {
         <Text>Media locations:</Text>
         <MediaLocationList
           connector={this.mediaExplorerConnector}
-          onSelectionChanged={(ml) => {
+          onSelectionChanged={(ml: IMediaLocation) => {
             this.setState({...this.state, selectedMediaLocation: ml});
           }}
         />
