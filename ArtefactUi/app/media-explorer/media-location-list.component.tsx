@@ -17,7 +17,7 @@ const MediaLocationListImpl: React.FC<IProps> = props => (
     renderItem={({ item }) => (
       <MediaLocationListItem location={item} />
     )}
-    keyExtractor={item => item.id.toString()}
+    keyExtractor={item => item.path.toString()}
     onSelectionChanged={(item) => {
       props.onSelectionChanged(item);
     }}
@@ -30,4 +30,5 @@ const MediaLocationListItem: React.FC<{
   <Text>{props.location.name}</Text>
 );
 
-export const MediaLocationList = withDataConnectorProps(MediaLocationListImpl);
+//export const MediaLocationList = withDataConnectorProps(MediaLocationListImpl);
+export const MediaLocationList = MediaLocationListImpl;
