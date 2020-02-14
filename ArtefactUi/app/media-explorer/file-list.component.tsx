@@ -1,13 +1,13 @@
 import React, { } from 'react';
 import {
-  Text, Alert
+  Text
 } from 'react-native';
 import { IDirectoryContent, IFileSystemItem } from './media-explorer.mock';
 import { SelectableList } from '../common/selectable-list.component';
 
 interface IProps {
   directory: IDirectoryContent;
-  //onSelectionChanged: (mediaLocation: IMediaLocation) => void;
+  onSelectionChanged: (fsItem: IFileSystemItem) => void;
 }
 
 const FileListImpl: React.FC<IProps> = props => (
@@ -18,7 +18,7 @@ const FileListImpl: React.FC<IProps> = props => (
     )}
     keyExtractor={item => item.name}
     onSelectionChanged={(item) => {
-      Alert.alert('File changed');
+      props.onSelectionChanged(item);
     }}
   />
 );

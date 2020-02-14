@@ -1,6 +1,6 @@
 import React, { ComponentType } from 'react';
 import {
-  Text, Alert, Button, NativeModules
+  Text, Alert, Button, NativeModules, ViewProps, View
 } from 'react-native';
 import { MockMediaExplorerModule, IMediaLocation, IMediaExplorerModule, IFileSystemItem, IDirectoryContent } from './media-explorer.mock';
 import { IDataConnector } from '../common/data-connector';
@@ -14,15 +14,19 @@ interface IState {
   selectedFile?: IFileSystemItem;
 }
 
-export class MediaExplorerView extends React.Component<{}, IState> {
+type IProps = {
+  onFileSelected: (fsItem: IFileSystemItem) => void;
+} & ViewProps;
+
+export class MediaExplorerView extends React.Component<IProps, IState> {
   private readonly mediaExplorerModule: IMediaExplorerModule;
   private readonly realModule: IMediaExplorerModule;
   private readonly mediaExplorerConnector: IDataConnector<IMediaLocation[]>;
   private readonly folderConnector: IDataConnector<IDirectoryContent>;
 
-  constructor(props: {}) {
+  constructor(props: IProps) {
     super(props);
-    this.state = {mediaLocations: []};
+    this.state = { mediaLocations: [] };
     this.realModule = NativeModules.MediaExplorerModule;
 
     this.mediaExplorerModule = new MockMediaExplorerModule();
@@ -43,7 +47,7 @@ export class MediaExplorerView extends React.Component<{}, IState> {
 
   public render(): React.ReactNode {
     return (
-      <>
+      <View {...this.props}>
         <Text>I am explorer view</Text>
         <Button title="Add Location"
           onPress={() => {
@@ -70,11 +74,14 @@ export class MediaExplorerView extends React.Component<{}, IState> {
             />
             <Text>Files</Text>
             <FileList
+              onSelectionChanged={(fsItem) => {
+                this.props.onFileSelected(fsItem);
+              }}
               directory={this.state.currentDirectory}
             />
           </>
         )}
-      </>
+      </View>
     )
   }
 
@@ -89,6 +96,6 @@ export class MediaExplorerView extends React.Component<{}, IState> {
   private async loadLocations(): Promise<void> {
     const locations = await this.realModule.getMediaLocations();
     Alert.alert(JSON.stringify(locations));
-    this.setState({...this.state, mediaLocations: locations});
+    this.setState({ ...this.state, mediaLocations: locations });
   }
 }

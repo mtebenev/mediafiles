@@ -8,88 +8,56 @@
  * @format
  */
 
-import React, {Fragment} from 'react';
+import React, { useState } from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
-  Text,
-  StatusBar,
   Button,
-  NativeModules,
-  Alert,
+  Text,
 } from 'react-native';
-import {MediaExplorerView} from './app/media-explorer/media-explorer.view';
 
 import {
-  Header,
-  LearnMoreLinks,
   Colors,
-  DebugInstructions,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import { MediaViewerView } from './app/media-viewer/media-viewer.view';
+import { MediaExplorerView } from './app/media-explorer/media-explorer.view';
 
 const App = () => {
+  const [selectedFileName, setSelectedFileName] = useState<string | undefined>();
   return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          <View style={styles.body}>
-            <Button title="Test" onPress={() => {
-               NativeModules.MediaExplorerModule.getFolders().then(r => {
-                 Alert.alert(`Restult: ${r}`);
-               });
-            }}/>
-            <MediaExplorerView/>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
+    <View style={styles.body}>
+      <View style={styles.mainContainer}>
+        <MediaExplorerView
+          style={styles.explorerPane}
+          onFileSelected={(fsItem) => {
+            setSelectedFileName(fsItem.path);
+          }}
+        />
+        <MediaViewerView style={styles.viewerPane} filePath={selectedFileName} />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
   body: {
     backgroundColor: Colors.white,
+    flex: 1
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  mainContainer: {
+    flexDirection: 'row',
+    flex: 1,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
+  explorerPane: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'red',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
+  viewerPane: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'red',
+  }
 });
 
 export default App;
