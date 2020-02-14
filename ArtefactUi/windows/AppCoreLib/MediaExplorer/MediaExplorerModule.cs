@@ -63,15 +63,12 @@ namespace Mt.MediaMan.ArtefactUi.AppCoreLib.MediaExplorer
     }
 
     [ReactMethod("getRoot")]
-    public void GetRoot(string name, IReactPromise<DirectoryContentDto> promise)
+    public async void GetRoot(string name, IReactPromise<DirectoryContentDto> promise)
     {
       var mediaLocation = _mediaLocations.Find(ml => ml.StorageFolder.Name == name);
       if(mediaLocation != null)
       {
-        var operation = mediaLocation.StorageFolder.GetItemsAsync();
-        operation.AsTask().Wait();
-
-        var fsItems = operation.GetResults();
+        var fsItems = await mediaLocation.StorageFolder.GetItemsAsync();
         var items = fsItems.Select(fsi => new FileSystemItemDto
         {
           name = fsi.Name,
