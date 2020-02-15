@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
+using Mt.MediaMan.ClientApp.Cli.Configuration;
 using NLog.Extensions.Logging;
 
 namespace Mt.MediaMan.ClientApp.Cli

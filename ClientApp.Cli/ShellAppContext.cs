@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Ebooks;
+using Mt.MediaMan.ClientApp.Cli.Configuration;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -53,7 +54,7 @@ namespace Mt.MediaMan.ClientApp.Cli
         var storageConfiguration = new StorageConfiguration();
         EbooksModule.CreateStorageConfiguration(storageConfiguration);
 
-        var catalog = Catalog.CreateCatalog(catalogName, _appSettings.Catalogs[catalogName]);
+        var catalog = Catalog.CreateCatalog(catalogName, _appSettings.Catalogs[catalogName].ConnectionString);
         await catalog.OpenAsync(storageConfiguration);
 
         // Close current catalog
@@ -82,7 +83,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       _catalog = null;
 
       // Reset storage
-      await Catalog.ResetCatalogStorage(catalogName, _appSettings.Catalogs[catalogName]);
+      await Catalog.ResetCatalogStorage(catalogName, _appSettings.Catalogs[catalogName].ConnectionString);
       await OpenCatalog(catalogName);
     }
   }

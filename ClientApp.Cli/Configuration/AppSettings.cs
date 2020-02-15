@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaMan.ClientApp.Cli.Configuration
 {
   /// <summary>
   /// Serialized app settings
@@ -15,6 +15,6 @@ namespace Mt.MediaMan.ClientApp.Cli
     /// <summary>
     /// Catalog name -> connection string
     /// </summary>
-    public Dictionary<string, string> Catalogs { get; set; }
+    public Dictionary<string, CatalogSettings> Catalogs { get; set; }
   }
 }
