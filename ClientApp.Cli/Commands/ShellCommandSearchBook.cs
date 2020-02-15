@@ -5,7 +5,7 @@ using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Ebooks.Commands;
 using Mt.MediaMan.AppEngine.Ebooks.Storage;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaMan.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Searches for books in catalog
@@ -27,7 +27,7 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      if(!String.IsNullOrWhiteSpace(Query))
+      if(!string.IsNullOrWhiteSpace(Query))
         throw new NotImplementedException();
 
       var command = new CommandSearchBook();

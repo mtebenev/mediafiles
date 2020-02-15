@@ -5,7 +5,7 @@ using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Scanning;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaMan.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Retrieves item info by name or id

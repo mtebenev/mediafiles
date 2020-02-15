@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Commands;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaMan.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Scans new files to catalog
@@ -29,7 +29,7 @@ namespace Mt.MediaMan.ClientApp.Cli
 
       if(item == null)
         throw new ArgumentException("Cannot load catalog item", nameof(ItemNameOrId));
-      
+
       _shellAppContext.CurrentItem = item;
 
       return 0;

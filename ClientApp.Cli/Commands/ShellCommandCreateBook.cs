@@ -4,7 +4,7 @@ using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Ebooks.Commands;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaMan.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Creates a single ebook record

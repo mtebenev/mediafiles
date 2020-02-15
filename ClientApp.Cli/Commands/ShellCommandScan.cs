@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Commands;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaMan.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Scans new files to catalog
@@ -29,7 +29,7 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      if(String.IsNullOrWhiteSpace(PathAlias))
+      if(string.IsNullOrWhiteSpace(PathAlias))
         throw new InvalidOperationException("Please provide scan path alias");
 
       var scanPath = PathAlias.Equals("video", StringComparison.InvariantCultureIgnoreCase)

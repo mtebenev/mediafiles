@@ -5,7 +5,7 @@ using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Common;
 using Mt.MediaMan.AppEngine.Tools;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaMan.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Finds duplicate items in catalog
