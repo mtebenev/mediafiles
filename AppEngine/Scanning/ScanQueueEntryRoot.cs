@@ -52,8 +52,11 @@ namespace Mt.MediaMan.AppEngine.Scanning
 
       foreach(var entry in entries)
       {
-        var childEntry = new ScanQueueEntryFileSystem(_scanContext, _catalogItemId.Value, _fileStore, entry);
-        scanQueue.Enqueue(childEntry);
+        if(!this._scanContext.ScanConfiguration.IsIgnoredEntry(entry.Name))
+        {
+          var childEntry = new ScanQueueEntryFileSystem(_scanContext, _catalogItemId.Value, _fileStore, entry);
+          scanQueue.Enqueue(childEntry);
+        }
       }
     }
 

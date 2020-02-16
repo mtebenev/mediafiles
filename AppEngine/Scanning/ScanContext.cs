@@ -8,7 +8,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
   internal class ScanContext : IScanContext
   {
 
-    public ScanContext(ScanConfiguration scanConfiguration, IItemStorage itemStorage, LuceneIndexManager indexManager, ILoggerFactory loggerFactory, IProgressOperation progressOperation)
+    public ScanContext(IScanConfiguration scanConfiguration, IItemStorage itemStorage, LuceneIndexManager indexManager, ILoggerFactory loggerFactory, IProgressOperation progressOperation)
     {
       ScanConfiguration = scanConfiguration;
       ItemStorage = itemStorage;
@@ -20,7 +20,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
     /// <summary>
     /// IScanContext
     /// </summary>
-    public ScanConfiguration ScanConfiguration { get; }
+    public IScanConfiguration ScanConfiguration { get; }
 
     /// <summary>
     /// IScanContext

@@ -11,7 +11,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
   internal interface IScanContext
   {
     LuceneIndexManager IndexManager { get; }
-    ScanConfiguration ScanConfiguration { get; }
+    IScanConfiguration ScanConfiguration { get; }
     IItemStorage ItemStorage { get; }
     ILogger Logger { get; }
     IProgressOperation ProgressOperation { get; }
