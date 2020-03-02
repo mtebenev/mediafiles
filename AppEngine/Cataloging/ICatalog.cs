@@ -9,6 +9,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
   public interface ICatalog : IDisposable
   {
     /// <summary>
+    /// The root catalog item.
+    /// </summary>
+    ICatalogItem RootItem { get; }
+
+    /// <summary>
     /// Loads an item with specified ID
     /// </summary>
     Task<ICatalogItem> GetItemByIdAsync(int itemId);

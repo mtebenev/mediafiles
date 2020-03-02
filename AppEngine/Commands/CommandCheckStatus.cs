@@ -41,7 +41,7 @@ namespace Mt.MediaMan.AppEngine.Commands
   /// </summary>
   public class CommandCheckStatus
   {
-    public async Task<IList<CheckStatusResult>> Execute(Catalog catalog, string fsPath)
+    public async Task<IList<CheckStatusResult>> ExecuteAsync(ICatalog catalog, string fsPath)
     {
       var partsEnumerator = new PathPartsEnumerator(fsPath);
 
@@ -59,7 +59,7 @@ namespace Mt.MediaMan.AppEngine.Commands
       }
 
       var partIdx = 0;
-      while(rootChildren != null && partIdx < partsEnumerator.Parts.Length)
+      while(catalogItem != null && partIdx < partsEnumerator.Parts.Length)
       {
         var children = await catalogItem.GetChildrenAsync();
         catalogItem = children.FirstOrDefault(c => c.Name == partsEnumerator.Parts[partIdx]);
@@ -67,15 +67,18 @@ namespace Mt.MediaMan.AppEngine.Commands
       }
 
       // Enumerate
-      var walker = CatalogTreeWalker.CreateDefaultWalker(catalog, catalogItem.CatalogItemId);
-      var catalogItems = await walker.ToList();
       var result = new List<CheckStatusResult>();
-      foreach(var ci in catalogItems)
+      if(catalogItem != null)
       {
-        if(!ci.IsDirectory)
+        var walker = CatalogTreeWalker.CreateDefaultWalker(catalog, catalogItem.CatalogItemId);
+        var catalogItems = await walker.ToList();
+        foreach(var ci in catalogItems)
         {
-          var itemResult = await this.CreateItemResult(ci);
-          result.Add(itemResult);
+          if(!ci.IsDirectory)
+          {
+            var itemResult = await this.CreateItemResult(ci);
+            result.Add(itemResult);
+          }
         }
       }
 

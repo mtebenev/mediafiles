@@ -53,6 +53,10 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     }
 
     public string CatalogName { get; }
+
+    /// <summary>
+    /// ICatalog
+    /// </summary>
     public ICatalogItem RootItem
     {
       get
