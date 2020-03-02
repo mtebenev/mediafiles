@@ -15,7 +15,7 @@ namespace Mt.MediaMan.ClientApp.Cli
   [Command("mediaman")]
   [Subcommand(
     typeof(Shell),
-    typeof(Status))]
+    typeof(CheckStatus))]
   internal class Program
   {
     public const int CommandExitResult = -1;

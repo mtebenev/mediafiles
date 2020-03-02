@@ -7,16 +7,21 @@ namespace Mt.MediaMan.AppEngine.Cataloging
   public interface ICatalogItem
   {
     int CatalogItemId { get; }
-    
+
     /// <summary>
     /// Usually corresponds to a file name
     /// </summary>
     string Name { get; }
 
     /// <summary>
-    /// Size of the item (0 for directories)
+    /// Size of the item (-1 for directories)
     /// </summary>
     long Size { get; }
+
+    /// <summary>
+    /// True if the item is directory.
+    /// </summary>
+    bool IsDirectory { get; }
 
     // Navigation
     Task<ICatalogItem> GetParentItemAsync();

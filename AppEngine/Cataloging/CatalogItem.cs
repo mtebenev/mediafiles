@@ -37,6 +37,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalogItem
     /// </summary>
+    public bool IsDirectory => this.Size == -1;
+
+    /// <summary>
+    /// ICatalogItem
+    /// </summary>
     public async Task<ICatalogItem> GetParentItemAsync()
     {
       var parentItemRecord = await _itemStorage.LoadItemByIdAsync(_catalogItemRecord.ParentItemId);
