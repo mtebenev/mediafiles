@@ -43,7 +43,8 @@ namespace Mt.MediaMan.AppEngine.Commands
   {
     public async Task<IList<CheckStatusResult>> ExecuteAsync(ICatalog catalog, string fsPath)
     {
-      var partsEnumerator = new PathPartsEnumerator(fsPath);
+      var result = new List<CheckStatusResult>();
+      InfoPartScanRoot infoPartScanRoot = null;
 
       // Find root
       var rootChildren = await catalog.RootItem.GetChildrenAsync();
@@ -51,38 +52,50 @@ namespace Mt.MediaMan.AppEngine.Commands
       foreach(var item in rootChildren)
       {
         var rootInfoPart = await item.GetInfoPartAsync<InfoPartScanRoot>();
-        if(rootInfoPart.RootPath == partsEnumerator.Root)
+        if(PathUtils.IsBaseOfPath(fsPath, rootInfoPart.RootPath))
         {
           catalogItem = item;
+          infoPartScanRoot = rootInfoPart;
           break;
         }
       }
 
-      var partIdx = 0;
-      while(catalogItem != null && partIdx < partsEnumerator.Parts.Length)
+      if(infoPartScanRoot != null)
       {
-        var children = await catalogItem.GetChildrenAsync();
-        catalogItem = children.FirstOrDefault(c => c.Name == partsEnumerator.Parts[partIdx]);
-        partIdx++;
-      }
-
-      // Enumerate
-      var result = new List<CheckStatusResult>();
-      if(catalogItem != null)
-      {
-        var walker = CatalogTreeWalker.CreateDefaultWalker(catalog, catalogItem.CatalogItemId);
-        var catalogItems = await walker.ToList();
-        foreach(var ci in catalogItems)
+        var pathParts = PathUtils.GetRelativeParts(fsPath, infoPartScanRoot.RootPath);
+        var partIdx = 0;
+        while(catalogItem != null && partIdx < pathParts.Length)
         {
-          if(!ci.IsDirectory)
-          {
-            var itemResult = await this.CreateItemResult(ci);
-            result.Add(itemResult);
-          }
+          var children = await catalogItem.GetChildrenAsync();
+          catalogItem = children.FirstOrDefault(c => c.Name == pathParts[partIdx]);
+          partIdx++;
         }
       }
 
+      // Enumerate
+      if(catalogItem != null)
+      {
+        await this.CheckStatusAsync(catalog, catalogItem, result);
+      }
+
       return result;
+    }
+
+    /// <summary>
+    /// Performs checking starting from the catalog item.
+    /// </summary>
+    private async Task CheckStatusAsync(ICatalog catalog, ICatalogItem checkRootItem, List<CheckStatusResult> result)
+    {
+      var walker = CatalogTreeWalker.CreateDefaultWalker(catalog, checkRootItem.CatalogItemId);
+      var catalogItems = await walker.ToList();
+      foreach(var ci in catalogItems)
+      {
+        if(!ci.IsDirectory)
+        {
+          var itemResult = await this.CreateItemResult(ci);
+          result.Add(itemResult);
+        }
+      }
     }
 
     /// <summary>

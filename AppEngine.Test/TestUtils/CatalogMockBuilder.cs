@@ -1,3 +1,4 @@
+using System;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Scanning;
 using Newtonsoft.Json.Linq;
@@ -116,7 +117,8 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
     {
       var mockCatalog = Substitute.For<ICatalog>();
       var catalogDefObject = JObject.Parse(this._catalogDef);
-      this.DeserializeItemDef(mockCatalog, catalogDefObject);
+      var rootItem = this.DeserializeItemDef(mockCatalog, catalogDefObject);
+      mockCatalog.RootItem.Returns(rootItem);
 
       return mockCatalog;
     }
@@ -130,6 +132,17 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
       var itemName = (string)itemDef["name"];
       mockCatalogItem.Name.Returns(itemName);
 
+      // Scan root info part
+      var rootPath = (string)itemDef["rootPath"];
+      if(!String.IsNullOrEmpty(rootPath))
+      {
+        var infoPartScanRoot = new InfoPartScanRoot
+        {
+          RootPath = rootPath
+        };
+        mockCatalogItem.GetInfoPartAsync<InfoPartScanRoot>().Returns(infoPartScanRoot);
+      }
+
       // Info parts
       this.BuildItemInfoParts<InfoPartVideo>(mockCatalogItem, this._infoPartsVideo);
 
@@ -140,7 +153,14 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
         var children = itemDef["children"]
         .Select(c => this.DeserializeItemDef(mockCatalog, (JObject)c))
         .ToList();
+
+        foreach(var c in children)
+        {
+          c.GetParentItemAsync().Returns(mockCatalogItem);
+        }
+
         mockCatalogItem.GetChildrenAsync().Returns(children);
+        mockCatalogItem.IsDirectory.Returns(true);
       }
 
       return mockCatalogItem;
