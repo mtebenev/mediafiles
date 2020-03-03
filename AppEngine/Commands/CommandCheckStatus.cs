@@ -51,58 +51,24 @@ namespace Mt.MediaMan.AppEngine.Commands
     public async Task<IList<CheckStatusResult>> ExecuteAsync(ICatalog catalog, string fsPath)
     {
       var result = new List<CheckStatusResult>();
-      InfoPartScanRoot infoPartScanRoot = null;
-
-      // Find root
-      var rootChildren = await catalog.RootItem.GetChildrenAsync();
-      ICatalogItem catalogItem = null;
-      foreach(var item in rootChildren)
-      {
-        var rootInfoPart = await item.GetInfoPartAsync<InfoPartScanRoot>();
-        if(PathUtils.IsBaseOfPath(fsPath, rootInfoPart.RootPath))
-        {
-          catalogItem = item;
-          infoPartScanRoot = rootInfoPart;
-          break;
-        }
-      }
-
-      if(infoPartScanRoot != null)
-      {
-        var pathParts = PathUtils.GetRelativeParts(fsPath, infoPartScanRoot.RootPath);
-        var partIdx = 0;
-        while(catalogItem != null && partIdx < pathParts.Length)
-        {
-          var children = await catalogItem.GetChildrenAsync();
-          catalogItem = children.FirstOrDefault(c => c.Name == pathParts[partIdx]);
-          partIdx++;
-        }
-      }
+      var catalogItem = await CatalogItemUtils.FindItemByFsPathAsync(catalog, fsPath);
 
       // Enumerate
       if(catalogItem != null)
       {
-        await this.CheckStatusAsync(catalog, catalogItem, result);
+        var walker = CatalogTreeWalker.CreateDefaultWalker(catalog, catalogItem.CatalogItemId);
+        var catalogItems = await walker.ToList();
+        foreach(var ci in catalogItems)
+        {
+          if(!ci.IsDirectory)
+          {
+            var itemResult = await this.CreateItemResult(ci);
+            result.Add(itemResult);
+          }
+        }
       }
 
       return result;
-    }
-
-    /// <summary>
-    /// Performs checking starting from the catalog item.
-    /// </summary>
-    private async Task CheckStatusAsync(ICatalog catalog, ICatalogItem checkRootItem, List<CheckStatusResult> result)
-    {
-      var walker = CatalogTreeWalker.CreateDefaultWalker(catalog, checkRootItem.CatalogItemId);
-      var catalogItems = await walker.ToList();
-      foreach(var ci in catalogItems)
-      {
-        if(!ci.IsDirectory)
-        {
-          var itemResult = await this.CreateItemResult(ci);
-          result.Add(itemResult);
-        }
-      }
     }
 
     /// <summary>
