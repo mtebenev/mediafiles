@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Commands;
@@ -23,7 +24,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     {
       var p = @"\\192.168.1.52\media_store_22\siterips\ifm.com\2014\02-February 2014";
 
-      var command = new CommandCheckStatus();
+      var command = new CommandCheckStatus(new FileSystem());
       var result = await command.ExecuteAsync(this._shellAppContext.Catalog, p);
 
       TableBuilder tb = new TableBuilder();

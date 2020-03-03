@@ -143,6 +143,12 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
         mockCatalogItem.GetInfoPartAsync<InfoPartScanRoot>().Returns(infoPartScanRoot);
       }
 
+      if(itemDef["fileSize"] != null)
+      {
+        mockCatalogItem.Size.Returns((int)itemDef["fileSize"]);
+      }
+
+
       // Info parts
       this.BuildItemInfoParts<InfoPartVideo>(mockCatalogItem, this._infoPartsVideo);
 

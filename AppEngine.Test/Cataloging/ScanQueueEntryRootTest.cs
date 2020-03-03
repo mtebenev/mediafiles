@@ -1,9 +1,7 @@
 using System.Threading.Tasks;
-using AutoFixture;
-using AutoFixture.AutoMoq;
-using Moq;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Scanning;
+using NSubstitute;
 using OrchardCore.FileStorage;
 using Xunit;
 
@@ -14,29 +12,22 @@ namespace Mt.MediaMan.AppEngine.Test.Cataloging
     [Fact]
     public async Task Should_Save_Scan_Root_Info_Part()
     {
-      var fixture = new Fixture()
-        .Customize(new AutoMoqCustomization {ConfigureMembers = true});
+      var mockScanDirectoryEntry = Substitute.For<IFileStoreEntry>();
+      mockScanDirectoryEntry.AccessFileAsync().Returns(@"C:\scan_root_folder");
 
-      var mockScanDirectoryEntry = new Mock<IFileStoreEntry>();
-      mockScanDirectoryEntry
-        .Setup(x => x.AccessFileAsync())
-        .ReturnsAsync(@"C:\scan_root_folder");
+      var mockFileStore = Substitute.For<IFileStore>();
+      mockFileStore.GetDirectoryInfoAsync("").Returns(mockScanDirectoryEntry);
 
-      var mockFileStore = fixture.Freeze<Mock<IFileStore>>();
-      mockFileStore.Setup(x => x.GetDirectoryInfoAsync(""))
-        .ReturnsAsync(mockScanDirectoryEntry.Object);
-
-      var mockItemStorage = fixture.Freeze<Mock<IItemStorage>>();
-
-      var scanQueueEntry = fixture.Create<ScanQueueEntryRoot>();
-      var itemStorage = fixture.Create<IItemStorage>();
-      await scanQueueEntry.StoreAsync(itemStorage);
+      var mockScanContext = Substitute.For<IScanContext>();
+      var mockItemStorage = Substitute.For<IItemStorage>();
+      mockItemStorage.SaveItemDataAsync(Arg.Any<int>(), Arg.Any<CatalogItemData>()).Returns(Task.CompletedTask);
+      var scanQueueEntry = new ScanQueueEntryRoot(mockScanContext, mockFileStore, 1);
+      await scanQueueEntry.StoreAsync(mockItemStorage);
 
       // Verify
-      mockItemStorage.Verify(x => x.SaveItemDataAsync(
-        It.IsAny<int>(),
-        It.Is<CatalogItemData>(cd => cd.Get<InfoPartScanRoot>().RootPath == @"C:\scan_root_folder")), Times.Once);
-
+      await mockItemStorage.Received(1).SaveItemDataAsync(
+        Arg.Any<int>(),
+        Arg.Is<CatalogItemData>(cd => cd.Get<InfoPartScanRoot>().RootPath == @"C:\scan_root_folder"));
     }
   }
 }
