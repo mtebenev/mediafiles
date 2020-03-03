@@ -36,8 +36,8 @@ namespace Mt.MediaMan.AppEngine.Common
       var uri = new Uri(path);
       var relativeUri = baseUri.MakeRelativeUri(uri);
 
-      var parts = relativeUri
-        .ToString()
+      var uriString = Uri.UnescapeDataString(relativeUri.ToString());
+      var parts = uriString
         .Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)
         .Skip(1)
         .ToArray();
