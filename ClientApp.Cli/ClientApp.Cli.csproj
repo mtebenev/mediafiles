@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppEngine.Ebooks\AppEngine.Ebooks.csproj" />
+    <ProjectReference Include="..\AppEngine.Video\AppEngine.Video.csproj" />
     <ProjectReference Include="..\AppEngine\AppEngine.csproj" />
   </ItemGroup>
 

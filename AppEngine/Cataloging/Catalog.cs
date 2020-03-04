@@ -87,6 +87,12 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     public async Task OpenAsync(StorageConfiguration storageConfiguration)
     {
       await _itemStorage.InitializeAsync(storageConfiguration.ModuleStorageProviders);
+
+      foreach(var mdbp in storageConfiguration.ModuleDbProviders)
+      {
+        await mdbp.InitializeDbAsync(this._storageManager.DbConnection);
+      }
+
       if(!_indexManager.IsIndexExists(CatalogName))
         _indexManager.CreateIndex(CatalogName);
 
@@ -132,7 +138,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     internal async Task<IList<int>> SearchAsync(string query)
     {
       var catalogItemIdStrings = new List<string>();
-      var idSet = new HashSet<string>(new[] {"CatalogItemId"});
+      var idSet = new HashSet<string>(new[] { "CatalogItemId" });
 
       // TODO MTE: it works only for file names, need to check other analyzers
       var analyzer = new StandardAnalyzer(SearchConstants.LuceneVersion);

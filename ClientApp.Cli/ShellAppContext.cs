@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using AppEngine.Video.VideoImprint;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Ebooks;
@@ -53,6 +54,7 @@ namespace Mt.MediaMan.ClientApp.Cli
         // Open the new catalog
         var storageConfiguration = new StorageConfiguration();
         EbooksModule.CreateStorageConfiguration(storageConfiguration);
+        VideoImprintModule.CreateStorageConfiguration(storageConfiguration);
 
         var catalog = Catalog.CreateCatalog(catalogName, _appSettings.Catalogs[catalogName].ConnectionString);
         await catalog.OpenAsync(storageConfiguration);

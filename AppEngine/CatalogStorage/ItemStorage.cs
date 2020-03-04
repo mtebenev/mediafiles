@@ -26,9 +26,8 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     public async Task InitializeAsync(IReadOnlyList<IModuleStorageProvider> moduleStorageProviders)
     {
       // Check if catalog item table exists
-      var checkTableQuery = @"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'CatalogItem'";
-      var tables = await DbConnection.QueryAsync(checkTableQuery);
-      if(!tables.Any())
+      var isTableExists = await DbUtils.IsTableExistsAsync(this.DbConnection, "CatalogItem");
+      if(!isTableExists)
       {
         // Catalog item table
         var query = @"CREATE TABLE [dbo].[CatalogItem] (
