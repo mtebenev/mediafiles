@@ -34,6 +34,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
 
       var scanPath = PathAlias.Equals("video", StringComparison.InvariantCultureIgnoreCase)
         ? @"C:\_films"
+        //? @"\\192.168.1.52\media_store_22"
         : PathAlias.Equals("video", StringComparison.InvariantCultureIgnoreCase) ? @"C:\_books_cat"
         : PathAlias;
 

@@ -44,37 +44,28 @@ namespace Mt.MediaMan.ClientApp.Cli
     /// <summary>
     /// Opens catalog
     /// </summary>
-    public async Task<bool> OpenCatalog(string catalogName)
+    public async Task OpenCatalog(IServiceProvider serviceProvider)
     {
-      bool result = false;
+      // Open the new catalog
+      var storageConfiguration = new StorageConfiguration();
+      EbooksModule.CreateStorageConfiguration(storageConfiguration);
+      VideoImprintModule.ConfigureStorage(storageConfiguration);
 
-      // Check if catalog with such name exists in configuration
-      if(_appSettings.Catalogs.ContainsKey(catalogName))
-      {
-        // Open the new catalog
-        var storageConfiguration = new StorageConfiguration();
-        EbooksModule.CreateStorageConfiguration(storageConfiguration);
-        VideoImprintModule.CreateStorageConfiguration(storageConfiguration);
+      var catalog = Catalog.CreateCatalog(serviceProvider);
+      await catalog.OpenAsync(storageConfiguration);
 
-        var catalog = Catalog.CreateCatalog(catalogName, _appSettings.Catalogs[catalogName].ConnectionString);
-        await catalog.OpenAsync(storageConfiguration);
+      // Close current catalog
+      this._catalog?.Close();
 
-        // Close current catalog
-        _catalog?.Close();
+      this._catalog = catalog;
+      CurrentItem = this._catalog.RootItem;
 
-        _catalog = catalog;
-        CurrentItem = _catalog.RootItem;
-
-        this.Console.WriteLine($"Opened catalog: {catalogName}");
-
-        result = true;
-      }
-
-      return result;
+      this.Console.WriteLine($"Opened catalog: {this.Catalog.CatalogName}");
     }
 
     /// <summary>
     /// Resets catalog data
+    /// TODO: For now just quit the app after the catalog reset. Cannot re-open the catalog.
     /// </summary>
     public async Task ResetCatalogStorage()
     {
@@ -86,7 +77,6 @@ namespace Mt.MediaMan.ClientApp.Cli
 
       // Reset storage
       await Catalog.ResetCatalogStorage(catalogName, _appSettings.Catalogs[catalogName].ConnectionString);
-      await OpenCatalog(catalogName);
     }
   }
 }

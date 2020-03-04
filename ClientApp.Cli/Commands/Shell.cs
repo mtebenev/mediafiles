@@ -15,7 +15,6 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     typeof(ShellCommandFindDuplicates),
     typeof(ShellCommandGetInfo),
     typeof(ShellCommandLs),
-    typeof(ShellCommandOpenCatalog),
     typeof(ShellCommandResetCatalog),
     typeof(ShellCommandScan),
     typeof(ShellCommandSearch),

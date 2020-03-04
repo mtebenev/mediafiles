@@ -3,7 +3,6 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
 using YesSql;
-using YesSql.Provider.SqlServer;
 
 namespace Mt.MediaMan.AppEngine.CatalogStorage
 {
@@ -15,16 +14,11 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// <summary>
     /// Create with connection string
     /// </summary>
-    public StorageManager(string connectionString)
+    public StorageManager(IDbConnection dbConnection, IConfiguration storeConfiguration)
     {
-      _dbConnection = new SqlConnection(connectionString);
-
-      // Document store
-      var storeConfiguration = new Configuration();
-      storeConfiguration.UseSqlServer(connectionString, IsolationLevel.ReadUncommitted);
-
-      _store = new Store(storeConfiguration);
-      _store.RegisterIndexes<CatalogItemIndexProvider>();
+      this._dbConnection = dbConnection;
+      this._store = new Store(storeConfiguration);
+      this._store.RegisterIndexes<CatalogItemIndexProvider>();
     }
 
     /// <summary>

@@ -1,19 +1,25 @@
 using System.Collections.Generic;
+using Mt.MediaMan.AppEngine.CatalogStorage;
 
 namespace Mt.MediaMan.ClientApp.Cli.Configuration
 {
   /// <summary>
   /// The catalog settings in appsettings.json
   /// </summary>
-  public class CatalogSettings
+  public class CatalogSettings : ICatalogSettings
   {
     /// <summary>
-    /// The connection string for the catalog.
+    /// ICatalogSettings.
+    /// </summary>
+    public string CatalogName { get; set; }
+
+    /// <summary>
+    /// ICatalogSettings.
     /// </summary>
     public string ConnectionString { get; set; }
 
     /// <summary>
-    /// Alias -> Absolute path
+    /// ICatalogSettings.
     /// </summary>
     public Dictionary<string, string> MediaRoots { get; set; }
   }

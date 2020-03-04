@@ -7,6 +7,7 @@ using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.QueryParsers.Simple;
 using Lucene.Net.Search;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Common;
@@ -25,11 +26,13 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// Open/create catalog
     /// </summary>
-    public static Catalog CreateCatalog(string catalogName, string connectionString)
+    public static Catalog CreateCatalog(IServiceProvider serviceProvider)
     {
-      var storageManager = new StorageManager(connectionString);
+      var catalogSettings = serviceProvider.GetRequiredService<ICatalogSettings>();
+      var storageManager = serviceProvider.GetRequiredService<IStorageManager>();
+
       var indexManager = new LuceneIndexManager(new Clock());
-      var catalog = new Catalog(catalogName, storageManager, indexManager);
+      var catalog = new Catalog(catalogSettings.CatalogName, storageManager, indexManager);
 
       return catalog;
     }
