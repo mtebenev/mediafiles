@@ -23,6 +23,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
 
     /// <summary>
     /// Use to reset all tables in the SQL storage
+    /// TODO: Modules should delete their own data.
     /// </summary>
     public static async Task ResetStorage(string connectionString)
     {
@@ -33,7 +34,8 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
         "[dbo].[MapIndexCatalogItem]",
         "[dbo].[MapIndexEbook]",
         "[dbo].[Document]",
-        "[dbo].[Identifiers]"
+        "[dbo].[Identifiers]",
+        "[dbo].[VideoImprint]"
       };
       foreach (var tableName in tables)
       {

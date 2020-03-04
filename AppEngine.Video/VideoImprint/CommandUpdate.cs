@@ -54,6 +54,7 @@ namespace AppEngine.Video.VideoImprint
       {
         progressOperation.UpdateStatus($"Updating file: {fsPath}");
         var task = new UpdateVideoImprintTask(this._videoImprintStorage, catalogItem, fsPath);
+        await task.ExecuteAsync();
       }
     }
   }

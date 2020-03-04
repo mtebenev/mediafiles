@@ -22,7 +22,7 @@ namespace AppEngine.Video.VideoImprint
         var query = @"CREATE TABLE [dbo].[VideoImprint] (
     [VideoImprintId] INT            IDENTITY (1, 1) NOT NULL,
     [CatalogItemId]  INT            NOT NULL,
-    [Data]           VARBINARY(8000) NOT NULL
+    [ImprintData]           VARBINARY(8000) NOT NULL
 );";
         await dbConnection.ExecuteAsync(query);
       }
