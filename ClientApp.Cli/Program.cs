@@ -1,4 +1,5 @@
 using System;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
@@ -56,6 +57,7 @@ namespace Mt.MediaMan.ClientApp.Cli
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton(_shellAppContext)
         .AddSingleton(PhysicalConsole.Singleton)
+        .AddSingleton<IFileSystem, FileSystem>()
         .AddTransient<ICommandExecutionContext, CommandExecutionContext>()
         .BuildServiceProvider();
 
