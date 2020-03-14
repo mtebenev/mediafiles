@@ -1,8 +1,9 @@
-using System.IO.Abstractions;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using MediaToolkit;
 using MediaToolkit.Model;
+using MediaToolkit.Services;
+using MediaToolkit.Tasks;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Scanning;
 
@@ -13,20 +14,26 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
   /// </summary>
   internal class ScanDriverVideo : IScanDriver
   {
+    private readonly IMediaToolkitService _mediaToolkitService;
+
+    public ScanDriverVideo(IMediaToolkitService mediaToolkitService)
+    {
+      this._mediaToolkitService = mediaToolkitService;
+    }
+
+    /// <summary>
+    /// IScanDriver.
+    /// </summary>
     public async Task ScanAsync(IScanContext scanContext, int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData)
     {
       var infoPartVideo = catalogItemData.GetOrCreate<InfoPartVideo>();
 
       var filePath = await fileStoreEntryContext.AccessFilePathAsync();
-      var fileSystem = new FileSystem();
-      FfprobeType ffProbeOutput;
-      using(var engine = new Engine(@"C:\ffmpeg\FFmpeg.exe", fileSystem))
-      {
-        ffProbeOutput = await engine.GetMetadataAsync(filePath);
-      }
+      var metadataTask = new FfTaskGetMetadata(filePath);
+      var taskResult = await this._mediaToolkitService.ExecuteAsync(metadataTask);
 
-      infoPartVideo.Duration = ffProbeOutput.Format.Duration;
-      FillVideoStreamInfo(ffProbeOutput, infoPartVideo);
+      infoPartVideo.Duration = float.Parse(taskResult.Metadata.Format.Duration, CultureInfo.InvariantCulture);
+      this.FillVideoStreamInfo(taskResult.Metadata, infoPartVideo);
 
       catalogItemData.Apply(infoPartVideo);
     }
@@ -34,22 +41,23 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
     /// <summary>
     /// Finds first video stream and extracts information for that
     /// </summary>
-    private void FillVideoStreamInfo(FfprobeType ffProbeOutput, InfoPartVideo infoPartVideo)
+    private void FillVideoStreamInfo(FfProbeOutput ffProbeOutput, InfoPartVideo infoPartVideo)
     {
       // Stream-specific properties
-      var videoStream = ffProbeOutput.Streams.FirstOrDefault(s => s.Codec_Type == "video");
+      var videoStream = ffProbeOutput.Streams.FirstOrDefault(s => s.CodecType == "video");
       if(videoStream != null)
       {
         infoPartVideo.VideoHeight = videoStream.Height;
         infoPartVideo.VideoWidth = videoStream.Width;
-        infoPartVideo.VideoCodecName = videoStream.Codec_Name;
-        infoPartVideo.VideoCodecLongName = videoStream.Codec_Long_Name;
+        infoPartVideo.VideoCodecName = videoStream.CodecName;
+        infoPartVideo.VideoCodecLongName = videoStream.CodecLongName;
       }
 
       // Format tags
-      var tagTitle = ffProbeOutput.Format.Tag.FirstOrDefault(t => t.Key == "title");
-      if(tagTitle != null)
-        infoPartVideo.Title = tagTitle.Value;
+      if(ffProbeOutput.Format.Tags != null && ffProbeOutput.Format.Tags.ContainsKey("title"))
+      {
+        infoPartVideo.Title = ffProbeOutput.Format.Tags["title"];
+      }
     }
   }
 }

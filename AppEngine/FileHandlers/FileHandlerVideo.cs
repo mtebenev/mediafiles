@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using MediaToolkit.Services;
 using Mt.MediaMan.AppEngine.Scanning;
 using Mt.MediaMan.AppEngine.Search;
 using OrchardCore.FileStorage;
@@ -12,9 +13,9 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
   /// </summary>
   internal class FileHandlerVideo : IFileHandler
   {
-    public FileHandlerVideo()
+    public FileHandlerVideo(IMediaToolkitService mediaToolkitService)
     {
-      ScanDriver = new ScanDriverVideo();
+      ScanDriver = new ScanDriverVideo(mediaToolkitService);
       CatalogItemIndexer = new CatalogItemIndexerNull();
     }
 
