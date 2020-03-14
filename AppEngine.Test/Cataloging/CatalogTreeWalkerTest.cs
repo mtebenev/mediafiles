@@ -1,7 +1,5 @@
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Test.TestUtils;
-using NSubstitute;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,25 +15,53 @@ namespace Mt.MediaMan.AppEngine.Test.Cataloging
 {
   name: 'Root',
   children: [
-    {name: 'Item 1'},
-    {name: 'Item 2'},
-    {name: 'Item 3'},
+    {
+      name: 'root_folder',
+      children: [
+        {
+          name: 'folder1',
+          children: [
+            {
+              name: 'folder2',
+              children: [
+                {
+                  name: 'file1.txt',
+                  fileSize: 3
+                },
+                {
+                  name: 'file2.txt',
+                  fileSize: 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: 'folder1_2',
+          children: [
+            {
+              name: 'file2_1'
+            },
+            {
+              name: 'file2_2'
+            }
+          ]
+        }
+      ]
+    }
   ]
 }
 ";
 
       var mockCatalog = CatalogMockBuilder.Create(catalogDef).Build();
+      var walker = CatalogTreeWalker.CreateDefaultWalker(mockCatalog, 1);
 
-      var enumerable = CatalogTreeWalker.CreateDefaultWalker(mockCatalog, 1);
-      var mockAction = Substitute.For<Action<ICatalogItem>>();
+      var names = await walker
+        .Select(i => i.Name)
+        .ToListAsync();
 
-      await enumerable.ForEachAsync(mockAction);
-
-      mockAction.Received()(Arg.Is<ICatalogItem>(x => x.Name == "Root"));
-      mockAction.Received()(Arg.Is<ICatalogItem>(x => x.Name == "Item 1"));
-      mockAction.Received()(Arg.Is<ICatalogItem>(x => x.Name == "Item 2"));
-      mockAction.Received()(Arg.Is<ICatalogItem>(x => x.Name == "Item 3"));
-      mockAction.Received(4)(Arg.Any<ICatalogItem>());
+      var expected = new[] { "Root", "root_folder", "folder1", "folder1_2", "folder2", "file2_1", "file2_2", "file1.txt", "file2.txt" };
+      Assert.Equal(expected, names);
     }
   }
 }

@@ -1,59 +1,43 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Mt.MediaMan.AppEngine.Cataloging
 {
-  internal class CatalogItemEnumerator : IAsyncEnumerator<ICatalogItem>
+  internal class CatalogItemEnumerator
   {
     private readonly ICatalog _catalog;
-    private readonly Func<ICatalogItem, Task> _processFunc;
     private readonly Queue<int> _idQueue;
     private ICatalogItem _currentCatalogItem;
 
     /// <summary>
     /// processFunc will be awaited after the item has been retrieved
     /// </summary>
-    public CatalogItemEnumerator(ICatalog catalog, int rootCatalogItemId, Func<ICatalogItem, Task> processFunc)
+    public CatalogItemEnumerator(ICatalog catalog, int rootCatalogItemId)
     {
-      _catalog = catalog;
-      _processFunc = processFunc;
-      _idQueue = new Queue<int>();
+      this._catalog = catalog;
+      this._idQueue = new Queue<int>();
 
-      _idQueue.Enqueue(rootCatalogItemId);
+      this._idQueue.Enqueue(rootCatalogItemId);
     }
 
-    public void Dispose()
-    {
-    }
+    // TODOA remove?
+    public ICatalogItem Current => _currentCatalogItem;
 
-    /// <summary>
-    /// IAsyncEnumerator
-    /// </summary>
-    public async Task<bool> MoveNext(CancellationToken cancellationToken)
+    public async IAsyncEnumerable<ICatalogItem> WalkAsync()
     {
-      if(_idQueue.Count == 0)
-        return false;
-      else
+      while(_idQueue.Count > 0)
       {
         var itemId = _idQueue.Dequeue();
-        _currentCatalogItem = await _catalog.GetItemByIdAsync(itemId);
-        var children = await _currentCatalogItem.GetChildrenAsync();
+        this._currentCatalogItem = await this._catalog.GetItemByIdAsync(itemId);
+        var children = await this._currentCatalogItem.GetChildrenAsync();
         children
           .Select(c => c.CatalogItemId)
           .ToList()
           .ForEach(id => { _idQueue.Enqueue(id); });
 
-        // Execute an action during for this iteration
-        await _processFunc(_currentCatalogItem);
-
-        return true;
+        yield return this._currentCatalogItem;
       }
     }
-
-    public ICatalogItem Current => _currentCatalogItem;
   }
 
 }
