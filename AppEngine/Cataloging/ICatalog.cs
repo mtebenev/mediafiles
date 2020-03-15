@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Mt.MediaMan.AppEngine.Tasks;
 
 namespace Mt.MediaMan.AppEngine.Cataloging
 {

@@ -1,10 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Scanning;
 using OrchardCore.FileStorage.FileSystem;
 
-namespace Mt.MediaMan.AppEngine.Cataloging
+namespace Mt.MediaMan.AppEngine.Tasks
 {
   /// <summary>
   /// The scan task.

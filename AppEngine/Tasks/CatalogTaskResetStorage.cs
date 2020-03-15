@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
+using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Common;
 using Mt.MediaMan.AppEngine.Search;
 
-namespace Mt.MediaMan.AppEngine.Cataloging
+namespace Mt.MediaMan.AppEngine.Tasks
 {
   /// <summary>
   /// The task resets the catalog storage.

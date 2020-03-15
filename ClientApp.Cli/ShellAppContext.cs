@@ -4,6 +4,7 @@ using AppEngine.Video.VideoImprint;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Ebooks;
+using Mt.MediaMan.AppEngine.Tasks;
 using Mt.MediaMan.ClientApp.Cli.Configuration;
 
 namespace Mt.MediaMan.ClientApp.Cli

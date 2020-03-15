@@ -9,7 +9,7 @@ namespace Mt.MediaMan.AppEngine.Commands
   public interface ICommandExecutionContext
   {
     IProgressIndicator ProgressIndicator { get; }
-    Catalog Catalog { get; }
+    ICatalog Catalog { get; }
     ILoggerFactory LoggerFactory { get; }
   }
 }
