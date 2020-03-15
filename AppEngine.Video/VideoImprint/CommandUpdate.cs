@@ -31,11 +31,10 @@ namespace AppEngine.Video.VideoImprint
         using(var progressOperation = executionContext.ProgressIndicator.StartOperation($"Updating files at: {fsPath}"))
         {
           var walker = CatalogTreeWalker.CreateDefaultWalker(executionContext.Catalog, catalogItem.CatalogItemId);
-          var catalogItems = await walker.ToList();
-          foreach(var ci in catalogItems)
+          await walker.ForEachAwaitAsync(async ci =>
           {
-            await UpdateItem(progressOperation, ci);
-          }
+            await this.UpdateItem(progressOperation, ci);
+          });
 
           progressOperation.UpdateStatus("Done.");
         }
