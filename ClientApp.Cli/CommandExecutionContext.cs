@@ -15,7 +15,7 @@ namespace Mt.MediaMan.ClientApp.Cli
     }
 
     public IProgressIndicator ProgressIndicator { get; }
-    public Catalog Catalog { get; }
+    public ICatalog Catalog { get; }
     public ILoggerFactory LoggerFactory { get; }
 
     /// <summary>

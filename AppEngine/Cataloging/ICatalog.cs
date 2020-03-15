@@ -9,6 +9,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
   public interface ICatalog : IDisposable
   {
     /// <summary>
+    /// The catalog name.
+    /// </summary>
+    string CatalogName { get; }
+
+    /// <summary>
     /// The root catalog item.
     /// </summary>
     ICatalogItem RootItem { get; }
@@ -17,5 +22,15 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// Loads an item with specified ID
     /// </summary>
     Task<ICatalogItem> GetItemByIdAsync(int itemId);
+
+    /// <summary>
+    /// Executes the catalog task.
+    /// </summary>
+    Task ExecuteTaskAsync(ICatalogTask catalogTask);
+
+    /// <summary>
+    /// Closes the catalog.
+    /// </summary>
+    void Close();
   }
 }

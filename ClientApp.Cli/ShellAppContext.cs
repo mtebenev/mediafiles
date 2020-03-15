@@ -15,7 +15,7 @@ namespace Mt.MediaMan.ClientApp.Cli
   internal class ShellAppContext
   {
     private readonly AppSettings _appSettings;
-    private Catalog _catalog;
+    private ICatalog _catalog;
 
     public ShellAppContext(AppSettings appSettings)
     {
@@ -30,7 +30,7 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     public IConsole Console => PhysicalConsole.Singleton;
 
-    public Catalog Catalog
+    public ICatalog Catalog
     {
       get
       {
@@ -51,7 +51,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       EbooksModule.CreateStorageConfiguration(storageConfiguration);
       VideoImprintModule.ConfigureStorage(storageConfiguration);
 
-      var catalog = Catalog.CreateCatalog(serviceProvider);
+      var catalog = AppEngine.Cataloging.Catalog.CreateCatalog(serviceProvider);
       await catalog.OpenAsync(storageConfiguration);
 
       // Close current catalog
@@ -71,12 +71,13 @@ namespace Mt.MediaMan.ClientApp.Cli
     {
       var catalogName = _catalog.CatalogName;
 
-      // Close current catalog in the shell context
-      CurrentItem = null;
-      _catalog = null;
-
       // Reset storage
-      await Catalog.ResetCatalogStorage(catalogName, _appSettings.Catalogs[catalogName].ConnectionString);
+      var task = new CatalogTaskResetStorage(catalogName, _appSettings.Catalogs[catalogName].ConnectionString);
+      await this._catalog.ExecuteTaskAsync(task);
+
+      // Close current catalog in the shell context
+      this.CurrentItem = null;
+      this._catalog = null;
     }
   }
 }

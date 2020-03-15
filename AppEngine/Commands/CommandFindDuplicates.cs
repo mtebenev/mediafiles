@@ -10,7 +10,7 @@ namespace Mt.MediaMan.AppEngine.Commands
   /// </summary>
   public class CommandFindDuplicates
   {
-    public async Task<IList<DuplicateFindResult>> Execute(Catalog catalog)
+    public async Task<IList<DuplicateFindResult>> Execute(ICatalog catalog)
     {
       var finder = new DuplicateFinder(catalog);
       var result = await finder.FindAsync();

@@ -6,17 +6,17 @@ using Lucene.Net.Analysis.Standard;
 using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.QueryParsers.Simple;
 using Lucene.Net.Search;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Common;
-using Mt.MediaMan.AppEngine.Scanning;
 using Mt.MediaMan.AppEngine.Search;
 
 namespace Mt.MediaMan.AppEngine.Cataloging
 {
-  public class Catalog : ICatalog, IDisposable
+  /// <summary>
+  /// The catalog implementation.
+  /// </summary>
+  public class Catalog : ICatalog
   {
     private readonly IItemStorage _itemStorage;
     private readonly IStorageManager _storageManager;
@@ -37,16 +37,6 @@ namespace Mt.MediaMan.AppEngine.Cataloging
       return catalog;
     }
 
-    /// <summary>
-    /// Reset catalog storage
-    /// </summary>
-    public static async Task ResetCatalogStorage(string catalogName, string connectionString)
-    {
-      await StorageManager.ResetStorage(connectionString);
-      var indexManager = new LuceneIndexManager(new Clock());
-      indexManager.DeleteIndex(catalogName);
-    }
-
     internal Catalog(string catalogName, IStorageManager storageManager, LuceneIndexManager indexManager)
     {
       CatalogName = catalogName;
@@ -55,10 +45,13 @@ namespace Mt.MediaMan.AppEngine.Cataloging
       _itemStorage = new ItemStorage(storageManager);
     }
 
+    /// <summary>
+    /// ICatalog.
+    /// </summary>
     public string CatalogName { get; }
 
     /// <summary>
-    /// ICatalog
+    /// ICatalog.
     /// </summary>
     public ICatalogItem RootItem
     {
@@ -104,15 +97,6 @@ namespace Mt.MediaMan.AppEngine.Cataloging
       _rootItem = new CatalogItem(catalogItemRecord, _itemStorage);
     }
 
-    public void Close()
-    {
-      if(_indexManager == null)
-        throw new InvalidOperationException("Catalog is not open");
-
-      _rootItem = null;
-    }
-
-
     /// <summary>
     /// ICatalog
     /// </summary>
@@ -125,14 +109,33 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     }
 
     /// <summary>
-    /// Scans new item to the catalog
+    /// ICatalog.
     /// </summary>
-    internal Task ScanAsync(ScanConfiguration scanConfiguration, IItemScanner itemScanner, ILoggerFactory loggerFactory, IProgressOperation progressOperation)
+    public Task ExecuteTaskAsync(ICatalogTask catalogTask)
     {
-      // Create scan context
-      var scanContext = new ScanContext(scanConfiguration, _itemStorage, _indexManager, loggerFactory, progressOperation);
-      return itemScanner.Scan(scanContext);
+      return catalogTask.ExecuteAsync(this);
     }
+
+    /// <summary>
+    /// ICatalog.
+    /// </summary>
+    public void Close()
+    {
+      if(_indexManager == null)
+        throw new InvalidOperationException("Catalog is not open");
+
+      _rootItem = null;
+    }
+
+    /// <summary>
+    /// The item storage.
+    /// </summary>
+    internal IItemStorage ItemStorage => this._itemStorage;
+
+    /// <summary>
+    /// The index manager.
+    /// </summary>
+    internal LuceneIndexManager IndexManager => this._indexManager;
 
     /// <summary>
     /// Performs search and returns list of found item IDs
