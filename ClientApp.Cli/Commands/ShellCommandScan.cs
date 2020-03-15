@@ -12,10 +12,12 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   internal class ShellCommandScan : ShellCommandBase
   {
     private readonly ICommandExecutionContext _executionContext;
+    private readonly IServiceProvider _serviceProvider;
 
-    public ShellCommandScan(ICommandExecutionContext executionContext)
+    public ShellCommandScan(ICommandExecutionContext executionContext, IServiceProvider serviceProvider)
     {
-      _executionContext = executionContext;
+      this._executionContext = executionContext;
+      this._serviceProvider = serviceProvider;
     }
 
     [Argument(0, "pathAlias")]
@@ -38,7 +40,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
         : PathAlias.Equals("video", StringComparison.InvariantCultureIgnoreCase) ? @"C:\_books_cat"
         : PathAlias;
 
-      var command = new CommandScanFiles();
+      var command = new CommandScanFiles(this._serviceProvider);
       await command.Execute(_executionContext, scanPath, Name);
 
       return 0;
