@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
+using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
 
 namespace Mt.MediaMan.ClientApp.Cli.Commands
@@ -40,8 +41,8 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
         : PathAlias.Equals("video", StringComparison.InvariantCultureIgnoreCase) ? @"C:\_books_cat"
         : PathAlias;
 
-      var command = new CommandScanFiles(this._serviceProvider);
-      await command.Execute(_executionContext, scanPath, Name);
+      var task = new CatalogTaskScan(this._serviceProvider, this._executionContext, scanPath, this.Name);
+      await this._executionContext.Catalog.ExecuteTaskAsync(task);
 
       return 0;
     }
