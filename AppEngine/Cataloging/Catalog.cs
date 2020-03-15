@@ -115,6 +115,14 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalog.
     /// </summary>
+    public Task<TResult> ExecuteTaskAsync<TResult>(ICatalogTask<TResult> catalogTask)
+    {
+      return catalogTask.ExecuteAsync(this);
+    }
+
+    /// <summary>
+    /// ICatalog.
+    /// </summary>
     public void Close()
     {
       if(_indexManager == null)

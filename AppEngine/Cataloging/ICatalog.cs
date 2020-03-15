@@ -30,6 +30,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     Task ExecuteTaskAsync(ICatalogTask catalogTask);
 
     /// <summary>
+    /// Executes the catalog task with result.
+    /// </summary>
+    Task<TResult> ExecuteTaskAsync<TResult>(ICatalogTask<TResult> task);
+
+    /// <summary>
     /// Closes the catalog.
     /// </summary>
     void Close();

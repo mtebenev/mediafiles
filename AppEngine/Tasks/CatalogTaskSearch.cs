@@ -15,7 +15,7 @@ namespace Mt.MediaMan.AppEngine.Tasks
   /// The task searches for items in the catalog.
   /// TODO MTE: check how orchard performs search, it uses MultiFieldQueryParser
   /// </summary>
-  public class CatalogTaskSearch : ICatalogTask
+  public class CatalogTaskSearch : ICatalogTask<IList<int>>
   {
     private readonly string _query;
 
@@ -30,7 +30,7 @@ namespace Mt.MediaMan.AppEngine.Tasks
     /// <summary>
     /// ICatalogTask.
     /// </summary>
-    async Task ICatalogTask.ExecuteAsync(Catalog catalog)
+    async Task<IList<int>> ICatalogTask<IList<int>>.ExecuteAsync(Catalog catalog)
     {
       var catalogItemIdStrings = new List<string>();
       var idSet = new HashSet<string>(new[] { "CatalogItemId" });
@@ -62,6 +62,8 @@ namespace Mt.MediaMan.AppEngine.Tasks
       var result = catalogItemIdStrings
         .Select(idString => int.Parse(idString))
         .ToList();
+
+      return result;
     }
   }
 }

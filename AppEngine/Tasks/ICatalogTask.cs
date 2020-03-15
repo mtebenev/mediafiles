@@ -10,4 +10,12 @@ namespace Mt.MediaMan.AppEngine.Tasks
   {
     internal Task ExecuteAsync(Catalog catalog);
   }
+
+  /// <summary>
+  /// The task with result.
+  /// </summary>
+  public interface ICatalogTask<TResult>
+  {
+    internal Task<TResult> ExecuteAsync(Catalog catalog);
+  }
 }

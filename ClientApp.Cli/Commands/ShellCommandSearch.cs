@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
+using Mt.MediaMan.AppEngine.Tasks;
 
 namespace Mt.MediaMan.ClientApp.Cli.Commands
 {
@@ -26,8 +27,8 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
 
     protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
     {
-      var command = new CommandSearch();
-      var itemIds = await command.ExecuteAsync(_executionContext.Catalog, Query);
+      var task = new CatalogTaskSearch(this.Query);
+      var itemIds = await this._executionContext.Catalog.ExecuteTaskAsync(task);
 
       var items = new List<ICatalogItem>();
       foreach(int itemId in itemIds)
