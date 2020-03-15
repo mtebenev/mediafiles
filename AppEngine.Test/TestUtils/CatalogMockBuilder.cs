@@ -125,10 +125,15 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
 
     private ICatalogItem DeserializeItemDef(ICatalog mockCatalog, JObject itemDef)
     {
-      // Base properties
       var mockCatalogItem = Substitute.For<ICatalogItem>();
-      var itemId = this._nextItemId++;
+
+      // Item ID
+      var itemId = itemDef.GetValue("id") != null
+        ? (int)itemDef["id"]
+        : this._nextItemId++;
       mockCatalogItem.CatalogItemId.Returns(itemId);
+
+      // Item name
       var itemName = (string)itemDef["name"];
       mockCatalogItem.Name.Returns(itemName);
 

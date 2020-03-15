@@ -13,6 +13,7 @@ using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.ClientApp.Cli.Commands;
 using Mt.MediaMan.ClientApp.Cli.Configuration;
 using NLog.Extensions.Logging;
+using MediaToolkit;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -73,6 +74,7 @@ namespace Mt.MediaMan.ClientApp.Cli
         .AddLogging(config => config
           .SetMinimumLevel(LogLevel.Trace)
           .AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true }))
+        .AddMediaToolkit(@"C:\ffmpeg\ffmpeg.exe")
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton(_shellAppContext)
         .AddSingleton(PhysicalConsole.Singleton)

@@ -1,4 +1,5 @@
 using Mt.MediaMan.AppEngine.Cataloging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,17 +11,17 @@ namespace Mt.MediaMan.AppEngine.Tools
   /// </summary>
   public class DuplicateFinder
   {
-    private readonly Catalog _catalog;
+    private readonly ICatalog _catalog;
 
-    public DuplicateFinder(Catalog catalog)
+    public DuplicateFinder(ICatalog catalog)
     {
       _catalog = catalog;
     }
 
     public async Task<IList<DuplicateFindResult>> FindAsync()
     {
-      var itemHashes = await CollectHashesAsync();
-      var candidates = CollectCandidates(itemHashes);
+      var itemHashes = await this.CollectHashesAsync();
+      var candidates = this.CollectCandidates(itemHashes);
 
       var result = await CreateResultAsync(candidates);
       return result;
@@ -41,11 +42,10 @@ namespace Mt.MediaMan.AppEngine.Tools
     {
       var result = new List<DuplicateFindResult>();
 
-      // TODOA: async select
       foreach(var candidate in candidates)
       {
         var itemIds = candidate.Select(i => i.CatalogItemId).ToList();
-        var duplicateFindResult = await DuplicateFindResult.Create(_catalog, itemIds);
+        var duplicateFindResult = await DuplicateFindResult.Create(this._catalog, itemIds);
 
         result.Add(duplicateFindResult);
       }
@@ -55,16 +55,16 @@ namespace Mt.MediaMan.AppEngine.Tools
 
     private async Task<List<ItemHashInfo>> CollectHashesAsync()
     {
-      var result = new List<ItemHashInfo>();
-
       int catalogItemId = _catalog.RootItem.CatalogItemId; // Start from catalog root
-      var walker = CatalogTreeWalker.CreateDefaultWalker(_catalog, catalogItemId, item => CreateItemHash(item, result));
+      var walker = CatalogTreeWalker.CreateDefaultWalker(_catalog, catalogItemId);
+      var result = await walker
+        .Select(ci => this.CreateItemHash(ci))
+        .ToListAsync();
 
-      await walker.ForEachAsync(item => {});
       return result;
     }
 
-    private Task CreateItemHash(ICatalogItem item, List<ItemHashInfo> hashCollection)
+    private ItemHashInfo CreateItemHash(ICatalogItem item)
     {
       var hash = new
       {
@@ -73,8 +73,7 @@ namespace Mt.MediaMan.AppEngine.Tools
       }.GetHashCode();
 
       var itemHashInfo = new ItemHashInfo(item.CatalogItemId, hash);
-      hashCollection.Add(itemHashInfo);
-      return Task.CompletedTask;
+      return itemHashInfo;
     }
   }
 }

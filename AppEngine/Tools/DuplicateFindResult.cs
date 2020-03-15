@@ -17,13 +17,13 @@ namespace Mt.MediaMan.AppEngine.Tools
     /// <summary>
     /// Factory method
     /// </summary>
-    public static async Task<DuplicateFindResult> Create(Catalog catalog, IList<int> catalogItemIds)
+    public static async Task<DuplicateFindResult> Create(ICatalog catalog, IList<int> catalogItemIds)
     {
       var catalogItems = await CatalogItemUtils.LoadItemsByIdsAsync(catalog, catalogItemIds);
 
       // TODOA: tuples?
       // TODOA: async select
-      List<BriefFileInfo> fileInfos = new List<BriefFileInfo>();
+      var fileInfos = new List<BriefFileInfo>();
 
       foreach(var catalogItem in catalogItems)
       {

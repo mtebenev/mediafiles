@@ -14,7 +14,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// Use to load multiple catalog items at once
     /// </summary>
-    public static async Task<IList<ICatalogItem>> LoadItemsByIdsAsync(Catalog catalog, IList<int> catalogItemIds)
+    public static async Task<IList<ICatalogItem>> LoadItemsByIdsAsync(ICatalog catalog, IList<int> catalogItemIds)
     {
       var result = new List<ICatalogItem>();
       foreach(var catalogItemId in catalogItemIds)

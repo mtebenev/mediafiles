@@ -3,8 +3,6 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Common;
-using Mt.MediaMan.AppEngine.Scanning;
 
 namespace Mt.MediaMan.AppEngine.Commands
 {
@@ -57,15 +55,14 @@ namespace Mt.MediaMan.AppEngine.Commands
       if(catalogItem != null)
       {
         var walker = CatalogTreeWalker.CreateDefaultWalker(catalog, catalogItem.CatalogItemId);
-        var catalogItems = await walker.ToList();
-        foreach(var ci in catalogItems)
-        {
-          if(!ci.IsDirectory)
+        result = await walker
+          .Where(ci => !ci.IsDirectory)
+          .SelectAwait(async ci =>
           {
             var itemResult = await this.CreateItemResult(ci);
-            result.Add(itemResult);
-          }
-        }
+            return itemResult;
+          })
+          .ToListAsync();
       }
 
       return result;
