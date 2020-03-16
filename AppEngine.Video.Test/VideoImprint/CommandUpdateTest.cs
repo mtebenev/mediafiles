@@ -1,8 +1,11 @@
+using System;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
 using FluentAssertions;
+using MediaToolkit.Services;
+using MediaToolkit.Tasks;
 using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Test.TestUtils;
 using NSubstitute;
@@ -59,10 +62,18 @@ namespace AppEngine.Video.Test.VideoImprint
 
       var mockFs = new MockFileSystem();
       var mockStorage = Substitute.For<IVideoImprintStorage>();
+      var mockToolkitService = Substitute.For<IMediaToolkitService>();
       var mockContext = Substitute.For<ICommandExecutionContext>();
       mockContext.Catalog.Returns(mockCatalog);
 
-      var command = new CommandUpdate(mockFs, mockStorage);
+      var mockServiceProvider = Substitute.For<IServiceProvider>();
+      mockServiceProvider.GetService(typeof(IVideoImprintStorage)).Returns(mockStorage);
+      mockServiceProvider.GetService(typeof(IMediaToolkitService)).Returns(mockToolkitService);
+
+      var thumbResult = new GetThumbnailResult(new byte[0]);
+      mockToolkitService.ExecuteAsync<GetThumbnailResult>(default).ReturnsForAnyArgs(thumbResult);
+
+      var command = new CommandUpdate(mockFs, mockServiceProvider);
       await command.ExecuteAsync(mockContext, @"x:\folder");
 
       var args = mockStorage

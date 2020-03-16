@@ -1,4 +1,7 @@
+using System;
 using System.Threading.Tasks;
+using MediaToolkit.Services;
+using MediaToolkit.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
 
 namespace AppEngine.Video.VideoImprint
@@ -9,12 +12,14 @@ namespace AppEngine.Video.VideoImprint
   internal class UpdateVideoImprintTask
   {
     private IVideoImprintStorage _videoImprintStorage;
+    private readonly IMediaToolkitService _mediaToolkitService;
     private ICatalogItem _catalogItem;
     private string _fsPath;
 
-    public UpdateVideoImprintTask(IVideoImprintStorage videoImprintStorage, ICatalogItem catalogItem, string fsPath)
+    public UpdateVideoImprintTask(IVideoImprintStorage videoImprintStorage, IMediaToolkitService mediaToolkitService, ICatalogItem catalogItem, string fsPath)
     {
       this._videoImprintStorage = videoImprintStorage;
+      this._mediaToolkitService = mediaToolkitService;
       this._catalogItem = catalogItem;
       this._fsPath = fsPath;
     }
@@ -25,14 +30,16 @@ namespace AppEngine.Video.VideoImprint
       await this._videoImprintStorage.SaveRecordAsync(imprintRecord);
     }
 
-    private Task<VideoImprintRecord> CreateRecordAsync(ICatalogItem catalogItem)
+    private async Task<VideoImprintRecord> CreateRecordAsync(ICatalogItem catalogItem)
     {
+      var thumbnailTask = new FfTaskGetThumbnail(this._fsPath, TimeSpan.FromSeconds(2), new FrameSize(64, 64));
+      var taskResult = await this._mediaToolkitService.ExecuteAsync(thumbnailTask);
       var record = new VideoImprintRecord
       {
         CatalogItemId = catalogItem.CatalogItemId,
-        ImprintData = new byte[100]
+        ImprintData = taskResult.ThumbnailData
       };
-      return Task.FromResult(record);
+      return record;
     }
   }
 }

@@ -20,4 +20,8 @@
     <ProjectReference Include="..\AppEngine.Video\AppEngine.Video.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Discovery\" />
+  </ItemGroup>
+
 </Project>
