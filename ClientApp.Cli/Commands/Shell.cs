@@ -13,6 +13,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     typeof(ShellCommandCreateBook),
     typeof(ShellCommandExit),
     typeof(ShellCommandFindDuplicates),
+    typeof(ShellCommandFindVideoDuplicates),
     typeof(ShellCommandGetInfo),
     typeof(ShellCommandLs),
     typeof(ShellCommandResetCatalog),

@@ -32,7 +32,11 @@ namespace AppEngine.Video.VideoImprint
 
     private async Task<VideoImprintRecord> CreateRecordAsync(ICatalogItem catalogItem)
     {
-      var thumbnailTask = new FfTaskGetThumbnail(this._fsPath, TimeSpan.FromSeconds(2), new FrameSize(64, 64));
+      var thumbnailTask = new FfTaskGetThumbnail(
+        this._fsPath,
+        TimeSpan.FromSeconds(1),
+        new FrameSize(32, 32));
+
       var taskResult = await this._mediaToolkitService.ExecuteAsync(thumbnailTask);
       var record = new VideoImprintRecord
       {

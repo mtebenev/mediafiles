@@ -14,6 +14,7 @@ using Mt.MediaMan.ClientApp.Cli.Commands;
 using Mt.MediaMan.ClientApp.Cli.Configuration;
 using NLog.Extensions.Logging;
 using MediaToolkit;
+using AppEngine.Video.Test;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -80,6 +81,8 @@ namespace Mt.MediaMan.ClientApp.Cli
         .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton<IFileSystem, FileSystem>()
         .AddTransient<ICommandExecutionContext, CommandExecutionContext>();
+
+      VideoModule.ConfigureServices(services);
 
       // DB connection
       var catalogName = appSettings.Catalogs.ContainsKey(appSettings.StartupCatalog)
