@@ -107,7 +107,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalog.
     /// </summary>
-    public Task ExecuteTaskAsync(ICatalogTask catalogTask)
+    public Task ExecuteTaskAsync(CatalogTaskBase catalogTask)
     {
       return catalogTask.ExecuteAsync(this);
     }
@@ -115,7 +115,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalog.
     /// </summary>
-    public Task<TResult> ExecuteTaskAsync<TResult>(ICatalogTask<TResult> catalogTask)
+    public Task<TResult> ExecuteTaskAsync<TResult>(CatalogTaskBase<TResult> catalogTask)
     {
       return catalogTask.ExecuteAsync(this);
     }
