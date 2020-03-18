@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
@@ -10,28 +9,31 @@ namespace Mt.MediaMan.AppEngine.Tasks
   /// <summary>
   /// The scan task.
   /// </summary>
-  public class CatalogTaskScan : ICatalogTask
+  public sealed class CatalogTaskScan : IInternalCatalogTask
   {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ICommandExecutionContext _executionContext;
+    private readonly ITaskExecutionContext _executionContext;
     private readonly string _scanPath;
     private readonly string _name;
 
     /// <summary>
     /// Ctor.
     /// </summary>
-    public CatalogTaskScan(IServiceProvider serviceProvider, ICommandExecutionContext executionContext, string scanPath, string name)
+    public CatalogTaskScan(ITaskExecutionContext executionContext, string scanPath, string name)
     {
-      this._serviceProvider = serviceProvider;
       this._executionContext = executionContext;
       this._scanPath = scanPath;
       this._name = name;
     }
 
+    public Task ExecuteAsync(ICatalog catalog)
+    {
+      return catalog.ExecuteTaskAsync(this);
+    }
+
     /// <summary>
-    /// ICatalogTask.
+    /// IInternalCatalogTask
     /// </summary>
-    async Task ICatalogTask.ExecuteAsync(Catalog catalog)
+    async Task IInternalCatalogTask.ExecuteAsync(Catalog catalog)
     {
       using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation($"Scanning files: {this._scanPath}"))
       {
@@ -39,7 +41,7 @@ namespace Mt.MediaMan.AppEngine.Tasks
         var fileStore = new FileSystemStore(this._scanPath);
         var rootItem = catalog.RootItem;
         var mmConfig = MmConfigFactory.LoadConfig(this._scanPath);
-        var scanConfiguration = new ScanConfiguration(this._name, mmConfig, this._serviceProvider);
+        var scanConfiguration = new ScanConfiguration(this._name, mmConfig, this._executionContext.ServiceProvider);
 
         var scanner = new ItemScannerFileSystem(fileStore, rootItem, scanQueue, this._executionContext.LoggerFactory);
 

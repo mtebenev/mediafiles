@@ -26,5 +26,7 @@ namespace Mt.MediaMan.AppEngine.Tasks
     {
       return catalog.ExecuteTaskAsync(this);
     }
+
+    internal Task<TResult> ExecuteAsync(Catalog catalog);
   }
 }
