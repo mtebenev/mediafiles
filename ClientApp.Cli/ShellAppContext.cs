@@ -13,7 +13,7 @@ namespace Mt.MediaMan.ClientApp.Cli
   /// Not sure if it's a bug but subcommand option values are not re-build if executed multiple time.
   /// Thus we are re-creating application each time and keep current catalog item in the context
   /// </summary>
-  internal class ShellAppContext
+  internal class ShellAppContext : IShellAppContext
   {
     private readonly AppSettings _appSettings;
     private ICatalog _catalog;
@@ -25,12 +25,18 @@ namespace Mt.MediaMan.ClientApp.Cli
     }
 
     /// <summary>
-    /// Get/set current item for navigation
+    /// IShellAppContext.
     /// </summary>
     public ICatalogItem CurrentItem { get; set; }
 
+    /// <summary>
+    /// IShellAppContext.
+    /// </summary>
     public IConsole Console => PhysicalConsole.Singleton;
 
+    /// <summary>
+    /// IShellAppContext.
+    /// </summary>
     public ICatalog Catalog
     {
       get

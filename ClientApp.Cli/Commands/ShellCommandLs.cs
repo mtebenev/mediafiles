@@ -9,14 +9,14 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   [Command("ls", Description = "Prints content of the current folder")]
   internal class ShellCommandLs : ShellCommandBase
   {
-    private readonly ShellAppContext _shellAppContext;
+    private readonly IShellAppContext _shellAppContext;
 
-    public ShellCommandLs(ShellAppContext shellAppContext)
+    public ShellCommandLs(IShellAppContext shellAppContext)
     {
       _shellAppContext = shellAppContext;
     }
 
-    protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
+    protected override async Task<int> OnExecuteAsync()
     {
       var currentItem = _shellAppContext.CurrentItem;
       var children = await currentItem.GetChildrenAsync();

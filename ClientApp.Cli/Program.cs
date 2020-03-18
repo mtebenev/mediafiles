@@ -22,8 +22,8 @@ namespace Mt.MediaMan.ClientApp.Cli
   [Command("mediaman")]
   [Subcommand(
     typeof(Shell),
-    typeof(CheckStatus),
-    typeof(Update))]
+    typeof(Commands.CommandCheckStatus),
+    typeof(Commands.CommandUpdate))]
   internal class Program
   {
     public const int CommandExitResult = -1;
@@ -78,7 +78,7 @@ namespace Mt.MediaMan.ClientApp.Cli
           .AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true }))
         .AddMediaToolkit(@"C:\ffmpeg\ffmpeg.exe")
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
-        .AddSingleton(_shellAppContext)
+        .AddSingleton<IShellAppContext>(_shellAppContext)
         .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton<IFileSystem, FileSystem>()
         .AddTransient<ITaskExecutionContext, TaskExecutionContext>();

@@ -1,6 +1,7 @@
 using AppEngine.Video.Comparison;
 using AspNetCoreInjection.TypedFactories;
 using Microsoft.Extensions.DependencyInjection;
+using Mt.MediaMan.AppEngine.Video.Tasks;
 
 namespace AppEngine.Video.Test
 {
@@ -11,6 +12,11 @@ namespace AppEngine.Video.Test
   {
     public static void ConfigureServices(IServiceCollection services)
     {
+      // Catalog tasks
+      services
+        .RegisterTypedFactory<IUpdateVideoImprintsFactory>().ForConcreteType<UpdateVideoImprints>();
+
+      // Internals
       services
         .RegisterTypedFactory<IVideoComparisonFactory>().ForConcreteType<VideoComparison>();
     }

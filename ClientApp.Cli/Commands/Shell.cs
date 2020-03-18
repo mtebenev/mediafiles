@@ -20,13 +20,14 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     typeof(ShellCommandScan),
     typeof(ShellCommandSearch),
     typeof(ShellCommandSearchBook),
-    typeof(ShellCommandSearchFiles)
+    typeof(ShellCommandSearchFiles),
+    typeof(ShellCommandUpdate)
     )]
   internal class Shell
   {
-    private readonly ShellAppContext _shellAppContext;
+    private readonly IShellAppContext _shellAppContext;
 
-    public Shell(ShellAppContext shellAppContext)
+    public Shell(IShellAppContext shellAppContext)
     {
       _shellAppContext = shellAppContext;
     }
