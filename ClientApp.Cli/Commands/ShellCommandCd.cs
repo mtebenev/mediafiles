@@ -11,10 +11,10 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   [Command("cd", Description = "Changes current directory")]
   internal class ShellCommandCd : ShellCommandBase
   {
-    private readonly ICommandExecutionContext _executionContext;
+    private readonly ITaskExecutionContext _executionContext;
     private readonly ShellAppContext _shellAppContext;
 
-    public ShellCommandCd(ICommandExecutionContext executionContext, ShellAppContext shellAppContext)
+    public ShellCommandCd(ITaskExecutionContext executionContext, ShellAppContext shellAppContext)
     {
       _executionContext = executionContext;
       _shellAppContext = shellAppContext;

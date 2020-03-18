@@ -18,7 +18,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     /// <summary>
     /// Load a catalog item by name (among current children) or ID (if parameter starts with ':')
     /// </summary>
-    protected async Task<ICatalogItem> GetItemByNameOrIdAsync(ShellAppContext shellContext, ICommandExecutionContext executionContext, string itemNameOrId)
+    protected async Task<ICatalogItem> GetItemByNameOrIdAsync(ShellAppContext shellContext, ITaskExecutionContext executionContext, string itemNameOrId)
     {
       var currentItem = shellContext.CurrentItem;
 
@@ -28,7 +28,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       if(itemNameOrId.StartsWith(':'))
       {
         var itemId = int.Parse(itemNameOrId.Substring(1));
-        child = await executionContext.Catalog.GetItemByIdAsync(itemId);
+        child = await shellContext.Catalog.GetItemByIdAsync(itemId);
       }
       else // by name among children
       {

@@ -1,5 +1,5 @@
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaMan.AppEngine.Commands;
+using Mt.MediaMan.AppEngine.Tasks;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {

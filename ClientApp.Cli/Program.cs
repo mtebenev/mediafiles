@@ -15,6 +15,7 @@ using Mt.MediaMan.ClientApp.Cli.Configuration;
 using NLog.Extensions.Logging;
 using MediaToolkit;
 using AppEngine.Video.Test;
+using Mt.MediaMan.AppEngine.Tasks;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -80,7 +81,7 @@ namespace Mt.MediaMan.ClientApp.Cli
         .AddSingleton(_shellAppContext)
         .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton<IFileSystem, FileSystem>()
-        .AddTransient<ICommandExecutionContext, CommandExecutionContext>();
+        .AddTransient<ITaskExecutionContext, TaskExecutionContext>();
 
       VideoModule.ConfigureServices(services);
 

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Search;
+using Mt.MediaMan.AppEngine.Tasks;
 
 namespace Mt.MediaMan.AppEngine.Scanning
 {

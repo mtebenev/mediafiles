@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Common;
 using Mt.MediaMan.AppEngine.Search;
 using Mt.MediaMan.AppEngine.Tasks;
 
@@ -12,33 +10,17 @@ namespace Mt.MediaMan.AppEngine.Cataloging
   /// <summary>
   /// The catalog implementation.
   /// </summary>
-  public class Catalog : ICatalog
+  internal class Catalog : ICatalog
   {
-    private readonly IItemStorage _itemStorage;
     private readonly IStorageManager _storageManager;
-    private readonly LuceneIndexManager _indexManager;
     private ICatalogItem _rootItem;
-
-    /// <summary>
-    /// Open/create catalog
-    /// </summary>
-    public static Catalog CreateCatalog(IServiceProvider serviceProvider)
-    {
-      var catalogSettings = serviceProvider.GetRequiredService<ICatalogSettings>();
-      var storageManager = serviceProvider.GetRequiredService<IStorageManager>();
-
-      var indexManager = new LuceneIndexManager(new Clock());
-      var catalog = new Catalog(catalogSettings.CatalogName, storageManager, indexManager);
-
-      return catalog;
-    }
 
     internal Catalog(string catalogName, IStorageManager storageManager, LuceneIndexManager indexManager)
     {
-      CatalogName = catalogName;
-      _storageManager = storageManager;
-      _indexManager = indexManager;
-      _itemStorage = new ItemStorage(storageManager);
+      this.CatalogName = catalogName;
+      this._storageManager = storageManager;
+      this.IndexManager = indexManager;
+      this.ItemStorage = new ItemStorage(storageManager);
     }
 
     /// <summary>
@@ -76,21 +58,21 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// Loads initial data from catalog (root item etc)
     /// </summary>
-    public async Task OpenAsync(StorageConfiguration storageConfiguration)
+    internal async Task OpenAsync(StorageConfiguration storageConfiguration)
     {
-      await _itemStorage.InitializeAsync(storageConfiguration.ModuleStorageProviders);
+      await ItemStorage.InitializeAsync(storageConfiguration.ModuleStorageProviders);
 
       foreach(var mdbp in storageConfiguration.ModuleDbProviders)
       {
         await mdbp.InitializeDbAsync(this._storageManager.DbConnection);
       }
 
-      if(!_indexManager.IsIndexExists(CatalogName))
-        _indexManager.CreateIndex(CatalogName);
+      if(!IndexManager.IsIndexExists(CatalogName))
+        IndexManager.CreateIndex(CatalogName);
 
       // Root item
-      var catalogItemRecord = await _itemStorage.LoadRootItemAsync();
-      _rootItem = new CatalogItem(catalogItemRecord, _itemStorage);
+      var catalogItemRecord = await ItemStorage.LoadRootItemAsync();
+      _rootItem = new CatalogItem(catalogItemRecord, ItemStorage);
     }
 
     /// <summary>
@@ -98,8 +80,8 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// </summary>
     public async Task<ICatalogItem> GetItemByIdAsync(int itemId)
     {
-      var catalogItemRecord = await _itemStorage.LoadItemByIdAsync(itemId);
-      var result = new CatalogItem(catalogItemRecord, _itemStorage);
+      var catalogItemRecord = await ItemStorage.LoadItemByIdAsync(itemId);
+      var result = new CatalogItem(catalogItemRecord, ItemStorage);
 
       return result;
     }
@@ -123,9 +105,25 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalog.
     /// </summary>
+    Task ICatalog.ExecuteTaskAsync(IInternalCatalogTask task)
+    {
+      return task.ExecuteAsync(this);
+    }
+
+    /// <summary>
+    /// ICatalog.
+    /// </summary>
+    Task<TResult> ICatalog.ExecuteTaskAsync<TResult>(IInternalCatalogTask<TResult> task)
+    {
+      return task.ExecuteAsync(this);
+    }
+
+    /// <summary>
+    /// ICatalog.
+    /// </summary>
     public void Close()
     {
-      if(_indexManager == null)
+      if(IndexManager == null)
         throw new InvalidOperationException("Catalog is not open");
 
       _rootItem = null;
@@ -134,19 +132,19 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// The item storage.
     /// </summary>
-    internal IItemStorage ItemStorage => this._itemStorage;
+    internal IItemStorage ItemStorage { get; }
 
     /// <summary>
     /// The index manager.
     /// </summary>
-    internal LuceneIndexManager IndexManager => this._indexManager;
+    internal LuceneIndexManager IndexManager { get; }
 
     /// <summary>
     /// Search in item storage by file name, return item IDs
     /// </summary>
     internal Task<IList<int>> SearchFilesAsync(string query)
     {
-      return _itemStorage.SearchItemsAsync(query);
+      return ItemStorage.SearchItemsAsync(query);
     }
 
     public ModuleStorage CreateModuleStorage()

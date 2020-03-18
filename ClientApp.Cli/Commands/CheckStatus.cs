@@ -11,10 +11,10 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   [Command("status", Description = "Checks the status of the files in the current directory")]
   internal class CheckStatus
   {
-    private readonly ICommandExecutionContext _executionContext;
+    private readonly ITaskExecutionContext _executionContext;
     private readonly ShellAppContext _shellAppContext;
 
-    public CheckStatus(ICommandExecutionContext executionContext, ShellAppContext shellAppContext)
+    public CheckStatus(ITaskExecutionContext executionContext, ShellAppContext shellAppContext)
     {
       _executionContext = executionContext;
       _shellAppContext = shellAppContext;

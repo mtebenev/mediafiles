@@ -1,6 +1,6 @@
 using System;
 
-namespace Mt.MediaMan.AppEngine.Commands
+namespace Mt.MediaMan.AppEngine.Tasks
 {
   /// <summary>
   /// Operation scope

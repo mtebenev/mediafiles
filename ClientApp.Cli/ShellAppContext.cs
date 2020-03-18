@@ -52,8 +52,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       EbooksModule.CreateStorageConfiguration(storageConfiguration);
       VideoImprintModule.ConfigureStorage(storageConfiguration);
 
-      var catalog = AppEngine.Cataloging.Catalog.CreateCatalog(serviceProvider);
-      await catalog.OpenAsync(storageConfiguration);
+      var catalog = await CatalogFactory.OpenCatalogAsync(serviceProvider, storageConfiguration);
 
       // Close current catalog
       this._catalog?.Close();

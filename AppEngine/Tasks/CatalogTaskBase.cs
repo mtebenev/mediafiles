@@ -4,7 +4,7 @@ using Mt.MediaMan.AppEngine.Cataloging;
 namespace Mt.MediaMan.AppEngine.Tasks
 {
   /// <summary>
-  /// Thin interface for catalog tasks.
+  /// Common catalog tasks should inherit this class.
   /// </summary>
   public abstract class CatalogTaskBase
   {
@@ -21,7 +21,7 @@ namespace Mt.MediaMan.AppEngine.Tasks
   }
 
   /// <summary>
-  /// The task with result.
+  /// Common catalog tasks should inherit this class.
   /// </summary>
   public abstract class CatalogTaskBase<TResult>
   {

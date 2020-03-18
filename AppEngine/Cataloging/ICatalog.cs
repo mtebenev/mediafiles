@@ -35,6 +35,16 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     Task<TResult> ExecuteTaskAsync<TResult>(CatalogTaskBase<TResult> task);
 
     /// <summary>
+    /// An internal task execution.
+    /// </summary>
+    internal Task ExecuteTaskAsync(IInternalCatalogTask task);
+
+    /// <summary>
+    /// An internal task execution with result.
+    /// </summary>
+    internal Task<TResult> ExecuteTaskAsync<TResult>(IInternalCatalogTask<TResult> task);
+
+    /// <summary>
     /// Closes the catalog.
     /// </summary>
     void Close();
