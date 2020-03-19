@@ -13,7 +13,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       _shellAppContext = shellAppContext;
     }
 
-    protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
+    protected override async Task<int> OnExecuteAsync()
     {
       await _shellAppContext.ResetCatalogStorage();
       return Program.CommandResultContinue;

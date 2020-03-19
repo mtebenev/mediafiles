@@ -16,7 +16,7 @@ namespace ClientApp.Cli.Test.Commands
     {
     }
 
-    public Task ExecuteAsync()
+    public Task<int> ExecuteAsync()
     {
       return this.OnExecuteAsync();
     }
@@ -47,7 +47,7 @@ namespace ClientApp.Cli.Test.Commands
       var command = new ShellCommandGetInfoTesing(mockShellAppContext);
       command.ItemNameOrId = ":2";
 
-      await command.ExecuteAsync();
+      var result = await command.ExecuteAsync();
 
       var output = console.GetText();
       output.Should().ContainEquivalentOf(
@@ -59,6 +59,7 @@ namespace ClientApp.Cli.Test.Commands
         );
 
       console.Dispose();
+      Assert.Equal(Program.CommandResultContinue, result);
     }
   }
 }

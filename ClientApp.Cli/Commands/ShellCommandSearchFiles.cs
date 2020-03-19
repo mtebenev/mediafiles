@@ -25,7 +25,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     [Argument(0, "query")]
     public string Query { get; set; }
 
-    protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
+    protected override async Task<int> OnExecuteAsync()
     {
       var task = new CatalogTaskSearchFiles(this.Query);
       var itemIds = await task.ExecuteAsync(this._shellAppContext.Catalog);

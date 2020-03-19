@@ -2,13 +2,15 @@ using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Test.TestUtils;
+using NSubstitute;
 using Xunit;
 
 namespace Mt.MediaMan.AppEngine.Test.Commands
 {
-  public class CommandCheckStatusTest
+  public class CatalogTaskCheckStatusTest
   {
     [Fact]
     public async Task Should_Compare_Files()
@@ -46,6 +48,8 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
 ";
 
       var mockCatalog = CatalogMockBuilder.Create(catalogDef).Build();
+      var mockCatalogContext = Substitute.For<ICatalogContext>();
+      mockCatalogContext.Catalog.Returns(mockCatalog);
 
       var mockFs = new MockFileSystem(
         new Dictionary<string, MockFileData>
@@ -54,8 +58,8 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
           { @"x:\root_folder\folder1\folder2\file2.txt", new MockFileData("abc") },
         });
 
-      var command = new CommandCheckStatus(mockFs);
-      var result = await command.ExecuteAsync(mockCatalog, @"x:\root_folder\folder1");
+      var command = new CatalogTaskCheckStatus(mockFs, @"x:\root_folder\folder1");
+      var result = await command.ExecuteAsync(mockCatalogContext);
       var expected = new[]
       {
         new CheckStatusResult {Path = @"x:\root_folder\folder1\folder2\file1.txt", Status = FsItemStatus.Ok},
@@ -105,6 +109,8 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
 ";
 
       var mockCatalog = CatalogMockBuilder.Create(catalogDef).Build();
+      var mockCatalogContext = Substitute.For<ICatalogContext>();
+      mockCatalogContext.Catalog.Returns(mockCatalog);
 
       var mockFs = new MockFileSystem(
         new Dictionary<string, MockFileData>
@@ -113,8 +119,8 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
           { @"x:\root_folder\folder 1\folder 2\file2.txt", new MockFileData("abc") },
         });
 
-      var command = new CommandCheckStatus(mockFs);
-      var result = await command.ExecuteAsync(mockCatalog, @"x:\root_folder\folder 1");
+      var command = new CatalogTaskCheckStatus(mockFs, @"x:\root_folder\folder 1");
+      var result = await command.ExecuteAsync(mockCatalogContext);
       var expected = new[]
       {
         new CheckStatusResult {Path = @"x:\root_folder\folder 1\folder 2\file1.txt", Status = FsItemStatus.Ok},

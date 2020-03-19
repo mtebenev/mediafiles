@@ -3,9 +3,15 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaMan.AppEngine.Tasks;
 
 namespace Mt.MediaMan.AppEngine.Commands
 {
+  public interface ICatalogTaskCheckStatusFactory
+  {
+    CatalogTaskBase<IList<CheckStatusResult>> Create(ICatalogItem catalogItem);
+  }
+
   public enum FsItemStatus
   {
     /// <summary>
@@ -37,24 +43,29 @@ namespace Mt.MediaMan.AppEngine.Commands
   /// <summary>
   /// Checks status of actual FS files compared to catalog.
   /// </summary>
-  public class CommandCheckStatus
+  public class CatalogTaskCheckStatus : CatalogTaskBase<IList<CheckStatusResult>>
   {
     private readonly IFileSystem _fileSystem;
+    private readonly string _fsPath;
 
-    public CommandCheckStatus(IFileSystem fileSystem)
+    public CatalogTaskCheckStatus(IFileSystem fileSystem, string fsPath)
     {
       this._fileSystem = fileSystem;
+      this._fsPath = fsPath;
     }
 
-    public async Task<IList<CheckStatusResult>> ExecuteAsync(ICatalog catalog, string fsPath)
+    /// <summary>
+    /// CatalogTaskBase.
+    /// </summary>
+    public override async Task<IList<CheckStatusResult>> ExecuteAsync(ICatalogContext catalogContext)
     {
       var result = new List<CheckStatusResult>();
-      var catalogItem = await CatalogItemUtils.FindItemByFsPathAsync(catalog, fsPath);
+      var catalogItem = await CatalogItemUtils.FindItemByFsPathAsync(catalogContext.Catalog, this._fsPath);
 
       // Enumerate
       if(catalogItem != null)
       {
-        var walker = CatalogTreeWalker.CreateDefaultWalker(catalog, catalogItem.CatalogItemId);
+        var walker = CatalogTreeWalker.CreateDefaultWalker(catalogContext.Catalog, catalogItem.CatalogItemId);
         result = await walker
           .Where(ci => !ci.IsDirectory)
           .SelectAwait(async ci =>

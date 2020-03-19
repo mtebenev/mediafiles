@@ -12,13 +12,15 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   [Command("scan", Description = "Scans files to catalog")]
   internal class ShellCommandScan : ShellCommandBase
   {
-    private readonly ICommandExecutionContext _executionContext;
     private readonly IServiceProvider _serviceProvider;
+    private readonly ITaskExecutionContext _executionContext;
+    private readonly ShellAppContext _shellAppContext;
 
-    public ShellCommandScan(ICommandExecutionContext executionContext, IServiceProvider serviceProvider)
+    public ShellCommandScan(IServiceProvider serviceProvider, ITaskExecutionContext executionContext, ShellAppContext shellAppContext)
     {
-      this._executionContext = executionContext;
       this._serviceProvider = serviceProvider;
+      this._executionContext = executionContext;
+      this._shellAppContext = shellAppContext;
     }
 
     [Argument(0, "pathAlias")]
@@ -30,7 +32,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     [Option(LongName = "name", ShortName = "n")]
     public string Name { get; set; }
 
-    protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
+    protected override async Task<int> OnExecuteAsync()
     {
       if(string.IsNullOrWhiteSpace(PathAlias))
         throw new InvalidOperationException("Please provide scan path alias");
@@ -41,10 +43,10 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
         : PathAlias.Equals("video", StringComparison.InvariantCultureIgnoreCase) ? @"C:\_books_cat"
         : PathAlias;
 
-      var task = new CatalogTaskScan(this._serviceProvider, this._executionContext, scanPath, this.Name);
-      await this._executionContext.Catalog.ExecuteTaskAsync(task);
+      var task = new CatalogTaskScan(this._executionContext, scanPath, this.Name);
+      await task.ExecuteAsync(this._shellAppContext.Catalog);
 
-      return 0;
+      return Program.CommandResultContinue;
     }
   }
 }

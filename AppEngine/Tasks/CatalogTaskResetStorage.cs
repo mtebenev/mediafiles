@@ -9,7 +9,7 @@ namespace Mt.MediaMan.AppEngine.Tasks
   /// <summary>
   /// The task resets the catalog storage.
   /// </summary>
-  public class CatalogTaskResetStorage : ICatalogTask
+  public sealed class CatalogTaskResetStorage : CatalogTaskBase
   {
     private readonly string _catalogName;
     private readonly string _connectionString;
@@ -24,9 +24,9 @@ namespace Mt.MediaMan.AppEngine.Tasks
     }
 
     /// <summary>
-    /// ICatalogTask
+    /// CatalogTaskBase.
     /// </summary>
-    async Task ICatalogTask.ExecuteAsync(Catalog catalog)
+    public override async Task ExecuteAsync(ICatalogContext catalogContext)
     {
       await StorageManager.ResetStorage(this._connectionString);
       var indexManager = new LuceneIndexManager(new Clock());

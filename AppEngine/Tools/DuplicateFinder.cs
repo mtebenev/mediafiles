@@ -45,7 +45,7 @@ namespace Mt.MediaMan.AppEngine.Tools
       foreach(var candidate in candidates)
       {
         var itemIds = candidate.Select(i => i.CatalogItemId).ToList();
-        var duplicateFindResult = await DuplicateFindResult.Create(this._catalog, itemIds);
+        var duplicateFindResult = await DuplicateFindResult.CreateAsync(this._catalog, itemIds);
 
         result.Add(duplicateFindResult);
       }

@@ -17,7 +17,7 @@ namespace Mt.MediaMan.AppEngine.Tools
     /// <summary>
     /// Factory method
     /// </summary>
-    public static async Task<DuplicateFindResult> Create(ICatalog catalog, IList<int> catalogItemIds)
+    public static async Task<DuplicateFindResult> CreateAsync(ICatalog catalog, IList<int> catalogItemIds)
     {
       var catalogItems = await CatalogItemUtils.LoadItemsByIdsAsync(catalog, catalogItemIds);
 
