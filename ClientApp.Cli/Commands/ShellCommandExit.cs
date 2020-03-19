@@ -6,7 +6,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   [Command("exit", Description = "Scans files to catalog")]
   internal class ShellCommandExit : ShellCommandBase
   {
-    protected override Task<int> OnExecuteAsync(CommandLineApplication app)
+    protected override Task<int> OnExecuteAsync()
     {
       return Task.FromResult(Program.CommandExitResult);
     }

@@ -84,7 +84,7 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
     }
 
     /// <summary>
-    /// Factory method: creates catalog mock with default structure.
+    /// Factory method: creates the catalog mock with default structure.
     /// </summary>
     public static CatalogMockBuilder CreateDefault()
     {
@@ -93,7 +93,7 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
     }
 
     /// <summary>
-    /// Factory method: creates catalog mock with given definition.
+    /// Factory method: creates the catalog mock with given definition.
     /// </summary>
     public static CatalogMockBuilder Create(string rootItemDef)
     {

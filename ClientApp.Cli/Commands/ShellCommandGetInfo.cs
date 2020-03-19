@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Scanning;
 
 namespace Mt.MediaMan.ClientApp.Cli.Commands
@@ -13,21 +12,21 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   [Command("get-info", Description = "Prints full information on a catalog item")]
   internal class ShellCommandGetInfo : ShellCommandBase
   {
-    private readonly ICommandExecutionContext _executionContext;
-    private readonly ShellAppContext _shellAppContext;
+    private readonly IShellAppContext _shellAppContext;
 
-    public ShellCommandGetInfo(ICommandExecutionContext executionContext, ShellAppContext shellAppContext)
+    public ShellCommandGetInfo(IShellAppContext shellAppContext)
     {
-      _executionContext = executionContext;
-      _shellAppContext = shellAppContext;
+      this._shellAppContext = shellAppContext;
     }
 
     [Argument(0, "itemNameOrId")]
     public string ItemNameOrId { get; set; }
 
-    protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
+    protected override async Task<int> OnExecuteAsync()
     {
-      var item = await GetItemByNameOrIdAsync(_shellAppContext, _executionContext, ItemNameOrId);
+      var item = await this.GetItemByNameOrIdAsync(
+        this._shellAppContext,
+        this.ItemNameOrId);
 
       if(item == null)
         throw new ArgumentException("Cannot load catalog item", nameof(ItemNameOrId));
@@ -43,7 +42,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
           throw new InvalidOperationException($"Unknown info part: {partName}");
       }
 
-      return 0;
+      return Program.CommandResultContinue;
     }
 
     private async Task PrintBookPartAsync(ICatalogItem catalogItem)

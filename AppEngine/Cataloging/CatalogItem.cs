@@ -51,7 +51,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     }
 
     /// <summary>
-    /// ICatalogItem
+    /// ICatalogItem.
     /// </summary>
     public async Task<IList<ICatalogItem>> GetChildrenAsync()
     {
@@ -65,7 +65,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     }
 
     /// <summary>
-    /// ICatalogItem
+    /// ICatalogItem.
     /// </summary>
     public async Task<TInfoPart> GetInfoPartAsync<TInfoPart>() where TInfoPart : InfoPartBase
     {
