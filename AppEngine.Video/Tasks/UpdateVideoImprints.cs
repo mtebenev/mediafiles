@@ -2,7 +2,6 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
-using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Tasks;

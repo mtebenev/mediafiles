@@ -10,7 +10,6 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   [Subcommand(
     typeof(ShellCommandCd),
     typeof(ShellCommandCls),
-    typeof(ShellCommandCreateBook),
     typeof(ShellCommandExit),
     typeof(ShellCommandFindDuplicates),
     typeof(ShellCommandFindVideoDuplicates),
@@ -19,7 +18,6 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     typeof(ShellCommandResetCatalog),
     typeof(ShellCommandScan),
     typeof(ShellCommandSearch),
-    typeof(ShellCommandSearchBook),
     typeof(ShellCommandSearchFiles),
     typeof(ShellCommandUpdate)
     )]
