@@ -35,7 +35,7 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
 
     public void Dispose()
     {
-      throw new NotImplementedException();
+      this._out.Dispose();
     }
 
     public void ResetColor()

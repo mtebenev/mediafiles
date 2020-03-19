@@ -10,12 +10,12 @@ namespace Mt.MediaMan.AppEngine.Tasks
   /// <summary>
   /// Finds the video duplicates.
   /// </summary>
-  public class CatalogTaskFindVideoDuplicates : CatalogTaskBase<IList<DuplicateFindResult>>
+  public class FindVideoDuplicates : CatalogTaskBase<IList<DuplicateFindResult>>
   {
     private readonly IVideoImprintStorage _imprintStorage;
     private readonly IVideoComparisonFactory _videoComparisonFactory;
 
-    public CatalogTaskFindVideoDuplicates(IVideoImprintStorage imprintStorage, IVideoComparisonFactory videoComparisonFactory)
+    public FindVideoDuplicates(IVideoImprintStorage imprintStorage, IVideoComparisonFactory videoComparisonFactory)
     {
       this._imprintStorage = imprintStorage;
       this._videoComparisonFactory = videoComparisonFactory;

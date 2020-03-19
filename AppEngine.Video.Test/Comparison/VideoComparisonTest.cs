@@ -13,18 +13,24 @@ namespace AppEngine.Video.Test.Comparison
     {
       var mockStorage = Substitute.For<IVideoImprintStorage>();
       mockStorage.GetRecordsAsync(1).Returns(
-        new VideoImprintRecord
+        new[]
         {
-          CatalogItemId = 1,
-          ImprintData = new byte[] { 1, 2, 3 },
-          VideoImprintId = 1
+          new VideoImprintRecord
+          {
+            CatalogItemId = 1,
+            ImprintData = new byte[] { 1, 2, 3 },
+            VideoImprintId = 1
+          }
         });
       mockStorage.GetRecordsAsync(2).Returns(
-        new VideoImprintRecord
+        new[]
         {
-          CatalogItemId = 2,
-          ImprintData = new byte[] { 1, 2, 3 },
-          VideoImprintId = 2
+          new VideoImprintRecord
+          {
+            CatalogItemId = 2,
+            ImprintData = new byte[] { 1, 2, 3 },
+            VideoImprintId = 2
+          }
         });
 
       var comparison = new VideoComparison(mockStorage);

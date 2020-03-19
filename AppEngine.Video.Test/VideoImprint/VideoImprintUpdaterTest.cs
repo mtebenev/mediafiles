@@ -8,7 +8,7 @@ using Xunit;
 
 namespace AppEngine.Video.Test.VideoImprint
 {
-  public class UpdateVideoImprintTaskTest
+  public class VideoImprintUpdaterTest
   {
     [Fact]
     public async Task Create_Record()
@@ -22,8 +22,8 @@ namespace AppEngine.Video.Test.VideoImprint
       var mockCi = Substitute.For<ICatalogItem>();
       mockCi.CatalogItemId.Returns(10);
 
-      var task = new UpdateVideoImprintTask(mockStorage, mockService, mockCi, @"x:\folder\file.mp4");
-      await task.ExecuteAsync();
+      var task = new VideoImprintUpdater(mockStorage, mockService);
+      await task.UpdateAsync(mockCi, @"x:\folder\file.mp4");
 
       await mockStorage.Received().SaveRecordAsync(Arg.Is<VideoImprintRecord>(x =>
       x.CatalogItemId == 10
