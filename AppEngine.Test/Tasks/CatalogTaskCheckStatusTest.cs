@@ -25,6 +25,7 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
       children: [
         {
           name: 'folder1',
+          id: 10,
           children: [
             {
               name: 'folder2',
@@ -50,6 +51,7 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
       var mockCatalog = CatalogMockBuilder.Create(catalogDef).Build();
       var mockCatalogContext = Substitute.For<ICatalogContext>();
       mockCatalogContext.Catalog.Returns(mockCatalog);
+      var mockCi = await mockCatalog.GetItemByIdAsync(10);
 
       var mockFs = new MockFileSystem(
         new Dictionary<string, MockFileData>
@@ -58,7 +60,7 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
           { @"x:\root_folder\folder1\folder2\file2.txt", new MockFileData("abc") },
         });
 
-      var command = new CatalogTaskCheckStatus(mockFs, @"x:\root_folder\folder1");
+      var command = new CatalogTaskCheckStatus(mockFs, mockCi);
       var result = await command.ExecuteAsync(mockCatalogContext);
       var expected = new[]
       {
@@ -86,6 +88,7 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
       children: [
         {
           name: 'folder 1',
+          id: 10,
           children: [
             {
               name: 'folder 2',
@@ -111,6 +114,7 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
       var mockCatalog = CatalogMockBuilder.Create(catalogDef).Build();
       var mockCatalogContext = Substitute.For<ICatalogContext>();
       mockCatalogContext.Catalog.Returns(mockCatalog);
+      var mockCi = await mockCatalog.GetItemByIdAsync(10);
 
       var mockFs = new MockFileSystem(
         new Dictionary<string, MockFileData>
@@ -119,7 +123,7 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
           { @"x:\root_folder\folder 1\folder 2\file2.txt", new MockFileData("abc") },
         });
 
-      var command = new CatalogTaskCheckStatus(mockFs, @"x:\root_folder\folder 1");
+      var command = new CatalogTaskCheckStatus(mockFs, mockCi);
       var result = await command.ExecuteAsync(mockCatalogContext);
       var expected = new[]
       {

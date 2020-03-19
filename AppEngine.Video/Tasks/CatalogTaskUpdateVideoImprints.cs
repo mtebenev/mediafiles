@@ -8,7 +8,7 @@ using Mt.MediaMan.AppEngine.Tasks;
 
 namespace Mt.MediaMan.AppEngine.Video.Tasks
 {
-  public interface IUpdateVideoImprintsFactory
+  public interface ICatalogTaskUpdateVideoImprintsFactory
   {
     public CatalogTaskBase Create(ICatalogItem catalogItem);
   }
@@ -16,7 +16,7 @@ namespace Mt.MediaMan.AppEngine.Video.Tasks
   /// <summary>
   /// Updates all video imprints starting from a given catalog item.
   /// </summary>
-  public class UpdateVideoImprints : CatalogTaskBase
+  public class CatalogTaskUpdateVideoImprints : CatalogTaskBase
   {
     private readonly ITaskExecutionContext _executionContext;
     private readonly IFileSystem _fileSystem;
@@ -26,7 +26,7 @@ namespace Mt.MediaMan.AppEngine.Video.Tasks
     /// <summary>
     /// Ctor.
     /// </summary>
-    public UpdateVideoImprints(ITaskExecutionContext executionContext, IFileSystem fileSystem, IVideoImprintUpdaterFactory updaterFactory, ICatalogItem catalogItem)
+    public CatalogTaskUpdateVideoImprints(ITaskExecutionContext executionContext, IFileSystem fileSystem, IVideoImprintUpdaterFactory updaterFactory, ICatalogItem catalogItem)
     {
       this._executionContext = executionContext;
       this._fileSystem = fileSystem;

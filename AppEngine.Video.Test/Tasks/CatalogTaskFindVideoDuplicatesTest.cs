@@ -10,7 +10,7 @@ using Xunit;
 
 namespace AppEngine.Video.Test.Tasks
 {
-  public class FindVideoDuplicatesTest
+  public class CatalogTaskFindVideoDuplicatesTest
   {
     [Fact]
     public async Task Should_Execute_Comparison_Tasks()
@@ -65,7 +65,7 @@ namespace AppEngine.Video.Test.Tasks
       var mockFactory = Substitute.For<IVideoComparisonFactory>();
       mockFactory.Create().Returns(mockComparison);
 
-      var task = new FindVideoDuplicates(mockStorage, mockFactory);
+      var task = new CatalogTaskFindVideoDuplicates(mockStorage, mockFactory);
       var result = await task.ExecuteAsync(mockCatalogContext);
 
       var expectedResult = new[]

@@ -10,7 +10,7 @@ using AppEngine.Video.VideoImprint;
 
 namespace AppEngine.Video.Test.Tasks
 {
-  public class UpdateVideoImprintsTest
+  public class CatalogTaskUpdateVideoImprintsTest
   {
     [Fact]
     public async Task Should_Invoke_Updater()
@@ -66,7 +66,7 @@ namespace AppEngine.Video.Test.Tasks
       var mockUpdaterFactory = Substitute.For<IVideoImprintUpdaterFactory>();
       mockUpdaterFactory.Create().ReturnsForAnyArgs(mockUpdater);
 
-      var task = new UpdateVideoImprints(mockExecutionContext, mockFs, mockUpdaterFactory, mockCi);
+      var task = new CatalogTaskUpdateVideoImprints(mockExecutionContext, mockFs, mockUpdaterFactory, mockCi);
       await task.ExecuteAsync(mockCatalogContext);
 
       // Verify

@@ -8,12 +8,12 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   internal class ShellCommandUpdate : ShellCommandBase
   {
     private readonly IShellAppContext _shellAppContext;
-    private readonly IUpdateVideoImprintsFactory _updateVideoImprintsFactory;
+    private readonly ICatalogTaskUpdateVideoImprintsFactory _updateVideoImprintsFactory;
 
     /// <summary>
     /// Ctor.
     /// </summary>
-    public ShellCommandUpdate(IShellAppContext shellAppContext, IUpdateVideoImprintsFactory updateVideoImprintsFactory)
+    public ShellCommandUpdate(IShellAppContext shellAppContext, ICatalogTaskUpdateVideoImprintsFactory updateVideoImprintsFactory)
     {
       this._shellAppContext = shellAppContext;
       this._updateVideoImprintsFactory = updateVideoImprintsFactory;

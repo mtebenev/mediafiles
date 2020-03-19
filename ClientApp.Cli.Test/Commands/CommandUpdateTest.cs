@@ -16,7 +16,7 @@ namespace ClientApp.Cli.Test.Commands
     public CommandUpdateTesing(
       IShellAppContext shellAppContext,
       IFileSystem fileSystem,
-      IUpdateVideoImprintsFactory updateVideoImprintsFactory
+      ICatalogTaskUpdateVideoImprintsFactory updateVideoImprintsFactory
       ) : base(shellAppContext, fileSystem, updateVideoImprintsFactory)
     {
     }
@@ -74,7 +74,7 @@ namespace ClientApp.Cli.Test.Commands
       var rootFolderItem = await mockCatalog.GetItemByIdAsync(100);
 
       var mockTask = Substitute.For<CatalogTaskBase>();
-      var mockFactory = Substitute.For<IUpdateVideoImprintsFactory>();
+      var mockFactory = Substitute.For<ICatalogTaskUpdateVideoImprintsFactory>();
       mockFactory.Create(rootFolderItem).Returns(mockTask);
 
       var mockFs = new MockFileSystem(null, @"x:\root_folder");

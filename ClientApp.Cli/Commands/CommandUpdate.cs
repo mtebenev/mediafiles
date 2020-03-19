@@ -16,9 +16,9 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   {
     private readonly IShellAppContext _shellAppContext;
     private readonly IFileSystem _fileSystem;
-    private readonly IUpdateVideoImprintsFactory _updateVideoImprintsFactory;
+    private readonly ICatalogTaskUpdateVideoImprintsFactory _updateVideoImprintsFactory;
 
-    public CommandUpdate(IShellAppContext shellAppContext, IFileSystem fileSystem, IUpdateVideoImprintsFactory updateVideoImprintsFactory)
+    public CommandUpdate(IShellAppContext shellAppContext, IFileSystem fileSystem, ICatalogTaskUpdateVideoImprintsFactory updateVideoImprintsFactory)
     {
       this._shellAppContext = shellAppContext;
       this._fileSystem = fileSystem;

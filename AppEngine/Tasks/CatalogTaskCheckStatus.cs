@@ -46,12 +46,12 @@ namespace Mt.MediaMan.AppEngine.Commands
   public class CatalogTaskCheckStatus : CatalogTaskBase<IList<CheckStatusResult>>
   {
     private readonly IFileSystem _fileSystem;
-    private readonly string _fsPath;
+    private readonly ICatalogItem _catalogItem;
 
-    public CatalogTaskCheckStatus(IFileSystem fileSystem, string fsPath)
+    public CatalogTaskCheckStatus(IFileSystem fileSystem, ICatalogItem catalogItem)
     {
       this._fileSystem = fileSystem;
-      this._fsPath = fsPath;
+      this._catalogItem = catalogItem;
     }
 
     /// <summary>
@@ -60,21 +60,17 @@ namespace Mt.MediaMan.AppEngine.Commands
     public override async Task<IList<CheckStatusResult>> ExecuteAsync(ICatalogContext catalogContext)
     {
       var result = new List<CheckStatusResult>();
-      var catalogItem = await CatalogItemUtils.FindItemByFsPathAsync(catalogContext.Catalog, this._fsPath);
 
       // Enumerate
-      if(catalogItem != null)
-      {
-        var walker = CatalogTreeWalker.CreateDefaultWalker(catalogContext.Catalog, catalogItem.CatalogItemId);
-        result = await walker
-          .Where(ci => !ci.IsDirectory)
-          .SelectAwait(async ci =>
-          {
-            var itemResult = await this.CreateItemResult(ci);
-            return itemResult;
-          })
-          .ToListAsync();
-      }
+      var walker = CatalogTreeWalker.CreateDefaultWalker(catalogContext.Catalog, this._catalogItem.CatalogItemId);
+      result = await walker
+        .Where(ci => !ci.IsDirectory)
+        .SelectAwait(async ci =>
+        {
+          var itemResult = await this.CreateItemResult(ci);
+          return itemResult;
+        })
+        .ToListAsync();
 
       return result;
     }

@@ -15,7 +15,7 @@ namespace AppEngine.Video.Test
     {
       // Catalog tasks
       services
-        .RegisterTypedFactory<IUpdateVideoImprintsFactory>().ForConcreteType<UpdateVideoImprints>();
+        .RegisterTypedFactory<ICatalogTaskUpdateVideoImprintsFactory>().ForConcreteType<CatalogTaskUpdateVideoImprints>();
 
       // Internals
       services

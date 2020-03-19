@@ -11,7 +11,7 @@ namespace ClientApp.Cli.Test.Commands
 {
   internal class ShellCommandUpdateTesing : ShellCommandUpdate
   {
-    public ShellCommandUpdateTesing(IShellAppContext shellAppContext, IUpdateVideoImprintsFactory updateVideoImprintsFactory)
+    public ShellCommandUpdateTesing(IShellAppContext shellAppContext, ICatalogTaskUpdateVideoImprintsFactory updateVideoImprintsFactory)
       : base(shellAppContext, updateVideoImprintsFactory)
     {
     }
@@ -31,7 +31,7 @@ namespace ClientApp.Cli.Test.Commands
       var mockShellAppContext = Substitute.For<IShellAppContext>();
       mockShellAppContext.CurrentItem.Returns(mockCurrentItem);
 
-      var mockFactory = Substitute.For<IUpdateVideoImprintsFactory>();
+      var mockFactory = Substitute.For<ICatalogTaskUpdateVideoImprintsFactory>();
       var mockTask = Substitute.For<CatalogTaskBase>();
       mockFactory.Create(mockCurrentItem).Returns(mockTask);
 
