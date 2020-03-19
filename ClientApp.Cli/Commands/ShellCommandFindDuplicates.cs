@@ -13,29 +13,30 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   [Command("find-duplicates", Description = "Finds duplicate items in the catalog")]
   internal class ShellCommandFindDuplicates : ShellCommandBase
   {
-    private readonly ICommandExecutionContext _executionContext;
-    private readonly ShellAppContext _shellAppContext;
+    private readonly IShellAppContext _shellAppContext;
 
-    public ShellCommandFindDuplicates(ICommandExecutionContext executionContext, ShellAppContext shellAppContext)
+    public ShellCommandFindDuplicates(IShellAppContext shellAppContext)
     {
-      _executionContext = executionContext;
-      _shellAppContext = shellAppContext;
+      this._shellAppContext = shellAppContext;
     }
 
-    protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
+    /// <summary>
+    /// ShellCommandBase.
+    /// </summary>
+    protected override async Task<int> OnExecuteAsync()
     {
       var command = new CommandFindDuplicates();
-      var result = await command.Execute(_executionContext.Catalog);
+      var result = await command.Execute(this._shellAppContext.Catalog);
 
       long totalWastedSize = 0;
-      _shellAppContext.Console.WriteLine($"{result.Count} duplicates found:");
+      this._shellAppContext.Console.WriteLine($"{result.Count} duplicates found:");
       foreach(var duplicates in result)
       {
         var wastedSize = await ProcessDuplicates(duplicates);
         totalWastedSize += wastedSize;
       }
 
-      _shellAppContext.Console.WriteLine($"Total wasted size: {StringUtils.BytesToString(totalWastedSize)}");
+      this._shellAppContext.Console.WriteLine($"Total wasted size: {StringUtils.BytesToString(totalWastedSize)}");
 
       return Program.CommandResultContinue;
     }
@@ -46,7 +47,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     private async Task<long> ProcessDuplicates(DuplicateFindResult duplicateResult)
     {
       var console = _shellAppContext.Console;
-      var firstItem = await _executionContext.Catalog.GetItemByIdAsync(duplicateResult.FileInfos[0].CatalogItemId);
+      var firstItem = await this._shellAppContext.Catalog.GetItemByIdAsync(duplicateResult.FileInfos[0].CatalogItemId);
 
       long wastedSize = 0; // Total wasted size in bytes
 

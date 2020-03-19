@@ -25,9 +25,9 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     /// <summary>
     /// ShellCommandBase.
     /// </summary>
-    protected override async Task<int> OnExecuteAsync(CommandLineApplication app)
+    protected override async Task<int> OnExecuteAsync()
     {
-      var task = ActivatorUtilities.CreateInstance<CatalogTaskFindVideoDuplicates>(this._serviceProvider);
+      var task = ActivatorUtilities.CreateInstance<FindVideoDuplicates>(this._serviceProvider);
       await task.ExecuteAsync(null);
 
       return Program.CommandResultContinue;
