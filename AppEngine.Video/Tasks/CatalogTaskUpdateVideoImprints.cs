@@ -37,7 +37,7 @@ namespace Mt.MediaMan.AppEngine.Video.Tasks
     /// <summary>
     /// CatalogTaskBase.
     /// </summary>
-    public override async Task ExecuteAsync(ICatalogContext catalogContext)
+    protected override async Task ExecuteAsync(ICatalogContext catalogContext)
     {
       var fsPath = await CatalogItemUtils.ComposeFsPathAsync(this._catalogItem);
       using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation($"Updating files at: {fsPath}"))

@@ -7,6 +7,11 @@ using Mt.MediaMan.AppEngine.Tools;
 
 namespace Mt.MediaMan.AppEngine.Tasks
 {
+  public interface ICatalogTaskFindVideoDuplicatesFactory
+  {
+    public CatalogTaskBase<IList<DuplicateFindResult>> Create();
+  }
+
   /// <summary>
   /// Finds the video duplicates.
   /// </summary>
@@ -21,7 +26,10 @@ namespace Mt.MediaMan.AppEngine.Tasks
       this._videoComparisonFactory = videoComparisonFactory;
     }
 
-    public override async Task<IList<DuplicateFindResult>> ExecuteAsync(ICatalogContext catalogContext)
+    /// <summary>
+    /// CatalogTaskBase.
+    /// </summary>
+    protected override async Task<IList<DuplicateFindResult>> ExecuteAsync(ICatalogContext catalogContext)
     {
       var itemIds = await this._imprintStorage.GetCatalogItemIdsAsync();
       var duplicateGroups = new List<IList<int>>();

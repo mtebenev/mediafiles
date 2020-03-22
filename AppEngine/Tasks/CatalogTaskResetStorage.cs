@@ -26,7 +26,7 @@ namespace Mt.MediaMan.AppEngine.Tasks
     /// <summary>
     /// CatalogTaskBase.
     /// </summary>
-    public override async Task ExecuteAsync(ICatalogContext catalogContext)
+    protected override async Task ExecuteAsync(ICatalogContext catalogContext)
     {
       await StorageManager.ResetStorage(this._connectionString);
       var indexManager = new LuceneIndexManager(new Clock());

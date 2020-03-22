@@ -49,5 +49,14 @@ namespace AppEngine.Video.VideoImprint
       var result = this._dbConnection.InsertAsync(imprintRecord);
       return result;
     }
+
+    /// <summary>
+    /// IVideoImprintStorage.
+    /// </summary>
+    public async Task DeleteRecordsAsync(int catalogItemId)
+    {
+      var query = @"delete from dbo.VideoImprint where [CatalogItemId]=@CatalogItemId";
+      await this._dbConnection.ExecuteAsync(query, new { CatalogItemId = catalogItemId });
+    }
   }
 }

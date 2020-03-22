@@ -66,7 +66,7 @@ namespace AppEngine.Video.Test.Tasks
       mockFactory.Create().Returns(mockComparison);
 
       var task = new CatalogTaskFindVideoDuplicates(mockStorage, mockFactory);
-      var result = await task.ExecuteAsync(mockCatalogContext);
+      var result = await task.ExecuteTaskAsync(mockCatalogContext);
 
       var expectedResult = new[]
       {

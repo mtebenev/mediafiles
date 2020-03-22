@@ -61,7 +61,7 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
         });
 
       var command = new CatalogTaskCheckStatus(mockFs, mockCi);
-      var result = await command.ExecuteAsync(mockCatalogContext);
+      var result = await command.ExecuteTaskAsync(mockCatalogContext);
       var expected = new[]
       {
         new CheckStatusResult {Path = @"x:\root_folder\folder1\folder2\file1.txt", Status = FsItemStatus.Ok},
@@ -124,7 +124,7 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
         });
 
       var command = new CatalogTaskCheckStatus(mockFs, mockCi);
-      var result = await command.ExecuteAsync(mockCatalogContext);
+      var result = await command.ExecuteTaskAsync(mockCatalogContext);
       var expected = new[]
       {
         new CheckStatusResult {Path = @"x:\root_folder\folder 1\folder 2\file1.txt", Status = FsItemStatus.Ok},

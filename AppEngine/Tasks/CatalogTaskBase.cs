@@ -14,10 +14,15 @@ namespace Mt.MediaMan.AppEngine.Tasks
       return this.ExecuteAsync(context);
     }
 
+    internal Task ExecuteTaskAsync(ICatalogContext catalogContext)
+    {
+      return this.ExecuteAsync(catalogContext);
+    }
+
     /// <summary>
     /// Override and implement the task logic in this method.
     /// </summary>
-    public abstract Task ExecuteAsync(ICatalogContext catalogContext);
+    protected abstract Task ExecuteAsync(ICatalogContext catalogContext);
   }
 
   /// <summary>
@@ -28,12 +33,17 @@ namespace Mt.MediaMan.AppEngine.Tasks
     internal Task<TResult> ExecuteAsync(Catalog catalog)
     {
       var context = new CatalogContext(catalog);
-      return this.ExecuteAsync(context);
+      return this.ExecuteTaskAsync(context);
+    }
+
+    internal Task<TResult> ExecuteTaskAsync(ICatalogContext catalogContext)
+    {
+      return this.ExecuteAsync(catalogContext);
     }
 
     /// <summary>
     /// Override and implement the task logic in this method.
     /// </summary>
-    public abstract Task<TResult> ExecuteAsync(ICatalogContext catalogContext);
+    protected abstract Task<TResult> ExecuteAsync(ICatalogContext catalogContext);
   }
 }

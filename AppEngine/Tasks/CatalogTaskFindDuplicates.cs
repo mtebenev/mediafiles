@@ -12,9 +12,9 @@ namespace Mt.MediaMan.AppEngine.Tasks
   public class CatalogTaskFindDuplicates : CatalogTaskBase<IList<DuplicateFindResult>>
   {
     /// <summary>
-    /// ICatalogTask
+    /// CatalogTaskBase.
     /// </summary>
-    public override async Task<IList<DuplicateFindResult>> ExecuteAsync(ICatalogContext catalogContext)
+    protected override async Task<IList<DuplicateFindResult>> ExecuteAsync(ICatalogContext catalogContext)
     {
       var itemHashes = await this.CollectHashesAsync(catalogContext.Catalog);
       var candidates = this.CollectCandidates(itemHashes);

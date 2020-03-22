@@ -67,7 +67,7 @@ namespace AppEngine.Video.Test.Tasks
       mockUpdaterFactory.Create().ReturnsForAnyArgs(mockUpdater);
 
       var task = new CatalogTaskUpdateVideoImprints(mockExecutionContext, mockFs, mockUpdaterFactory, mockCi);
-      await task.ExecuteAsync(mockCatalogContext);
+      await task.ExecuteTaskAsync(mockCatalogContext);
 
       // Verify
       await mockUpdater.Received().UpdateAsync(Arg.Is<ICatalogItem>(x => x.CatalogItemId == 100), @"x:\root_folder\folder1\video1.mp4");

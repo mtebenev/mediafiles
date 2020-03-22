@@ -57,7 +57,7 @@ namespace Mt.MediaMan.AppEngine.Commands
     /// <summary>
     /// CatalogTaskBase.
     /// </summary>
-    public override async Task<IList<CheckStatusResult>> ExecuteAsync(ICatalogContext catalogContext)
+    protected override async Task<IList<CheckStatusResult>> ExecuteAsync(ICatalogContext catalogContext)
     {
       var result = new List<CheckStatusResult>();
 
