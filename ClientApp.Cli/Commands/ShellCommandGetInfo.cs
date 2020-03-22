@@ -22,7 +22,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     [Argument(0, "itemNameOrId")]
     public string ItemNameOrId { get; set; }
 
-    protected override async Task<int> OnExecuteAsync()
+    public async Task<int> OnExecuteAsync()
     {
       var item = await this.GetItemByNameOrIdAsync(
         this._shellAppContext,

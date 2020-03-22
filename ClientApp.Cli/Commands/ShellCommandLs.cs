@@ -16,13 +16,13 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       _shellAppContext = shellAppContext;
     }
 
-    protected override async Task<int> OnExecuteAsync()
+    public async Task<int> OnExecuteAsync()
     {
       var currentItem = _shellAppContext.CurrentItem;
       var children = await currentItem.GetChildrenAsync();
 
       ShellConsoleUtils.PrintItemsTable(_shellAppContext.Console, children);
-      return 0;
+      return Program.CommandResultContinue;
     }
   }
 }

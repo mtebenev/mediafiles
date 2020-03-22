@@ -32,7 +32,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     [Option(LongName = "name", ShortName = "n")]
     public string Name { get; set; }
 
-    protected override async Task<int> OnExecuteAsync()
+    public async Task<int> OnExecuteAsync()
     {
       if(string.IsNullOrWhiteSpace(PathAlias))
         throw new InvalidOperationException("Please provide scan path alias");

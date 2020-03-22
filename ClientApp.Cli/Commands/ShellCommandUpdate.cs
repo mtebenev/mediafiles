@@ -22,7 +22,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     /// <summary>
     /// ShellCommandBase.
     /// </summary>
-    protected override async Task<int> OnExecuteAsync()
+    public async Task<int> OnExecuteAsync()
     {
       var currentItem = _shellAppContext.CurrentItem;
       var task = this._updateVideoImprintsFactory.Create(currentItem);

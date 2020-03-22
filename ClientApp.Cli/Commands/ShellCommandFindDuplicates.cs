@@ -23,7 +23,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     /// <summary>
     /// ShellCommandBase.
     /// </summary>
-    protected override async Task<int> OnExecuteAsync()
+    public async Task<int> OnExecuteAsync()
     {
       var command = new CommandFindDuplicates();
       var result = await command.Execute(this._shellAppContext.Catalog);

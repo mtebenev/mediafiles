@@ -10,11 +10,6 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   internal abstract class ShellCommandBase
   {
     /// <summary>
-    /// Should return 0 to continue execution
-    /// </summary>
-    protected abstract Task<int> OnExecuteAsync();
-
-    /// <summary>
     /// Load a catalog item by name (among current children) or ID (if parameter starts with ':')
     /// </summary>
     protected async Task<ICatalogItem> GetItemByNameOrIdAsync(IShellAppContext shellContext, string itemNameOrId)

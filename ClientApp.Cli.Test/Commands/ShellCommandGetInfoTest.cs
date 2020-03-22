@@ -9,19 +9,6 @@ using Xunit;
 
 namespace ClientApp.Cli.Test.Commands
 {
-  internal class ShellCommandGetInfoTesing : ShellCommandGetInfo
-  {
-    public ShellCommandGetInfoTesing(IShellAppContext shellAppContext)
-      : base(shellAppContext)
-    {
-    }
-
-    public Task<int> ExecuteAsync()
-    {
-      return this.OnExecuteAsync();
-    }
-  }
-
   public class ShellCommandGetInfoTest
   {
     [Fact]
@@ -44,10 +31,10 @@ namespace ClientApp.Cli.Test.Commands
       mockShellAppContext.Console.Returns(console);
       mockShellAppContext.Catalog.GetItemByIdAsync(2).Returns(mockCi);
 
-      var command = new ShellCommandGetInfoTesing(mockShellAppContext);
+      var command = new ShellCommandGetInfo(mockShellAppContext);
       command.ItemNameOrId = ":2";
 
-      var result = await command.ExecuteAsync();
+      var result = await command.OnExecuteAsync();
 
       var output = console.GetText();
       output.Should().ContainEquivalentOf(

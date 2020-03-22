@@ -9,19 +9,6 @@ using Xunit;
 
 namespace ClientApp.Cli.Test.Commands
 {
-  internal class ShellCommandUpdateTesing : ShellCommandUpdate
-  {
-    public ShellCommandUpdateTesing(IShellAppContext shellAppContext, ICatalogTaskUpdateVideoImprintsFactory updateVideoImprintsFactory)
-      : base(shellAppContext, updateVideoImprintsFactory)
-    {
-    }
-
-    public Task ExecuteAsync()
-    {
-      return this.OnExecuteAsync();
-    }
-  }
-
   public class ShellCommandUpdateTest
   {
     [Fact]
@@ -35,8 +22,8 @@ namespace ClientApp.Cli.Test.Commands
       var mockTask = Substitute.For<CatalogTaskBase>();
       mockFactory.Create(mockCurrentItem).Returns(mockTask);
 
-      var command = new ShellCommandUpdateTesing(mockShellAppContext, mockFactory);
-      await command.ExecuteAsync();
+      var command = new ShellCommandUpdate(mockShellAppContext, mockFactory);
+      await command.OnExecuteAsync();
 
       // Verify
       mockFactory.Received().Create(mockCurrentItem);
