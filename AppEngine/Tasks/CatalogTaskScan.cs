@@ -6,10 +6,20 @@ using OrchardCore.FileStorage.FileSystem;
 
 namespace Mt.MediaMan.AppEngine.Tasks
 {
+  public interface ICatalogTaskScanFactory
+  {
+    ICatalogTaskScan Create(string scanPath, string name);
+  }
+
+  public interface ICatalogTaskScan
+  {
+    Task ExecuteAsync(ICatalog catalog);
+  }
+
   /// <summary>
   /// The scan task.
   /// </summary>
-  public sealed class CatalogTaskScan : IInternalCatalogTask
+  public sealed class CatalogTaskScan : IInternalCatalogTask, ICatalogTaskScan
   {
     private readonly ITaskExecutionContext _executionContext;
     private readonly string _scanPath;

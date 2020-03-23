@@ -4,6 +4,7 @@ using AspNetCoreInjection.TypedFactories;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Commands;
+using Mt.MediaMan.AppEngine.Tasks;
 using YesSql.Provider.SqlServer;
 
 namespace Mt.MediaMan.AppEngine
@@ -32,7 +33,8 @@ namespace Mt.MediaMan.AppEngine
       // Typed factories
       services
         .RegisterTypedFactory<ICatalogTaskCheckStatusFactory>().ForConcreteType<CatalogTaskCheckStatus>();
-
+      services
+        .RegisterTypedFactory<ICatalogTaskScanFactory>().ForConcreteType<CatalogTaskScan>();
     }
   }
 }
