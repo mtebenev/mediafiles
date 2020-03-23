@@ -73,17 +73,16 @@ namespace Mt.MediaMan.ClientApp.Cli
     /// Resets catalog data
     /// TODO: For now just quit the app after the catalog reset. Cannot re-open the catalog.
     /// </summary>
-    public async Task ResetCatalogStorage()
+    public async Task ResetCatalogStorage(IServiceProvider serviceProvider)
     {
       var catalogName = _catalog.CatalogName;
 
       // Reset storage
       var task = new CatalogTaskResetStorage(catalogName, _appSettings.Catalogs[catalogName].ConnectionString);
-      await this._catalog.ExecuteTaskAsync(task);
+      await task.ExecuteAsync(this._catalog);
 
-      // Close current catalog in the shell context
-      this.CurrentItem = null;
-      this._catalog = null;
+      // Re-open the current catalog
+      await this.OpenCatalog(serviceProvider);
     }
   }
 }

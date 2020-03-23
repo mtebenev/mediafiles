@@ -1,6 +1,8 @@
+using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaMan.AppEngine.Tools;
 
 namespace Mt.MediaMan.ClientApp.Cli.Commands
 {
@@ -16,9 +18,41 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, ICatalogTaskFindVideoDuplicatesFactory taskFactory)
     {
       var task = taskFactory.Create();
-      await shellAppContext.Catalog.ExecuteTaskAsync(task);
+      var result = await shellAppContext.Catalog.ExecuteTaskAsync(task);
+
+      shellAppContext.Console.WriteLine($"{result.Count} duplicates found:");
+      foreach(var duplicates in result)
+      {
+        await ProcessDuplicates(shellAppContext, duplicates);
+      }
 
       return Program.CommandResultContinue;
     }
+
+    /// <summary>
+    /// Prints duplicate info
+    /// </summary>
+    private async Task<long> ProcessDuplicates(IShellAppContext shellAppContext, DuplicateFindResult duplicateResult)
+    {
+      var console = shellAppContext.Console;
+      var firstItem = await shellAppContext.Catalog.GetItemByIdAsync(duplicateResult.FileInfos[0].CatalogItemId);
+
+      long wastedSize = 0; // Total wasted size in bytes
+
+      console.ForegroundColor = ConsoleColor.Yellow;
+      console.WriteLine($"{firstItem.Name}");
+      console.ResetColor();
+
+      for(int i = 0; i < duplicateResult.FileInfos.Count; i++)
+      {
+        if(i > 0)
+          wastedSize += duplicateResult.FileInfos[i].FileSize;
+
+        console.WriteLine($"{i + 1}: {duplicateResult.FileInfos[i].FilePath}");
+      }
+
+      return wastedSize;
+    }
+
   }
 }

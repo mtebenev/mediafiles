@@ -16,6 +16,7 @@ using NLog.Extensions.Logging;
 using MediaToolkit;
 using AppEngine.Video.Test;
 using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaMan.AppEngine.Common;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -79,8 +80,10 @@ namespace Mt.MediaMan.ClientApp.Cli
         .AddMediaToolkit(@"C:\ffmpeg\ffmpeg.exe")
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton<IShellAppContext>(_shellAppContext)
+        .AddSingleton<ShellAppContext>(_shellAppContext)
         .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton<IFileSystem, FileSystem>()
+        .AddSingleton<IClock, Clock>()
         .AddTransient<ITaskExecutionContext, TaskExecutionContext>();
 
       VideoModule.ConfigureServices(services);

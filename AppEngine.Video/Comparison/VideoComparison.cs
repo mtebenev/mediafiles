@@ -25,9 +25,10 @@ namespace AppEngine.Video.Comparison
       var imprintRecords2 = await this._storage.GetRecordsAsync(catalogItemId2);
 
       // Compare
-      const float targetPercentage = 90;
+      const int MarginDiff = 90; // Margin difference. If diff > maring => similar
+      const float minDiff = ((float)100 - MarginDiff) / 100;
       var diff = this.CalculateDifference(imprintRecords1[0].ImprintData, imprintRecords2[0].ImprintData);
-      var result = diff < targetPercentage;
+      var result = diff < minDiff;
 
       return result;
     }
