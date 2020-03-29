@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders;
 
-namespace OrchardCore.FileStorage.FileSystem
+namespace Mt.MediaMan.AppEngine.FileStorage
 {
   public class FileSystemStoreEntry : IFileStoreEntry
   {

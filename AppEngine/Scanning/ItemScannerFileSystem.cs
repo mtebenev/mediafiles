@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.Cataloging;
-using OrchardCore.FileStorage;
+using Mt.MediaMan.AppEngine.FileStorage;
 
 namespace Mt.MediaMan.AppEngine.Scanning
 {

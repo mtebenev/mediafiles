@@ -1,6 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
-using OrchardCore.FileStorage;
+using Mt.MediaMan.AppEngine.FileStorage;
 
 namespace Mt.MediaMan.AppEngine.Scanning
 {

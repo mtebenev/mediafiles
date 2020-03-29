@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
-using OrchardCore.FileStorage;
+using Mt.MediaMan.AppEngine.FileStorage;
 
 namespace Mt.MediaMan.AppEngine.Scanning
 {

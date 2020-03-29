@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppEngine\AppEngine.csproj" />
-    <ProjectReference Include="..\OrchardCore.FileStorage.FileSystem\OrchardCore.FileStorage.FileSystem.csproj" />
   </ItemGroup>
 
 </Project>

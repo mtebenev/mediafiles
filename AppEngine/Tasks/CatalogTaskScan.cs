@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Commands;
+using Mt.MediaMan.AppEngine.FileStorage;
 using Mt.MediaMan.AppEngine.Scanning;
-using OrchardCore.FileStorage.FileSystem;
 
 namespace Mt.MediaMan.AppEngine.Tasks
 {

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace OrchardCore.FileStorage
+namespace Mt.MediaMan.AppEngine.FileStorage
 {
   /// <summary>
   /// Represents an abstract entry (file or directory) in a virtual file store.

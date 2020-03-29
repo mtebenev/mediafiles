@@ -5,8 +5,8 @@ using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.FileHandlers;
+using Mt.MediaMan.AppEngine.FileStorage;
 using Mt.MediaMan.AppEngine.Search;
-using OrchardCore.FileStorage;
 
 namespace Mt.MediaMan.AppEngine.Scanning
 {

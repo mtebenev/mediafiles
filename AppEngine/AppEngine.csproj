@@ -26,9 +26,4 @@
     <PackageReference Include="YesSql.Provider.SqlServer" Version="1.0.0-beta-1189" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OrchardCore.FileStorage.Abstractions\OrchardCore.FileStorage.Abstractions.csproj" />
-    <ProjectReference Include="..\OrchardCore.FileStorage.FileSystem\OrchardCore.FileStorage.FileSystem.csproj" />
-  </ItemGroup>
-
 </Project>
