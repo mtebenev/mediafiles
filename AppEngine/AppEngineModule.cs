@@ -4,6 +4,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Commands;
+using Mt.MediaMan.AppEngine.Scanning;
 using Mt.MediaMan.AppEngine.Tasks;
 using YesSql.Provider.Sqlite;
 
@@ -35,6 +36,8 @@ namespace Mt.MediaMan.AppEngine
         .RegisterTypedFactory<ICatalogTaskCheckStatusFactory>().ForConcreteType<CatalogTaskCheckStatus>();
       services
         .RegisterTypedFactory<ICatalogTaskScanFactory>().ForConcreteType<CatalogTaskScan>();
+      services
+        .RegisterTypedFactory<IItemScannerFileSystemFactory>().ForConcreteType<ItemScannerFileSystem>();
     }
   }
 }

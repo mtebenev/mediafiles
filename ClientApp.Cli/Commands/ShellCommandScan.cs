@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Tasks;
+using StackExchange.Profiling;
 
 namespace Mt.MediaMan.ClientApp.Cli.Commands
 {
@@ -35,7 +36,12 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
         : PathAlias;
 
       var task = taskFactory.Create(scanPath, this.Name);
+      var profiler = MiniProfiler.StartNew("ShellCommandScan");
       await task.ExecuteAsync(shellAppContext.Catalog);
+
+      await profiler.StopAsync();
+      var profileResult = profiler.RenderPlainText();
+      shellAppContext.Console.Write(profileResult);
 
       return Program.CommandResultContinue;
     }

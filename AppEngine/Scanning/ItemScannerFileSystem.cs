@@ -6,6 +6,11 @@ using Mt.MediaMan.AppEngine.FileStorage;
 
 namespace Mt.MediaMan.AppEngine.Scanning
 {
+  public interface IItemScannerFileSystemFactory
+  {
+    internal IItemScanner Create(IFileStore fileStore, ICatalogItem parentItem, IScanQueue scanQueue);
+  }
+
   internal class ItemScannerFileSystem : IItemScanner
   {
     private readonly IFileStore _fileStore;
@@ -14,7 +19,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
     private readonly IScanQueue _scanQueue;
     private readonly ILogger<ItemScannerFileSystem> _logger;
 
-    public ItemScannerFileSystem(IFileStore fileStore, IFileSystem fileSystem, ICatalogItem parentItem, IScanQueue scanQueue, ILoggerFactory loggerFactory)
+    public ItemScannerFileSystem(IFileSystem fileSystem, ILoggerFactory loggerFactory, IFileStore fileStore, ICatalogItem parentItem, IScanQueue scanQueue)
     {
       this._fileStore = fileStore;
       this._fileSystem = fileSystem;

@@ -22,15 +22,17 @@ namespace Mt.MediaMan.AppEngine.Tasks
   public sealed class CatalogTaskScan : IInternalCatalogTask, ICatalogTaskScan
   {
     private readonly ITaskExecutionContext _executionContext;
+    private readonly IItemScannerFileSystemFactory _scannerFactory;
     private readonly string _scanPath;
     private readonly string _name;
 
     /// <summary>
     /// Ctor.
     /// </summary>
-    public CatalogTaskScan(ITaskExecutionContext executionContext, string scanPath, string name)
+    public CatalogTaskScan(ITaskExecutionContext executionContext, IItemScannerFileSystemFactory scannerFactory, string scanPath, string name)
     {
       this._executionContext = executionContext;
+      this._scannerFactory = scannerFactory;
       this._scanPath = scanPath;
       this._name = name;
     }
@@ -53,7 +55,7 @@ namespace Mt.MediaMan.AppEngine.Tasks
         var mmConfig = MmConfigFactory.LoadConfig(this._scanPath);
         var scanConfiguration = new ScanConfiguration(this._name, mmConfig, this._executionContext.ServiceProvider);
 
-        var scanner = new ItemScannerFileSystem(fileStore, rootItem, scanQueue, this._executionContext.LoggerFactory);
+        var scanner = this._scannerFactory.Create(fileStore, rootItem, scanQueue);
 
         // Create scan context and execute
         var scanContext = new ScanContext(
