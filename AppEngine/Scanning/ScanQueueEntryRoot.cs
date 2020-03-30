@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
@@ -16,14 +17,16 @@ namespace Mt.MediaMan.AppEngine.Scanning
     private int? _catalogItemId;
     private readonly IScanContext _scanContext;
     private readonly IFileStore _fileStore;
+    private readonly IFileSystem _fileSystem;
     private readonly int _parentItemId;
 
-    public ScanQueueEntryRoot(IScanContext scanContext, IFileStore fileStore, int parentItemId)
+    public ScanQueueEntryRoot(IScanContext scanContext, IFileStore fileStore, IFileSystem fileSystem, int parentItemId)
     {
-      _catalogItemId = null;
-      _scanContext = scanContext;
-      _fileStore = fileStore;
-      _parentItemId = parentItemId;
+      this._catalogItemId = null;
+      this._scanContext = scanContext;
+      this._fileStore = fileStore;
+      this._fileSystem = fileSystem;
+      this._parentItemId = parentItemId;
     }
 
     public async Task StoreAsync(IItemStorage itemStorage)
@@ -35,7 +38,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
       {
         Name = String.IsNullOrWhiteSpace(_scanContext.ScanConfiguration.ScanRootItemName) ? "[SCAN_ROOT]" : _scanContext.ScanConfiguration.ScanRootItemName,
         Size = 0,
-        ParentItemId = _parentItemId,
+        ParentItemId = this._parentItemId,
         ItemType = CatalogItemType.ScanRoot
       };
 
@@ -79,8 +82,8 @@ namespace Mt.MediaMan.AppEngine.Scanning
         infoPartScanRoot.DriveType = DriveType.Network.ToString();
       else
       {
-        var drives = DriveInfo.GetDrives();
-        var driveInfo = drives.First(di => di.RootDirectory.FullName == filePathRoot);
+        var drives = this._fileSystem.DriveInfo.GetDrives();
+        var driveInfo = drives.First(di => di.Name.Equals(filePathRoot, StringComparison.InvariantCultureIgnoreCase));
         infoPartScanRoot.DriveType = driveInfo.DriveType.ToString();
       }
 

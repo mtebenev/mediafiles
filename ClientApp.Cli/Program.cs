@@ -17,6 +17,9 @@ using MediaToolkit;
 using AppEngine.Video.Test;
 using Mt.MediaMan.AppEngine.Tasks;
 using Mt.MediaMan.AppEngine.Common;
+using System.Collections.Generic;
+using System.IO;
+using Microsoft.Data.Sqlite;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -40,10 +43,13 @@ namespace Mt.MediaMan.ClientApp.Cli
 
       var configuration = new ConfigurationBuilder()
         .SetBasePath(AppContext.BaseDirectory)
-        .AddJsonFile("appsettings.json")
+        .AddJsonFile("appsettings.json", true)
         .Build();
 
       var appSettings = configuration.Get<AppSettings>();
+      if(appSettings == null)
+        appSettings = Program.CreateDefaultSettings();
+
       _shellAppContext = new ShellAppContext(appSettings);
 
       // Open startup or first catalog
@@ -102,6 +108,41 @@ namespace Mt.MediaMan.ClientApp.Cli
 
       var result = services.BuildServiceProvider();
       return result;
+    }
+
+    /// <summary>
+    /// Creates the default app settings.
+    /// </summary>
+    private static AppSettings CreateDefaultSettings()
+    {
+      var appDataPath = System.Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+      var mmDataPath = Path.Combine(appDataPath, ".mediaman");
+      Directory.CreateDirectory(mmDataPath);
+      var defaultDbPath = Path.Combine(mmDataPath, "default.db");
+
+      var connectionString = new SqliteConnectionStringBuilder
+      {
+        DataSource = defaultDbPath
+      }.ToString();
+
+
+      var defaultCatalogSettings = new CatalogSettings
+      {
+        CatalogName = "default",
+        ConnectionString = connectionString,
+        MediaRoots = new Dictionary<string, string>()
+      };
+      var settings = new AppSettings
+      {
+        StartupCatalog = "default"
+      };
+
+      settings.Catalogs = new Dictionary<string, CatalogSettings>
+      {
+        { "default", defaultCatalogSettings }
+      };
+
+      return settings;
     }
   }
 }

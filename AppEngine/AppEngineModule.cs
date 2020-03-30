@@ -1,11 +1,11 @@
 using System.Data;
-using System.Data.SqlClient;
 using AspNetCoreInjection.TypedFactories;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Tasks;
-using YesSql.Provider.SqlServer;
+using YesSql.Provider.Sqlite;
 
 namespace Mt.MediaMan.AppEngine
 {
@@ -19,11 +19,11 @@ namespace Mt.MediaMan.AppEngine
     /// </summary>
     public static void ConfigureContainer(IServiceCollection services, ICatalogSettings catalogSettings)
     {
-      services.AddSingleton<IDbConnection>(x => new SqlConnection(catalogSettings.ConnectionString));
+      services.AddSingleton<IDbConnection>(x => new SqliteConnection(catalogSettings.ConnectionString));
       services.AddSingleton<YesSql.IConfiguration>(x =>
       {
         var storeConfiguration = new YesSql.Configuration();
-        storeConfiguration.UseSqlServer(catalogSettings.ConnectionString, IsolationLevel.ReadUncommitted);
+        storeConfiguration.UseSqLite(catalogSettings.ConnectionString, IsolationLevel.ReadUncommitted);
 
         return storeConfiguration;
       });

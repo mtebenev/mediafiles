@@ -12,7 +12,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
   {
     public static async Task<bool> IsTableExistsAsync(IDbConnection dbConnection, string tableName)
     {
-      var checkTableQuery = $@"SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = '{tableName}'";
+      var checkTableQuery = $@"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'";
       var tables = await dbConnection.QueryAsync(checkTableQuery);
       var result = tables.Any();
 

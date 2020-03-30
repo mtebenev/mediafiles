@@ -30,12 +30,12 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       if(!isTableExists)
       {
         // Catalog item table
-        var query = @"CREATE TABLE [dbo].[CatalogItem] (
-    [CatalogItemId] INT            IDENTITY (1, 1) NOT NULL,
-    [Name]          NVARCHAR (256) NOT NULL,
-    [Size]          BIGINT            NULL,
-    [ParentItemId]  INT            NOT NULL,
-    [ItemType]      VARCHAR (4)    NOT NULL
+        var query = @"CREATE TABLE CatalogItem (
+                        [CatalogItemId]   INT  PRIMARY KEY ASC, 
+                        [Name]            NVARCHAR (256) NOT NULL,
+                        [Size]            BIGINT            NULL,
+                        [ParentItemId]    INT            NOT NULL,
+                        [ItemType]        VARCHAR (4)    NOT NULL
 );";
         await DbConnection.ExecuteAsync(query);
 
@@ -62,7 +62,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     public async Task<CatalogItemRecord> LoadRootItemAsync()
     {
       var query = @"select * from CatalogItem where [ItemType]=@ItemType";
-      var rootItemRecord = await DbConnection.QueryFirstOrDefaultAsync<CatalogItemRecord>(query, new {ItemType = CatalogItemType.CatalogRoot});
+      var rootItemRecord = await DbConnection.QueryFirstOrDefaultAsync<CatalogItemRecord>(query, new { ItemType = CatalogItemType.CatalogRoot });
 
       if(rootItemRecord == null)
         throw new InvalidOperationException("Cannot load root item in the catalog");
@@ -76,7 +76,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     public async Task<CatalogItemRecord> LoadItemByIdAsync(int catalogItemId)
     {
       var query = @"select * from CatalogItem where [CatalogItemId]=@CatalogItemId";
-      var itemRecord = await DbConnection.QueryFirstAsync<CatalogItemRecord>(query, new {CatalogItemId = catalogItemId});
+      var itemRecord = await DbConnection.QueryFirstAsync<CatalogItemRecord>(query, new { CatalogItemId = catalogItemId });
 
       return itemRecord;
     }
@@ -87,7 +87,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     public async Task<IList<CatalogItemRecord>> LoadChildrenAsync(int parentItemId)
     {
       var query = @"select * from CatalogItem where [ParentItemId]=@ParentItemId";
-      var itemRecords = await DbConnection.QueryAsync<CatalogItemRecord>(query, new {ParentItemId = parentItemId});
+      var itemRecords = await DbConnection.QueryAsync<CatalogItemRecord>(query, new { ParentItemId = parentItemId });
 
       return itemRecords.ToList();
     }
@@ -144,7 +144,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
         .Replace('?', '_')
         .Replace('*', '%');
 
-      var result = await DbConnection.QueryAsync<int>(query, new {NameFilter = escapedFilter});
+      var result = await DbConnection.QueryAsync<int>(query, new { NameFilter = escapedFilter });
 
       return result.ToList();
     }

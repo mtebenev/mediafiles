@@ -28,12 +28,11 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       if(string.IsNullOrWhiteSpace(PathAlias))
         throw new InvalidOperationException("Please provide scan path alias");
 
-      KeyValuePair<string, string>? mediaRoot = catalogSettings.MediaRoots
+      KeyValuePair<string, string> mediaRoot = catalogSettings.MediaRoots
         .FirstOrDefault(mr => mr.Key.Equals(PathAlias, StringComparison.InvariantCultureIgnoreCase));
-      var scanPath = mediaRoot.HasValue
-        ? mediaRoot.Value.Value
+      var scanPath = mediaRoot.Key != null
+        ? mediaRoot.Value
         : PathAlias;
-
 
       var task = taskFactory.Create(scanPath, this.Name);
       await task.ExecuteAsync(shellAppContext.Catalog);

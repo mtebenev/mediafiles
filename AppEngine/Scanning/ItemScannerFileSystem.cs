@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mt.MediaMan.AppEngine.Cataloging;
@@ -8,22 +9,24 @@ namespace Mt.MediaMan.AppEngine.Scanning
   internal class ItemScannerFileSystem : IItemScanner
   {
     private readonly IFileStore _fileStore;
+    private readonly IFileSystem _fileSystem;
     private readonly ICatalogItem _parentItem;
     private readonly IScanQueue _scanQueue;
     private readonly ILogger<ItemScannerFileSystem> _logger;
 
-    public ItemScannerFileSystem(IFileStore fileStore, ICatalogItem parentItem, IScanQueue scanQueue, ILoggerFactory loggerFactory)
+    public ItemScannerFileSystem(IFileStore fileStore, IFileSystem fileSystem, ICatalogItem parentItem, IScanQueue scanQueue, ILoggerFactory loggerFactory)
     {
-      _fileStore = fileStore;
-      _parentItem = parentItem;
-      _scanQueue = scanQueue;
-      _logger = loggerFactory.CreateLogger<ItemScannerFileSystem>();
+      this._fileStore = fileStore;
+      this._fileSystem = fileSystem;
+      this._parentItem = parentItem;
+      this._scanQueue = scanQueue;
+      this._logger = loggerFactory.CreateLogger<ItemScannerFileSystem>();
     }
 
     public async Task Scan(IScanContext scanContext)
     {
-      _logger.LogInformation("Scanning started");
-      InitQueue(scanContext);
+      this._logger.LogInformation("Scanning started");
+      this.InitQueue(scanContext);
       
       do
       {
@@ -38,7 +41,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
 
     private void InitQueue(IScanContext scanContext)
     {
-      var rootScanEntry = new ScanQueueEntryRoot(scanContext, _fileStore, _parentItem.CatalogItemId);
+      var rootScanEntry = new ScanQueueEntryRoot(scanContext, _fileStore, this._fileSystem, _parentItem.CatalogItemId);
       _scanQueue.Enqueue(rootScanEntry);
     }
   }
