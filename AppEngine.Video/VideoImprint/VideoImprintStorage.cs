@@ -24,7 +24,7 @@ namespace AppEngine.Video.VideoImprint
     /// </summary>
     public async Task<IReadOnlyList<int>> GetCatalogItemIdsAsync()
     {
-      var query = @"select distinct CatalogItemId from dbo.VideoImprint";
+      var query = @"select distinct CatalogItemId from VideoImprint";
       var catalogItemIds = await this._dbConnection.QueryAsync<int>(query);
 
       return catalogItemIds.ToList();
@@ -35,7 +35,7 @@ namespace AppEngine.Video.VideoImprint
     /// </summary>
     public async Task<IList<VideoImprintRecord>> GetRecordsAsync(int catalogItemId)
     {
-      var query = @"select * from dbo.VideoImprint where [CatalogItemId]=@CatalogItemId";
+      var query = @"select * from dbo.VideoImprint where CatalogItemId=@CatalogItemId";
       var records = await this._dbConnection.QueryAsync<VideoImprintRecord>(query, new { CatalogItemId = catalogItemId });
 
       return records.ToList();
@@ -55,7 +55,7 @@ namespace AppEngine.Video.VideoImprint
     /// </summary>
     public async Task DeleteRecordsAsync(int catalogItemId)
     {
-      var query = @"delete from dbo.VideoImprint where [CatalogItemId]=@CatalogItemId";
+      var query = @"delete from dbo.VideoImprint where CatalogItemId=@CatalogItemId";
       await this._dbConnection.ExecuteAsync(query, new { CatalogItemId = catalogItemId });
     }
   }
