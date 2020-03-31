@@ -38,33 +38,41 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     public static async Task<int> Main(string[] args)
     {
-      Console.SetWindowSize(220, 54);
-      NLog.LogManager.LoadConfiguration("nlog.config");
+      int result = 0;
+      try
+      {
+        Console.SetWindowSize(220, 54);
+        NLog.LogManager.LoadConfiguration("nlog.config");
 
-      var configuration = new ConfigurationBuilder()
-        .SetBasePath(AppContext.BaseDirectory)
-        .AddJsonFile("appsettings.json", true)
-        .Build();
+        var configuration = new ConfigurationBuilder()
+          .SetBasePath(AppContext.BaseDirectory)
+          .AddJsonFile("appsettings.json", true)
+          .Build();
 
-      var appSettings = configuration.Get<AppSettings>();
-      if(appSettings == null)
-        appSettings = Program.CreateDefaultSettings();
+        var appSettings = configuration.Get<AppSettings>();
+        if(appSettings == null)
+          appSettings = Program.CreateDefaultSettings();
 
-      _shellAppContext = new ShellAppContext(appSettings);
+        Program._shellAppContext = new ShellAppContext(appSettings);
 
-      // Open startup or first catalog
-      if(appSettings.Catalogs.Count == 0)
-        throw new InvalidOperationException("No catalogs defined");
+        // Open startup or first catalog
+        if(appSettings.Catalogs.Count == 0)
+          throw new InvalidOperationException("No catalogs defined");
 
-      Program._services = Program.ConfigureServices(appSettings);
-      await _shellAppContext.OpenCatalog(Program._services);
+        Program._services = Program.ConfigureServices(appSettings);
+        await _shellAppContext.OpenCatalog(Program._services);
 
-      var app = new CommandLineApplication<Program>();
-      app.Conventions
-        .UseDefaultConventions()
-        .UseConstructorInjection(Program._services);
+        var app = new CommandLineApplication<Program>();
+        app.Conventions
+          .UseDefaultConventions()
+          .UseConstructorInjection(Program._services);
 
-      var result = await app.ExecuteAsync(args);
+        result = await app.ExecuteAsync(args);
+      }
+      finally
+      {
+        Program._shellAppContext?.Catalog.Dispose();
+      }
       return result;
     }
 

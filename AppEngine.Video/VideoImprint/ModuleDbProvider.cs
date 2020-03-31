@@ -20,9 +20,9 @@ namespace AppEngine.Video.VideoImprint
       {
         // Catalog item table
         var query = @"CREATE TABLE VideoImprint (
-    VideoImprintId INT            NOT NULL PRIMARY KEY AUTOINCREMENT,
-    CatalogItemId  INT            NOT NULL,
-    ImprintData                   BLOB NOT NULL
+    VideoImprintId INTEGER            NOT NULL PRIMARY KEY AUTOINCREMENT,
+    CatalogItemId  INTEGER            NOT NULL,
+    ImprintData                       BLOB NOT NULL
 );";
         await dbConnection.ExecuteAsync(query);
       }

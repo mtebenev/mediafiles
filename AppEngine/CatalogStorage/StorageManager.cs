@@ -1,7 +1,7 @@
 using System.Data;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Data.Sqlite;
 using YesSql;
 
 namespace Mt.MediaMan.AppEngine.CatalogStorage
@@ -27,15 +27,15 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// </summary>
     public static async Task ResetStorage(string connectionString)
     {
-      var dbConnection = new SqlConnection(connectionString);
+      var dbConnection = new SqliteConnection(connectionString);
       var tables = new[]
       {
-        "[dbo].[CatalogItem]",
-        "[dbo].[MapIndexCatalogItem]",
-        "[dbo].[MapIndexEbook]",
-        "[dbo].[Document]",
-        "[dbo].[Identifiers]",
-        "[dbo].[VideoImprint]"
+        "CatalogItem",
+        "MapIndexCatalogItem",
+        "MapIndexEbook",
+        "Document",
+        "Identifiers",
+        "VideoImprint"
       };
       foreach (var tableName in tables)
       {

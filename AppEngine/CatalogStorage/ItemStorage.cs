@@ -34,7 +34,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
                         CatalogItemId   INTEGER        NOT NULL PRIMARY KEY AUTOINCREMENT,
                         Name            NVARCHAR (256) NOT NULL,
                         Size            BIGINT         NULL,
-                        ParentItemId    INT            NOT NULL,
+                        ParentItemId    INTEGER        NOT NULL,
                         ItemType        VARCHAR (4)    NOT NULL
 );";
         await DbConnection.ExecuteAsync(query);
