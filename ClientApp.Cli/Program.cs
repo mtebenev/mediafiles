@@ -108,6 +108,9 @@ namespace Mt.MediaMan.ClientApp.Cli
         : appSettings.Catalogs.First().Key;
 
       var catalogSettings = appSettings.Catalogs[catalogName];
+      if(String.IsNullOrEmpty(catalogSettings.ConnectionString))
+        catalogSettings.ConnectionString = Program.CreateDefaultConnectionString(catalogSettings.CatalogName);
+
       services.AddSingleton<ICatalogSettings>(x => catalogSettings);
 
       // Modules
@@ -123,21 +126,9 @@ namespace Mt.MediaMan.ClientApp.Cli
     /// </summary>
     private static AppSettings CreateDefaultSettings()
     {
-      var appDataPath = System.Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-      var mmDataPath = Path.Combine(appDataPath, ".mediaman");
-      Directory.CreateDirectory(mmDataPath);
-      var defaultDbPath = Path.Combine(mmDataPath, "default.db");
-
-      var connectionString = new SqliteConnectionStringBuilder
-      {
-        DataSource = defaultDbPath
-      }.ToString();
-
-
       var defaultCatalogSettings = new CatalogSettings
       {
         CatalogName = "default",
-        ConnectionString = connectionString,
         MediaRoots = new Dictionary<string, string>()
       };
       var settings = new AppSettings
@@ -151,6 +142,22 @@ namespace Mt.MediaMan.ClientApp.Cli
       };
 
       return settings;
+    }
+
+    private static string CreateDefaultConnectionString(string catalogName)
+    {
+      var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+      var mmDataPath = Path.Combine(appDataPath, ".mediaman");
+      Directory.CreateDirectory(mmDataPath);
+      var databaseName = $"{catalogName}.db";
+      var defaultDbPath = Path.Combine(mmDataPath, databaseName);
+
+      var connectionString = new SqliteConnectionStringBuilder
+      {
+        DataSource = defaultDbPath,
+      }.ToString();
+
+      return connectionString;
     }
   }
 }
