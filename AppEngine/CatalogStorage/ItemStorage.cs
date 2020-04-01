@@ -32,10 +32,10 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
         // Catalog item table
         var query = @"CREATE TABLE CatalogItem (
                         CatalogItemId   INTEGER        NOT NULL PRIMARY KEY AUTOINCREMENT,
-                        Name            NVARCHAR (256) NOT NULL,
+                        Path            NVARCHAR (256) NOT NULL,
+                        ItemType        VARCHAR (4)    NOT NULL,
                         Size            BIGINT         NULL,
-                        ParentItemId    INTEGER        NOT NULL,
-                        ItemType        VARCHAR (4)    NOT NULL
+                        ParentItemId    INTEGER        NOT NULL
 );";
         await DbConnection.ExecuteAsync(query);
 
@@ -154,7 +154,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       var catalogItem = new CatalogItemRecord
       {
         ItemType = CatalogItemType.CatalogRoot,
-        Name = "[ROOT]"
+        Path = "[ROOT]"
       };
 
       return CreateItemAsync(catalogItem);

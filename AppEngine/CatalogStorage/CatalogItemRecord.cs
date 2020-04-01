@@ -9,21 +9,23 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     public int CatalogItemId { get; set; }
 
     /// <summary>
-    /// File system name
+    /// The path (or uri or whatever - depends on the item type and scanner) for the item.
     /// </summary>
-    public string Name { get; set; }
+    public string Path { get; internal set; }
 
     /// <summary>
-    /// Should be one of CatalogItemType strings
+    /// <see cref="Cataloging.CatalogItemType"/>
     /// </summary>
     public string ItemType { get; set; }
 
     /// <summary>
-    /// Size in bytes for files
+    /// Size in bytes for files.
     /// </summary>
     public long Size { get; set; }
 
+    /// <summary>
+    /// The parent record id.
+    /// </summary>
     public int ParentItemId { get; set; }
-
   }
 }

@@ -22,17 +22,17 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalogItem
     /// </summary>
-    public int CatalogItemId => _catalogItemRecord.CatalogItemId;
+    public int CatalogItemId => this._catalogItemRecord.CatalogItemId;
 
     /// <summary>
     /// ICatalogItem
     /// </summary>
-    public string Name => _catalogItemRecord.Name;
+    public string Path => this._catalogItemRecord.Path;
 
     /// <summary>
     /// ICatalogItem
     /// </summary>
-    public long Size => _catalogItemRecord.Size;
+    public long Size => this._catalogItemRecord.Size;
 
     /// <summary>
     /// ICatalogItem
@@ -44,8 +44,12 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// </summary>
     public async Task<ICatalogItem> GetParentItemAsync()
     {
-      var parentItemRecord = await _itemStorage.LoadItemByIdAsync(_catalogItemRecord.ParentItemId);
-      var result = new CatalogItem(parentItemRecord, _itemStorage);
+      ICatalogItem result = null;
+      if(this._catalogItemRecord.ParentItemId != 0)
+      {
+        var parentItemRecord = await _itemStorage.LoadItemByIdAsync(_catalogItemRecord.ParentItemId);
+        result = new CatalogItem(parentItemRecord, _itemStorage);
+      }
 
       return result;
     }

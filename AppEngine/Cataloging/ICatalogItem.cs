@@ -10,9 +10,9 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     int CatalogItemId { get; }
 
     /// <summary>
-    /// Usually corresponds to a file name
+    /// The item path (for files) or item-specific string.
     /// </summary>
-    string Name { get; }
+    string Path { get; }
 
     /// <summary>
     /// Size of the item (-1 for directories)
