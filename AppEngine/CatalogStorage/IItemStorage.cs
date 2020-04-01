@@ -16,6 +16,11 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     Task<int> CreateItemAsync(CatalogItemRecord itemRecord);
 
     /// <summary>
+    /// Saves multiple items in the storage.
+    /// </summary>
+    Task CreateManyItemsAsync(IEnumerable<CatalogItemRecord> records);
+
+    /// <summary>
     /// Loads root item in the storage
     /// </summary>
     Task<CatalogItemRecord> LoadRootItemAsync();

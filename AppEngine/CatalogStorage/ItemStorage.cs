@@ -37,32 +37,57 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
                         Size            BIGINT         NULL,
                         ParentItemId    INTEGER        NOT NULL
 );";
-        await DbConnection.ExecuteAsync(query);
+        await this.DbConnection.ExecuteAsync(query);
 
         // Document storage
         await InitializeStoreAsync(moduleStorageProviders);
 
         // The root item
-        await SaveRootItemAsync();
+        await this.SaveRootItemAsync();
       }
     }
 
     /// <summary>
-    /// IItemStorage
+    /// IItemStorage.
     /// </summary>
     public async Task<int> CreateItemAsync(CatalogItemRecord itemRecord)
     {
-      int itemId = await DbConnection.InsertAsync(itemRecord);
+      int itemId = await this.DbConnection.InsertAsync(itemRecord);
       return itemId;
     }
 
     /// <summary>
-    /// IItemStorage
+    /// IItemStorage.
+    /// </summary>
+    public Task CreateManyItemsAsync(IEnumerable<CatalogItemRecord> records)
+    {
+      try
+      {
+        this.DbConnection.Open();
+        using(var transaction = this.DbConnection.BeginTransaction())
+        {
+          foreach(var r in records)
+          {
+            this.DbConnection.Insert(r, transaction);
+          }
+          transaction.Commit();
+        }
+      }
+      finally
+      {
+        this.DbConnection.Close();
+      }
+
+      return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// IItemStorage.
     /// </summary>
     public async Task<CatalogItemRecord> LoadRootItemAsync()
     {
       var query = @"select * from CatalogItem where ItemType=@ItemType";
-      var rootItemRecord = await DbConnection.QueryFirstOrDefaultAsync<CatalogItemRecord>(query, new { ItemType = CatalogItemType.CatalogRoot });
+      var rootItemRecord = await this.DbConnection.QueryFirstOrDefaultAsync<CatalogItemRecord>(query, new { ItemType = CatalogItemType.CatalogRoot });
 
       if(rootItemRecord == null)
         throw new InvalidOperationException("Cannot load root item in the catalog");
@@ -71,29 +96,29 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     }
 
     /// <summary>
-    /// IItemStorage
+    /// IItemStorage.
     /// </summary>
     public async Task<CatalogItemRecord> LoadItemByIdAsync(int catalogItemId)
     {
       var query = @"select * from CatalogItem where CatalogItemId=@CatalogItemId";
-      var itemRecord = await DbConnection.QueryFirstAsync<CatalogItemRecord>(query, new { CatalogItemId = catalogItemId });
+      var itemRecord = await this.DbConnection.QueryFirstAsync<CatalogItemRecord>(query, new { CatalogItemId = catalogItemId });
 
       return itemRecord;
     }
 
     /// <summary>
-    /// IItemStorage
+    /// IItemStorage.
     /// </summary>
     public async Task<IList<CatalogItemRecord>> LoadChildrenAsync(int parentItemId)
     {
       var query = @"select * from CatalogItem where ParentItemId=@ParentItemId";
-      var itemRecords = await DbConnection.QueryAsync<CatalogItemRecord>(query, new { ParentItemId = parentItemId });
+      var itemRecords = await this.DbConnection.QueryAsync<CatalogItemRecord>(query, new { ParentItemId = parentItemId });
 
       return itemRecords.ToList();
     }
 
     /// <summary>
-    /// IItemStorage
+    /// IItemStorage.
     /// </summary>
     public Task SaveItemDataAsync(int catalogItemId, CatalogItemData itemData)
     {
@@ -106,7 +131,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     }
 
     /// <summary>
-    /// IItemStorage
+    /// IItemStorage.
     /// </summary>
     public async Task<CatalogItemData> LoadItemDataAsync(int catalogItemId)
     {
@@ -134,7 +159,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     }
 
     /// <summary>
-    /// IItemStorage
+    /// IItemStorage.
     /// </summary>
     public async Task<IList<int>> SearchItemsAsync(string whereFilter)
     {

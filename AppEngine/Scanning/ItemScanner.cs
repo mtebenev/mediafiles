@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using MoreLinq;
 using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 
@@ -42,14 +43,20 @@ namespace Mt.MediaMan.AppEngine.Scanning
 
       var scanRootItemId = await this.CreateScanRootItemAsync(scanContext.ItemStorage, scanContext.ScanConfiguration.ScanRootItemName);
 
+      scanContext.ProgressOperation.UpdateStatus("Exploring files...");
       var records = await this._itemExplorer.Explore(this._scanPath, scanRootItemId)
         .ToListAsync();
 
-      foreach(var r in records)
+      scanContext.ProgressOperation.UpdateStatus("Saving file records...");
+
+      const int pageSize = 1000;
+      var chunks = records.Batch(pageSize);
+      foreach(var c in chunks)
       {
-        await scanContext.ItemStorage.CreateItemAsync(r);
+        await scanContext.ItemStorage.CreateManyItemsAsync(c);
       }
 
+      scanContext.ProgressOperation.UpdateStatus("Done.");
       _logger.LogInformation("Scanning finished");
     }
 
