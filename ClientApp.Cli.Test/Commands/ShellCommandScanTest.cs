@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaMan.AppEngine.Test.TestUtils;
 using Mt.MediaMan.ClientApp.Cli;
 using Mt.MediaMan.ClientApp.Cli.Commands;
 using NSubstitute;
@@ -15,6 +16,7 @@ namespace ClientApp.Cli.Test.Commands
     public async Task Should_Scan_Media_Root()
     {
       var mockShellAppContext = Substitute.For<IShellAppContext>();
+      mockShellAppContext.Console.Returns(new StringConsole());
       var mockCatalogSettings = Substitute.For<ICatalogSettings>();
       mockCatalogSettings.MediaRoots.Returns(new Dictionary<string, string>
       {
@@ -37,6 +39,7 @@ namespace ClientApp.Cli.Test.Commands
     public async Task Should_Use_Fs_Path()
     {
       var mockShellAppContext = Substitute.For<IShellAppContext>();
+      mockShellAppContext.Console.Returns(new StringConsole());
       var mockCatalogSettings = Substitute.For<ICatalogSettings>();
       mockCatalogSettings.MediaRoots.Returns(new Dictionary<string, string>
       {
