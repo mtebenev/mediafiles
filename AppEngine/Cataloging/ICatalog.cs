@@ -25,6 +25,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     Task<ICatalogItem> GetItemByIdAsync(int itemId);
 
     /// <summary>
+    /// Get structured access for catalog items for given scan root.
+    /// </summary>
+    Task<IStructureAccess> GetStructureAccessAsync(int scanRootId);
+
+    /// <summary>
     /// Executes the catalog task.
     /// </summary>
     Task ExecuteTaskAsync(CatalogTaskBase catalogTask);

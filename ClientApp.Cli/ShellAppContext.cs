@@ -6,6 +6,7 @@ using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Ebooks;
 using Mt.MediaMan.AppEngine.Tasks;
 using Mt.MediaMan.ClientApp.Cli.Configuration;
+using Mt.MediaMan.ClientApp.Cli.Core;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -17,17 +18,14 @@ namespace Mt.MediaMan.ClientApp.Cli
   {
     private readonly AppSettings _appSettings;
     private ICatalog _catalog;
+    private ICurrentLocation _currentLocation;
 
     public ShellAppContext(AppSettings appSettings)
     {
-      _appSettings = appSettings;
-      CurrentItem = null;
+      this._appSettings = appSettings;
+      this._catalog = null;
+      this._currentLocation = null;
     }
-
-    /// <summary>
-    /// IShellAppContext.
-    /// </summary>
-    public ICatalogItem CurrentItem { get; set; }
 
     /// <summary>
     /// IShellAppContext.
@@ -41,10 +39,21 @@ namespace Mt.MediaMan.ClientApp.Cli
     {
       get
       {
-        if(_catalog == null)
+        if(this._catalog == null)
           throw new InvalidOperationException("Catalog is not open");
 
-        return _catalog;
+        return this._catalog;
+      }
+    }
+
+    public ICurrentLocation CurrentLocation
+    {
+      get
+      {
+        if(this._currentLocation == null)
+          throw new InvalidOperationException("Catalog is not open");
+
+        return this._currentLocation;
       }
     }
 
@@ -64,7 +73,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       this._catalog?.Close();
 
       this._catalog = catalog;
-      CurrentItem = this._catalog.RootItem;
+      this._currentLocation = new CurrentLocation(catalog);
 
       this.Console.WriteLine($"Opened catalog: {this.Catalog.CatalogName}");
     }

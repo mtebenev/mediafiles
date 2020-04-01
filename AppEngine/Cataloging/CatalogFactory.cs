@@ -1,4 +1,5 @@
 using System;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaMan.AppEngine.CatalogStorage;
@@ -17,9 +18,10 @@ namespace Mt.MediaMan.AppEngine.Cataloging
       var catalogSettings = serviceProvider.GetRequiredService<ICatalogSettings>();
       var storageManager = serviceProvider.GetRequiredService<IStorageManager>();
       var clock = serviceProvider.GetRequiredService<IClock>();
+      var fileSystem = serviceProvider.GetRequiredService<IFileSystem>();
 
       var indexManager = new LuceneIndexManager(clock);
-      var catalog = new Catalog(catalogSettings.CatalogName, storageManager, indexManager);
+      var catalog = new Catalog(catalogSettings.CatalogName, storageManager, indexManager, fileSystem);
 
       await catalog.OpenAsync(storageConfiguration);
 
