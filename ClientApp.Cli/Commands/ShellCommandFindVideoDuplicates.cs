@@ -40,7 +40,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       long wastedSize = 0; // Total wasted size in bytes
 
       console.ForegroundColor = ConsoleColor.Yellow;
-      console.WriteLine($"{firstItem.Name}");
+      console.WriteLine($"{firstItem.Path}");
       console.ResetColor();
 
       for(int i = 0; i < duplicateResult.FileInfos.Count; i++)

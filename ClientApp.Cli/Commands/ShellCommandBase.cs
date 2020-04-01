@@ -28,7 +28,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       {
         var children = await currentItem.GetChildrenAsync();
         child = children
-          .FirstOrDefault(c => c.Name.Equals(itemNameOrId, StringComparison.InvariantCultureIgnoreCase));
+          .FirstOrDefault(c => c.Path.Equals(itemNameOrId, StringComparison.InvariantCultureIgnoreCase));
       }
 
       return child;

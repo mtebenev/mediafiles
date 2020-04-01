@@ -56,7 +56,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
     /// </summary>
     private static string CreatePrompt(ICatalogItem currentItem)
     {
-      var result = $"{currentItem.Name}>";
+      var result = $"{currentItem.Path}>";
       return result;
     }
 
