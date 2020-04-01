@@ -68,7 +68,7 @@ namespace Mt.MediaMan.AppEngine.Tools
     {
       var hash = new
       {
-        item.Name,
+        item.Path,
         item.Size
       }.GetHashCode();
 

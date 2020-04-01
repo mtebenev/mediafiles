@@ -135,7 +135,7 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
 
       // Item name
       var itemName = (string)itemDef["name"];
-      mockCatalogItem.Name.Returns(itemName);
+      mockCatalogItem.Path.Returns(itemName);
 
       // Scan root info part
       var rootPath = (string)itemDef["rootPath"];
@@ -180,7 +180,7 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
     private void BuildItemInfoParts<TInfoPart>(ICatalogItem catalogItem, Dictionary<string, TInfoPart> infoParts) where TInfoPart : InfoPartBase
     {
       TInfoPart ip;
-      if(infoParts.TryGetValue(catalogItem.Name, out ip))
+      if(infoParts.TryGetValue(catalogItem.Path, out ip))
       {
         catalogItem.GetInfoPartAsync<TInfoPart>().Returns(ip);
       }

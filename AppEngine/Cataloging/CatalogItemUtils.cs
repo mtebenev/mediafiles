@@ -48,7 +48,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
           result = result.Insert(0, infoPartScanRoot.RootPath);
         else
         {
-          result = result.Insert(0, currentItem.Name);
+          result = result.Insert(0, currentItem.Path);
           currentItem = await currentItem.GetParentItemAsync();
         }
       } while(!isFinished);
@@ -84,7 +84,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
         while(catalogItem != null && partIdx < pathParts.Length)
         {
           var children = await catalogItem.GetChildrenAsync();
-          catalogItem = children.FirstOrDefault(c => c.Name == pathParts[partIdx]);
+          catalogItem = children.FirstOrDefault(c => c.Path == pathParts[partIdx]);
           partIdx++;
         }
       }

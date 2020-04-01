@@ -57,7 +57,7 @@ namespace Mt.MediaMan.AppEngine.Test.Cataloging
       var walker = CatalogTreeWalker.CreateDefaultWalker(mockCatalog, 1);
 
       var names = await walker
-        .Select(i => i.Name)
+        .Select(i => i.Path)
         .ToListAsync();
 
       var expected = new[] { "Root", "root_folder", "folder1", "folder1_2", "folder2", "file2_1", "file2_2", "file1.txt", "file2.txt" };

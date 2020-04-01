@@ -37,7 +37,7 @@ namespace Mt.MediaMan.AppEngine
       services
         .RegisterTypedFactory<ICatalogTaskScanFactory>().ForConcreteType<CatalogTaskScan>();
       services
-        .RegisterTypedFactory<IItemScannerFileSystemFactory>().ForConcreteType<ItemScannerFileSystem>();
+        .RegisterTypedFactory<IItemScannerFactory>().ForConcreteType<ItemScanner>();
     }
   }
 }
