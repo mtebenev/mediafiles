@@ -11,7 +11,8 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
   {
     public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext)
     {
-      var children = await shellAppContext.CurrentLocation.GetChildrenAsync();
+      var currentItem = shellAppContext.CurrentItem;
+      var children = await currentItem.GetChildrenAsync();
 
       ShellConsoleUtils.PrintItemsTable(shellAppContext.Console, children);
       return Program.CommandResultContinue;

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 
@@ -14,7 +15,15 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
 
     public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext)
     {
-      await shellAppContext.CurrentLocation.ChangeAsync(this.ItemNameOrId);
+      var item = await GetItemByNameOrIdAsync(
+        shellAppContext,
+        this.ItemNameOrId);
+
+      if(item == null)
+        throw new ArgumentException("Cannot load catalog item", nameof(ItemNameOrId));
+
+      shellAppContext.CurrentItem = item;
+
       return Program.CommandResultContinue;
     }
   }

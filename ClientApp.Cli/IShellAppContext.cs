@@ -1,6 +1,5 @@
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.ClientApp.Cli.Core;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -15,9 +14,9 @@ namespace Mt.MediaMan.ClientApp.Cli
     ICatalog Catalog { get; }
 
     /// <summary>
-    /// The current catalog location.
+    /// Get/set current item for navigation
     /// </summary>
-    public ICurrentLocation CurrentLocation { get; }
+    ICatalogItem CurrentItem { get; set; }
 
     /// <summary>
     /// The console instance.
