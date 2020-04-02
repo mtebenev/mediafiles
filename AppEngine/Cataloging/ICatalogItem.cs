@@ -24,7 +24,6 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     bool IsDirectory { get; }
 
     // Navigation
-    Task<ICatalogItem> GetParentItemAsync();
     Task<IList<ICatalogItem>> GetChildrenAsync();
 
     // Info parts

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Scanning;
 using Mt.MediaMan.AppEngine.Search;
 using Mt.MediaMan.AppEngine.Tasks;
 
@@ -17,6 +16,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     private readonly IStorageManager _storageManager;
     private readonly IFileSystem _fileSystem;
     private ICatalogItem _rootItem;
+    private CatalogItemFactory _itemFactory;
 
     internal Catalog(string catalogName, IStorageManager storageManager, LuceneIndexManager indexManager, IFileSystem fileSystem)
     {
@@ -25,6 +25,9 @@ namespace Mt.MediaMan.AppEngine.Cataloging
       this.IndexManager = indexManager;
       this._fileSystem = fileSystem;
       this.ItemStorage = new ItemStorage(storageManager);
+
+      var structureAccessFactory = new StructureAccessFactory(fileSystem, this.ItemStorage);
+      this._itemFactory = new CatalogItemFactory(this.ItemStorage, structureAccessFactory);
     }
 
     /// <summary>
@@ -76,7 +79,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
 
       // Root item
       var catalogItemRecord = await ItemStorage.LoadRootItemAsync();
-      _rootItem = new CatalogItem(catalogItemRecord, ItemStorage);
+      this._rootItem = new CatalogItem(catalogItemRecord, this.ItemStorage, this._itemFactory);
     }
 
     /// <summary>
@@ -85,22 +88,8 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     public async Task<ICatalogItem> GetItemByIdAsync(int itemId)
     {
       var catalogItemRecord = await ItemStorage.LoadItemByIdAsync(itemId);
-      var result = new CatalogItem(catalogItemRecord, ItemStorage);
+      var result = this._itemFactory.CreateItem(catalogItemRecord);
 
-      return result;
-    }
-
-    /// <summary>
-    /// ICatalog.
-    /// </summary>
-    public async Task<IStructureAccess> GetStructureAccessAsync(int scanRootId)
-    {
-      var scanRootItem = await this.GetItemByIdAsync(scanRootId);
-      var infoPartScanRoot = await scanRootItem.GetInfoPartAsync<InfoPartScanRoot>();
-      if(infoPartScanRoot == null)
-        throw new InvalidOperationException($"The catalog item {scanRootId} is not a scan root.");
-
-      var result = new StructureAccessFs(this._fileSystem, this.ItemStorage, scanRootId);
       return result;
     }
 

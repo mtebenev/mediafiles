@@ -2,95 +2,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Scanning;
 
 namespace Mt.MediaMan.AppEngine.Cataloging
 {
-  internal class CatalogItem : ICatalogItem
+  /// <summary>
+  /// Common catalog item implementation.
+  /// </summary>
+  internal class CatalogItem : CatalogItemBase
   {
-    private readonly CatalogItemRecord _catalogItemRecord;
-    private CatalogItemData _catalogItemData;
-    private readonly IItemStorage _itemStorage;
-
-    public CatalogItem(CatalogItemRecord catalogItemRecord, IItemStorage itemStorage)
+    public CatalogItem(CatalogItemRecord catalogItemRecord, IItemStorage itemStorage, ICatalogItemFactory catalogItemFactory)
+      : base(catalogItemRecord, itemStorage, catalogItemFactory)
     {
-      _catalogItemRecord = catalogItemRecord;
-      _itemStorage = itemStorage;
-      _catalogItemData = null;
-    }
-
-    /// <summary>
-    /// ICatalogItem
-    /// </summary>
-    public int CatalogItemId => this._catalogItemRecord.CatalogItemId;
-
-    /// <summary>
-    /// ICatalogItem
-    /// </summary>
-    public string Path => this._catalogItemRecord.Path;
-
-    /// <summary>
-    /// ICatalogItem
-    /// </summary>
-    public long Size => this._catalogItemRecord.Size;
-
-    /// <summary>
-    /// ICatalogItem
-    /// </summary>
-    public bool IsDirectory => this.Size == -1;
-
-    /// <summary>
-    /// ICatalogItem
-    /// </summary>
-    public async Task<ICatalogItem> GetParentItemAsync()
-    {
-      ICatalogItem result = null;
-      if(this._catalogItemRecord.ParentItemId != 0)
-      {
-        var parentItemRecord = await _itemStorage.LoadItemByIdAsync(_catalogItemRecord.ParentItemId);
-        result = new CatalogItem(parentItemRecord, _itemStorage);
-      }
-
-      return result;
     }
 
     /// <summary>
     /// ICatalogItem.
     /// </summary>
-    public async Task<IList<ICatalogItem>> GetChildrenAsync()
+    public override async Task<IList<ICatalogItem>> GetChildrenAsync()
     {
-      var childrenItemRecords = await _itemStorage.LoadChildrenAsync(_catalogItemRecord.CatalogItemId);
+      var childrenItemRecords = await this._itemStorage.LoadChildrenAsync(_catalogItemRecord.CatalogItemId);
       var childrenItems = childrenItemRecords
-        .Select(r => new CatalogItem(r, _itemStorage))
-        .Cast<ICatalogItem>()
+        .Select(r => this.CreateChildItem(r))
         .ToList();
 
       return childrenItems;
     }
 
     /// <summary>
-    /// ICatalogItem.
+    /// ICatalogItem
     /// </summary>
-    public async Task<TInfoPart> GetInfoPartAsync<TInfoPart>() where TInfoPart : InfoPartBase
-    {
-      await EnsureItemDataLoaded();
-
-      var result = _catalogItemData.Get<TInfoPart>();
-      return result;
-    }
-
-    public async Task<IList<string>> GetInfoPartNamesAsync()
-    {
-      await EnsureItemDataLoaded();
-
-      var result = _catalogItemData.Data.Properties().Select(p => p.Name).ToList();
-      return result;
-    }
-
-    private async Task EnsureItemDataLoaded()
-    {
-      if(_catalogItemData == null)
-        _catalogItemData = await _itemStorage.LoadItemDataAsync(_catalogItemRecord.CatalogItemId);
-    }
+    public override bool IsDirectory => this.Size == -1;
   }
 }
