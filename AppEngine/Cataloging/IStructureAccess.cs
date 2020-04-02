@@ -13,10 +13,5 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// Returns direct children at the item location.
     /// </summary>
     Task<IList<CatalogItemRecord>> QueryLevelAsync(CatalogItemLocation catalogItemLocation);
-
-    /// <summary>
-    /// Creates location object from ID of an item belonging to the scan root.
-    /// </summary>
-    Task<CatalogItemLocation> CreateLocationAsync(int catalogItemId);
   }
 }
