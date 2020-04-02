@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,7 +37,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
 
       var result = records
         .Select(r => r.ItemType == CatalogItemType.VirtualFolder
-        ? this.CreateVirtualFolderItem(r)
+        ? this.CreateVirtualFolderItem(r, structureAccess, location)
         : this.CreateChildItem(r))
         .ToList();
 
@@ -48,9 +47,10 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// Creates a new virtual folder item based on the record.
     /// </summary>
-    private ICatalogItem CreateVirtualFolderItem(CatalogItemRecord record)
+    private ICatalogItem CreateVirtualFolderItem(CatalogItemRecord record, IStructureAccess structureAccess, CatalogItemLocation location)
     {
-      var result = new CatalogItemVirtualFolder(record, this._itemStorage, this._catalogItemFactory);
+      var childLocation = location.CreateChildLocation(record.Path);
+      var result = new CatalogItemVirtualFolder(record, this._itemStorage, this._catalogItemFactory, childLocation, structureAccess);
       return result;
     }
   }
