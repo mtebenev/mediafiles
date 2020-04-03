@@ -6,7 +6,7 @@ using Mt.MediaMan.AppEngine.Search;
 namespace Mt.MediaMan.AppEngine.FileHandlers
 {
   /// <summary>
-  /// Abstract factory for file handlers
+  /// Abstract factory for file handlers.
   /// </summary>
   internal interface IFileHandler
   {
@@ -15,7 +15,14 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
     /// </summary>
     string Id { get; }
 
+    /// <summary>
+    /// The scan driver extracts file properties.
+    /// </summary>
     IScanDriver ScanDriver { get; }
+
+    /// <summary>
+    /// The item indexer store searchable properties in the index.
+    /// </summary>
     ICatalogItemIndexer CatalogItemIndexer { get; }
 
     /// <summary>

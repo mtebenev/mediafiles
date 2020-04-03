@@ -8,7 +8,19 @@ namespace Mt.MediaMan.AppEngine.Scanning
   /// </summary>
   internal interface IScanConfiguration
   {
+    /// <summary>
+    /// The subtasks to perform.
+    /// </summary>
+    IReadOnlyList<ISubTask> SubTasks { get; }
+
+    /// <summary>
+    /// Configured file handlers.
+    /// </summary>
     IReadOnlyList<IFileHandler> FileHandlers { get; }
+
+    /// <summary>
+    /// Given scan root item name.
+    /// </summary>
     string ScanRootItemName { get; }
 
     /// <summary>

@@ -41,8 +41,9 @@ namespace Mt.MediaMan.AppEngine.Scanning
     {
       this._logger.LogInformation("Scanning started");
 
-      var scanRootItemId = await this.CreateScanRootItemAsync(scanContext.ItemStorage, scanContext.ScanConfiguration.ScanRootItemName);
+      var (scanRootItemId, location) = await this.CreateScanRootItemAsync(scanContext.ItemStorage, scanContext.ScanConfiguration.ScanRootItemName);
 
+      // Explore and save the items (file infos)
       scanContext.ProgressOperation.UpdateStatus("Exploring files...");
       var records = await this._itemExplorer.Explore(this._scanPath, scanRootItemId)
         .ToListAsync();
@@ -56,14 +57,23 @@ namespace Mt.MediaMan.AppEngine.Scanning
         await scanContext.ItemStorage.CreateManyItemsAsync(c);
       }
 
+      // Do scan sub-tasks
+      if(scanContext.ScanConfiguration.SubTasks.Any())
+      {
+        scanContext.ProgressOperation.UpdateStatus("Scanning files...");
+        await this.RunScanSubTasksAsync(scanContext, location);
+      }
+
+
       scanContext.ProgressOperation.UpdateStatus("Done.");
       _logger.LogInformation("Scanning finished");
     }
 
     /// <summary>
-    /// Stores catalog item data for scan root
+    /// Stores catalog item data for scan root.
+    /// Returns tuple with the scan root item id and catalog location.
     /// </summary>
-    private async Task<int> CreateScanRootItemAsync(IItemStorage itemStorage, string itemName)
+    private async Task<(int, CatalogItemLocation)> CreateScanRootItemAsync(IItemStorage itemStorage, string itemName)
     {
       // Create the store record
       var scanRootRecord = new CatalogItemRecord
@@ -83,8 +93,24 @@ namespace Mt.MediaMan.AppEngine.Scanning
       catalogItemData.Apply(infoPartScanRoot);
 
       await itemStorage.SaveItemDataAsync(scanRootItemId, catalogItemData);
+      var location = new CatalogItemLocation(scanRootItemId, infoPartScanRoot.RootPath);
 
-      return scanRootItemId;
+      return (scanRootItemId, location);
+    }
+
+    /// <summary>
+    /// Runs the scanning sub-tasks on the catalog items.
+    /// </summary>
+    private async Task RunScanSubTasksAsync(IScanContext scanContext, CatalogItemLocation location)
+    {
+      var records = await scanContext.ItemStorage.QuerySubtree(location);
+      foreach(var r in records)
+      {
+        foreach(var subTask in scanContext.ScanConfiguration.SubTasks)
+        {
+          await subTask.ExecuteAsync(scanContext, r);
+        }
+      }
     }
   }
 }
