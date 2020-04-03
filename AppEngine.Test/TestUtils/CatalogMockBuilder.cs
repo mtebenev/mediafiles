@@ -134,8 +134,8 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
       mockCatalogItem.CatalogItemId.Returns(itemId);
 
       // Item name
-      var itemName = (string)itemDef["name"];
-      mockCatalogItem.Path.Returns(itemName);
+      var itemPath = (string)itemDef["path"];
+      mockCatalogItem.Path.Returns(itemPath);
 
       // Scan root info part
       var rootPath = (string)itemDef["rootPath"];
@@ -151,6 +151,12 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
       if(itemDef["fileSize"] != null)
       {
         mockCatalogItem.Size.Returns((int)itemDef["fileSize"]);
+        mockCatalogItem.ItemType.Returns(CatalogItemType.File);
+        mockCatalogItem.Name.Returns(System.IO.Path.GetFileName(itemPath));
+      }
+      else
+      {
+        mockCatalogItem.Name.Returns(itemPath);
       }
 
 
@@ -164,11 +170,6 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
         var children = itemDef["children"]
         .Select(c => this.DeserializeItemDef(mockCatalog, (JObject)c))
         .ToList();
-
-        foreach(var c in children)
-        {
-          c.GetParentItemAsync().Returns(mockCatalogItem);
-        }
 
         mockCatalogItem.GetChildrenAsync().Returns(children);
         mockCatalogItem.IsDirectory.Returns(true);

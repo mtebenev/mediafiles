@@ -13,23 +13,23 @@ namespace Mt.MediaMan.AppEngine.Test.Cataloging
     {
       var catalogDef = @"
 {
-  name: 'Root',
+  path: 'Root',
   children: [
     {
-      name: 'root_folder',
+      path: 'scan_root',
       children: [
         {
-          name: 'folder1',
+          path: 'folder1',
           children: [
             {
-              name: 'folder2',
+              path: 'folder2',
               children: [
                 {
-                  name: 'file1.txt',
+                  path: 'file1.txt',
                   fileSize: 3
                 },
                 {
-                  name: 'file2.txt',
+                  path: 'file2.txt',
                   fileSize: 3
                 }
               ]
@@ -37,13 +37,13 @@ namespace Mt.MediaMan.AppEngine.Test.Cataloging
           ]
         },
         {
-          name: 'folder1_2',
+          path: 'folder1_2',
           children: [
             {
-              name: 'file2_1'
+              path: 'file2_1'
             },
             {
-              name: 'file2_2'
+              path: 'file2_2'
             }
           ]
         }
@@ -60,7 +60,7 @@ namespace Mt.MediaMan.AppEngine.Test.Cataloging
         .Select(i => i.Path)
         .ToListAsync();
 
-      var expected = new[] { "Root", "root_folder", "folder1", "folder1_2", "folder2", "file2_1", "file2_2", "file1.txt", "file2.txt" };
+      var expected = new[] { "Root", "scan_root", "folder1", "folder1_2", "folder2", "file2_1", "file2_2", "file1.txt", "file2.txt" };
       Assert.Equal(expected, names);
     }
   }

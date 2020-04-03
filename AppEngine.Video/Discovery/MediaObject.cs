@@ -19,7 +19,7 @@ namespace AppEngine.Video.Discovery
     /// </summary>
     public Task<string> GetFsPathAsync()
     {
-      return CatalogItemUtils.ComposeFsPathAsync(this._catalogItem);
+      return Task.FromResult(this._catalogItem.Path);
     }
   }
 }

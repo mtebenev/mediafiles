@@ -83,8 +83,8 @@ namespace Mt.MediaMan.AppEngine.Commands
       var result = new CheckStatusResult
       {
         CatalogItemId = catalogItem.CatalogItemId,
+        Path = catalogItem.Path
       };
-      result.Path = await CatalogItemUtils.ComposeFsPathAsync(catalogItem);
 
       if(!this._fileSystem.File.Exists(result.Path))
       {

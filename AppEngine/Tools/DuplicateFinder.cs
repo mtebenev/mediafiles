@@ -58,6 +58,7 @@ namespace Mt.MediaMan.AppEngine.Tools
       int catalogItemId = _catalog.RootItem.CatalogItemId; // Start from catalog root
       var walker = CatalogTreeWalker.CreateDefaultWalker(_catalog, catalogItemId);
       var result = await walker
+        .Where(ci => ci.ItemType == CatalogItemType.File)
         .Select(ci => this.CreateItemHash(ci))
         .ToListAsync();
 
@@ -68,7 +69,7 @@ namespace Mt.MediaMan.AppEngine.Tools
     {
       var hash = new
       {
-        item.Path,
+        item.Name,
         item.Size
       }.GetHashCode();
 

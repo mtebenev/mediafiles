@@ -27,6 +27,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// <summary>
     /// ICatalogItem.
     /// </summary>
+    public override string Name => this.Path;
+
+    /// <summary>
+    /// ICatalogItem.
+    /// </summary>
     public override async Task<IList<ICatalogItem>> GetChildrenAsync()
     {
       var structureAccess = await this._structureAccessFactory.CreateAsync(this.CatalogItemId);

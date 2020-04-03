@@ -39,8 +39,7 @@ namespace Mt.MediaMan.AppEngine.Video.Tasks
     /// </summary>
     protected override async Task ExecuteAsync(ICatalogContext catalogContext)
     {
-      var fsPath = await CatalogItemUtils.ComposeFsPathAsync(this._catalogItem);
-      using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation($"Updating files at: {fsPath}"))
+      using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation($"Updating files at: {this._catalogItem.Path}"))
       {
         var walker = CatalogTreeWalker.CreateDefaultWalker(catalogContext.Catalog, this._catalogItem.CatalogItemId);
         await walker.ForEachAwaitAsync(async ci =>
@@ -57,15 +56,13 @@ namespace Mt.MediaMan.AppEngine.Video.Tasks
     /// </summary>
     private async Task UpdateItem(IProgressOperation progressOperation, ICatalogItem catalogItem)
     {
-      var fsPath = await CatalogItemUtils.ComposeFsPathAsync(catalogItem);
-
-      var extension = _fileSystem.Path.GetExtension(fsPath);
+      var extension = _fileSystem.Path.GetExtension(catalogItem.Path);
       var supportedExtensions = new[] { ".flv", ".mp4", ".wmv", ".avi", ".mkv" };
       if(supportedExtensions.Any(e => e.Equals(extension)))
       {
-        progressOperation.UpdateStatus($"Updating file: {fsPath}");
+        progressOperation.UpdateStatus($"Updating file: {catalogItem.Path}");
         var updater = this._updaterFactory.Create();
-        await updater.UpdateAsync(catalogItem, fsPath);
+        await updater.UpdateAsync(catalogItem, catalogItem.Path);
       }
     }
   }

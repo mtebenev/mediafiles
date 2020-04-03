@@ -9,7 +9,12 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     int CatalogItemId { get; }
 
     /// <summary>
-    /// The item path (for files) or item-specific string.
+    /// Item type-specific name (file name for FS items).
+    /// </summary>
+    string Name { get; }
+
+    /// <summary>
+    /// The item path (for files) or item type-specific string.
     /// </summary>
     string Path { get; }
 
@@ -22,6 +27,11 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     /// True if the item is directory.
     /// </summary>
     bool IsDirectory { get; }
+
+    /// <summary>
+    /// <see cref="CatalogItemType"/>
+    /// </summary>
+    string ItemType { get; }
 
     // Navigation
     Task<IList<ICatalogItem>> GetChildrenAsync();

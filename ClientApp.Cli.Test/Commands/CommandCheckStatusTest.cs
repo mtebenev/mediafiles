@@ -28,10 +28,10 @@ namespace ClientApp.Cli.Test.Commands
     {
       var catalogDef = @"
 {
-  name: 'Root',
+  path: 'Root',
   children: [
     {
-      name: 'root_folder',
+      path: 'scan_root',
       id: 100,
       rootPath: 'x:\\root_folder'
     }

@@ -17,31 +17,15 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
     {
       var catalogDef = @"
 {
-  name: 'Root',
+  path: 'Root',
   children: [
     {
-      name: 'root_folder',
+      path: 'scan_root',
       rootPath: 'x:\\root_folder',
+      id: 10,
       children: [
-        {
-          name: 'folder1',
-          id: 10,
-          children: [
-            {
-              name: 'folder2',
-              children: [
-                {
-                  name: 'file1.txt',
-                  fileSize: 3
-                },
-                {
-                  name: 'file2.txt',
-                  fileSize: 3
-                },
-              ]
-            }
-          ]
-        }
+        { path: 'x:\\root_folder\\folder1\\folder2\\file1.txt', fileSize: 3 },
+        { path: 'x:\\root_folder\\folder1\\folder2\\file2.txt', fileSize: 3 }
       ]
     }
   ]
@@ -80,31 +64,15 @@ namespace Mt.MediaMan.AppEngine.Test.Commands
     {
       var catalogDef = @"
 {
-  name: 'Root',
+  path: 'Root',
   children: [
     {
-      name: 'root_folder',
+      path: 'scan_root',
       rootPath: 'x:\\root_folder',
+      id: 10,
       children: [
-        {
-          name: 'folder 1',
-          id: 10,
-          children: [
-            {
-              name: 'folder 2',
-              children: [
-                {
-                  name: 'file1.txt',
-                  fileSize: 3
-                },
-                {
-                  name: 'file2.txt',
-                  fileSize: 3
-                },
-              ]
-            }
-          ]
-        }
+        { path: 'x:\\root_folder\\folder 1\\folder 2\\file1.txt', fileSize: 3 },
+        { path: 'x:\\root_folder\\folder 1\\folder 2\\file2.txt', fileSize: 3 }
       ]
     }
   ]

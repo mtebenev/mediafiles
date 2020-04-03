@@ -14,32 +14,15 @@ namespace Mt.MediaMan.AppEngine.Test.Tools
     {
       var catalogDef = @"
 {
-  name: 'Root',
-  rootPath: 'x:\\root_folder',
+  path: 'Root',
   children: [
     {
-      name: 'folder1',
+      path: 'scan_root',
+      rootPath: 'x:\\root_folder',
       children: [
-        {
-            id: 100,
-            name: 'file1.txt',
-            fileSize: 3
-        },
-        {
-            id: 200,
-            name: 'file2.txt',
-            fileSize: 3
-        }
-      ]
-    },
-    {
-      name: 'folder2',
-      children: [
-        {
-            id: 300,
-            name: 'file1.txt',
-            fileSize: 3
-        }
+        { id: 100, path: 'x:\\root_folder\\folder1\\file1.txt', fileSize: 3 },
+        { id: 200, path: 'x:\\root_folder\\folder1\\file2.txt', fileSize: 3 },
+        { id: 300, path: 'x:\\root_folder\\folder2\\file1.txt', fileSize: 3 }
       ]
     }
   ]

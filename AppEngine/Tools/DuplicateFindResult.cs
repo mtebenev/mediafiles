@@ -27,9 +27,11 @@ namespace Mt.MediaMan.AppEngine.Tools
 
       foreach(var catalogItem in catalogItems)
       {
-        var fsPath = await CatalogItemUtils.ComposeFsPathAsync(catalogItem);
-        var brifFileInfo = new BriefFileInfo(catalogItem.CatalogItemId, fsPath, catalogItem.Size);
-
+        var brifFileInfo = new BriefFileInfo(
+          catalogItem.CatalogItemId,
+          catalogItem.Path,
+          catalogItem.Size
+          );
         fileInfos.Add(brifFileInfo);
       }
 

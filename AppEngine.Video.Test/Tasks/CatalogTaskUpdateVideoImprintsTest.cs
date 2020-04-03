@@ -17,39 +17,16 @@ namespace AppEngine.Video.Test.Tasks
     {
       var catalogDef = @"
 {
-  name: 'Root',
+  path: 'Root',
   children: [
     {
-      name: 'scan_root',
+      path: 'scan_root',
       rootPath: 'x:\\root_folder',
       id: 10,
       children: [
-        {
-          name: 'folder1',
-          children: [
-            {
-              id: 100,
-              name: 'video1.mp4',
-              fileSize: 3
-            },
-            {
-              id: 200,
-              name: 'video2.mp4',
-              fileSize: 3
-            }
-          ]
-        },
-        {
-          name: 'folder2',
-          children: [
-            {
-              id: 300,
-              name: 'video3.flv',
-              fileSize: 3
-            }
-          ]
-        }
-    
+        { id: 100, path: 'x:\\root_folder\\folder1\\video1.mp4', fileSize: 3 },
+        { id: 200, path: 'x:\\root_folder\\folder1\\video2.mp4', fileSize: 3 },
+        { id: 300, path: 'x:\\root_folder\\folder2\\video3.flv', fileSize: 3 },
       ]
     }
   ]

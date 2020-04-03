@@ -29,8 +29,13 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     }
 
     /// <summary>
-    /// ICatalogItem
+    /// ICatalogItem.
     /// </summary>
     public override bool IsDirectory => this.Size == -1;
+
+    /// <summary>
+    /// ICatalogItem.
+    /// </summary>
+    public override string Name => System.IO.Path.GetFileName(this.Path);
   }
 }

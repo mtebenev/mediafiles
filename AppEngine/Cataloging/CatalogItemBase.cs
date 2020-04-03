@@ -22,19 +22,24 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     }
 
     /// <summary>
-    /// ICatalogItem
+    /// ICatalogItem.
     /// </summary>
     public int CatalogItemId => this._catalogItemRecord.CatalogItemId;
 
     /// <summary>
-    /// ICatalogItem
+    /// ICatalogItem.
     /// </summary>
     public string Path => this._catalogItemRecord.Path;
 
     /// <summary>
-    /// ICatalogItem
+    /// ICatalogItem.
     /// </summary>
     public long Size => this._catalogItemRecord.Size;
+
+    /// <summary>
+    /// ICatalogItem.
+    /// </summary>
+    public string ItemType => this._catalogItemRecord.ItemType;
 
     /// <summary>
     /// ICatalogItem.
@@ -63,6 +68,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
       return result;
     }
 
+    public abstract string Name { get; }
     public abstract bool IsDirectory { get; }
 
     private async Task EnsureItemDataLoaded()

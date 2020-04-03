@@ -27,36 +27,6 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     }
 
     /// <summary>
-    /// Creates physical file system path for a given catalog item
-    /// </summary>
-    public static async Task<string> ComposeFsPathAsync(ICatalogItem catalogItem)
-    {
-      var result = "";
-      var isFinished = false;
-
-      var currentItem = catalogItem;
-      do
-      {
-        // Determine if the item is scan root
-        var infoPartScanRoot = await currentItem.GetInfoPartAsync<InfoPartScanRoot>();
-        isFinished = infoPartScanRoot != null;
-
-        if(result.Length > 0)
-          result = result.Insert(0, @"\");
-
-        if(infoPartScanRoot != null)
-          result = result.Insert(0, infoPartScanRoot.RootPath);
-        else
-        {
-          result = result.Insert(0, currentItem.Path);
-          currentItem = await currentItem.GetParentItemAsync();
-        }
-      } while(!isFinished);
-
-      return result;
-    }
-
-    /// <summary>
     /// Searches for a catalog item by fs path. Returns null if unable to find the item.
     /// </summary>
     public static async Task<ICatalogItem> FindItemByFsPathAsync(ICatalog catalog, string fsPath)

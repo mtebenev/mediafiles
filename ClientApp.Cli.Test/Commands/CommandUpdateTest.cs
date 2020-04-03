@@ -34,33 +34,17 @@ namespace ClientApp.Cli.Test.Commands
     {
       var catalogDef = @"
 {
-  name: 'Root',
+  path: 'Root',
   children: [
     {
-      name: 'root_folder',
+      path: 'scan_root',
       id: 100,
       rootPath: 'x:\\root_folder',
       children: [
-        {
-          name: 'file1.mp4',
-          id: 11,
-          fileSize: 10
-        },
-        {
-          name: 'file2.mp4',
-          id: 12,
-          fileSize: 20
-        },
-        {
-          name: 'file3.mp4',
-          id: 13,
-          fileSize: 30
-        },
-        {
-          name: 'file4.mp4',
-          id: 14,
-          fileSize: 40
-        }
+        { id: 11, path: 'x:\\root_folder\\file1.mp4', fileSize: 10 },
+        { id: 12, path: 'x:\\root_folder\\file2.mp4', fileSize: 20 },
+        { id: 13, path: 'x:\\root_folder\\file3.mp4', fileSize: 30 },
+        { id: 14, path: 'x:\\root_folder\\file4.mp4', fileSize: 40 },
       ]
     }
   ]
