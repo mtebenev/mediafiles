@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mt.MediaMan.AppEngine.Cataloging;
 
 namespace Mt.MediaMan.AppEngine.CatalogStorage
 {
@@ -49,5 +50,10 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// Search items by name (with wildcards)
     /// </summary>
     Task<IList<int>> SearchItemsAsync(string whereFilter);
+
+    /// <summary>
+    /// Retrieves the subtree by location.
+    /// </summary>
+    Task<IList<CatalogItemRecord>> QuerySubtree(CatalogItemLocation catalogItemLocation);
   }
 }

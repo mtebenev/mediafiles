@@ -16,7 +16,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     private readonly IStorageManager _storageManager;
 
     private IDbConnection DbConnection => _storageManager.DbConnection;
-    private Store Store => _storageManager.Store;
+    private IStore Store => _storageManager.Store;
 
     public ItemStorage(IStorageManager storageManager)
     {
@@ -86,7 +86,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// </summary>
     public async Task<CatalogItemRecord> LoadRootItemAsync()
     {
-      var query = @"select * from CatalogItem where ItemType=@ItemType";
+      var query = @"SELECT * FROM CatalogItem WHERE ItemType=@ItemType";
       var rootItemRecord = await this.DbConnection.QueryFirstOrDefaultAsync<CatalogItemRecord>(query, new { ItemType = CatalogItemType.CatalogRoot });
 
       if(rootItemRecord == null)
@@ -100,7 +100,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// </summary>
     public async Task<CatalogItemRecord> LoadItemByIdAsync(int catalogItemId)
     {
-      var query = @"select * from CatalogItem where CatalogItemId=@CatalogItemId";
+      var query = @"SELECT * FROM CatalogItem WHERE CatalogItemId=@CatalogItemId";
       var itemRecord = await this.DbConnection.QueryFirstAsync<CatalogItemRecord>(query, new { CatalogItemId = catalogItemId });
 
       return itemRecord;
@@ -111,7 +111,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// </summary>
     public async Task<IList<CatalogItemRecord>> LoadChildrenAsync(int parentItemId)
     {
-      var query = @"select * from CatalogItem where ParentItemId=@ParentItemId";
+      var query = @"SELECT * FROM CatalogItem WHERE ParentItemId=@ParentItemId";
       var itemRecords = await this.DbConnection.QueryAsync<CatalogItemRecord>(query, new { ParentItemId = parentItemId });
 
       return itemRecords.ToList();
@@ -163,7 +163,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// </summary>
     public async Task<IList<int>> SearchItemsAsync(string whereFilter)
     {
-      var query = @"select CatalogItemId from CatalogItem where Name like @NameFilter";
+      var query = @"SELECT CatalogItemId FROM CatalogItem WHERE Path LIKE @NameFilter";
       var escapedFilter = whereFilter
         .Replace("_", "[_]")
         .Replace('?', '_')
@@ -172,6 +172,24 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       var result = await DbConnection.QueryAsync<int>(query, new { NameFilter = escapedFilter });
 
       return result.ToList();
+    }
+
+    /// <summary>
+    /// IItemStorage.
+    /// </summary>
+    public async Task<IList<CatalogItemRecord>> QuerySubtree(CatalogItemLocation catalogItemLocation)
+    {
+      var query = @"SELECT * FROM CatalogItem WHERE ParentItemId=@ScanRootId AND Path LIKE @PathPrefix";
+      var itemRecords = await this.DbConnection
+        .QueryAsync<CatalogItemRecord>(query,
+        new
+        {
+          ScanRootId = catalogItemLocation.ScanRootId,
+          PathPrefix = $"{catalogItemLocation.PathPrefix}%"
+        });
+
+      var result = itemRecords.ToList();
+      return result;
     }
 
     private Task SaveRootItemAsync()

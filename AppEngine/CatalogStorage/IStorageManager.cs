@@ -10,6 +10,6 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
   internal interface IStorageManager : IDisposable
   {
     IDbConnection DbConnection { get; }
-    Store Store { get; }
+    IStore Store { get; }
   }
 }

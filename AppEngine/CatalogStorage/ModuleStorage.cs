@@ -10,9 +10,9 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
   /// </summary>
   public class ModuleStorage
   {
-    private readonly Store _store;
+    private readonly IStore _store;
 
-    public ModuleStorage(Store store)
+    public ModuleStorage(IStore store)
     {
       _store = store;
     }

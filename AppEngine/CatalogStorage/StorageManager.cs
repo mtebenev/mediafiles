@@ -44,7 +44,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     }
 
     public IDbConnection DbConnection => _dbConnection;
-    public Store Store => _store;
+    public IStore Store => _store;
 
     /// <summary>
     /// IDisposable
