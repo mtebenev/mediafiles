@@ -44,9 +44,13 @@ namespace Mt.MediaMan.ClientApp.Cli
         Console.SetWindowSize(220, 54);
         NLog.LogManager.LoadConfiguration("nlog.config");
 
+        var environmentName = Environment.GetEnvironmentVariable("MM_ENVIRONMENT");
+
         var configuration = new ConfigurationBuilder()
           .SetBasePath(AppContext.BaseDirectory)
           .AddJsonFile("appsettings.json", true)
+          .AddJsonFile($"appsettings.{environmentName}.json", true)
+          .AddEnvironmentVariables()
           .Build();
 
         var appSettings = configuration.Get<AppSettings>();

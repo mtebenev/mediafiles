@@ -159,12 +159,20 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
         mockCatalogItem.Name.Returns(itemPath);
       }
 
-
       // Info parts
       this.BuildItemInfoParts<InfoPartVideo>(mockCatalogItem, this._infoPartsVideo);
 
       mockCatalog.GetItemByIdAsync(itemId).Returns(mockCatalogItem);
+      this.DeserializeChildren(itemDef, mockCatalog, mockCatalogItem);
 
+      return mockCatalogItem;
+    }
+
+    /// <summary>
+    /// Prepares mock children for the item.
+    /// </summary>
+    private void DeserializeChildren(JObject itemDef, ICatalog mockCatalog, ICatalogItem mockCatalogItem)
+    {
       if(itemDef["children"] != null)
       {
         var children = itemDef["children"]
@@ -174,8 +182,6 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
         mockCatalogItem.GetChildrenAsync().Returns(children);
         mockCatalogItem.IsDirectory.Returns(true);
       }
-
-      return mockCatalogItem;
     }
 
     private void BuildItemInfoParts<TInfoPart>(ICatalogItem catalogItem, Dictionary<string, TInfoPart> infoParts) where TInfoPart : InfoPartBase

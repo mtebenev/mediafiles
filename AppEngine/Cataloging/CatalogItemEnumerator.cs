@@ -6,36 +6,34 @@ namespace Mt.MediaMan.AppEngine.Cataloging
   internal class CatalogItemEnumerator
   {
     private readonly ICatalog _catalog;
-    private readonly Queue<int> _idQueue;
-    private ICatalogItem _currentCatalogItem;
+    private readonly Queue<ICatalogItem> _itemQueue;
+    private int _startItemId;
 
     /// <summary>
-    /// processFunc will be awaited after the item has been retrieved
+    /// Ctor.
     /// </summary>
     public CatalogItemEnumerator(ICatalog catalog, int rootCatalogItemId)
     {
       this._catalog = catalog;
-      this._idQueue = new Queue<int>();
-
-      this._idQueue.Enqueue(rootCatalogItemId);
+      this._itemQueue = new Queue<ICatalogItem>();
+      this._startItemId = rootCatalogItemId;
     }
 
-    // TODOA remove?
-    public ICatalogItem Current => _currentCatalogItem;
-
-    public async IAsyncEnumerable<ICatalogItem> WalkAsync()
+    public async IAsyncEnumerable<ICatalogItem> EnumerateAsync()
     {
-      while(_idQueue.Count > 0)
-      {
-        var itemId = _idQueue.Dequeue();
-        this._currentCatalogItem = await this._catalog.GetItemByIdAsync(itemId);
-        var children = await this._currentCatalogItem.GetChildrenAsync();
-        children
-          .Select(c => c.CatalogItemId)
-          .ToList()
-          .ForEach(id => { _idQueue.Enqueue(id); });
+      var rootCatalogItem = await this._catalog.GetItemByIdAsync(this._startItemId);
+      this._itemQueue.Enqueue(rootCatalogItem);
 
-        yield return this._currentCatalogItem;
+      while(this._itemQueue.Count > 0)
+      {
+        var item = this._itemQueue.Dequeue();
+        var children = await item.GetChildrenAsync();
+
+        children
+          .ToList()
+          .ForEach(c => { this._itemQueue.Enqueue(c); });
+
+        yield return item;
       }
     }
   }

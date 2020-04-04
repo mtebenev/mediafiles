@@ -14,7 +14,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       tb.AddRow("--", "----", "----");
 
       foreach (var catalogItem in catalogItems)
-        tb.AddRow(catalogItem.CatalogItemId, catalogItem.Path, StringUtils.BytesToString(catalogItem.Size));
+        tb.AddRow(catalogItem.CatalogItemId, catalogItem.Name, StringUtils.BytesToString(catalogItem.Size));
 
       console.Write(tb.Output());
     }

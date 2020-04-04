@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 ArtefactUi/msbuild.binlog
+/ClientApp.Cli/appsettings.dev.json

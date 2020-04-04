@@ -37,7 +37,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       // Do execution
       do
       {
-        var prompt = CreatePrompt(_shellAppContext.CurrentItem);
+        var prompt = Shell.CreatePrompt(_shellAppContext.CurrentItem);
         var commandInput = Prompt.GetString(prompt, promptColor: ConsoleColor.DarkBlue);
 
         if(!String.IsNullOrEmpty(commandInput))

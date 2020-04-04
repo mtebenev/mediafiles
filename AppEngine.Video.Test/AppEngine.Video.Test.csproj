@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -21,10 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\AppEngine.Test\AppEngine.Test.csproj" />
     <ProjectReference Include="..\AppEngine.Video\AppEngine.Video.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Discovery\" />
   </ItemGroup>
 
 </Project>

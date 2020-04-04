@@ -1,7 +1,10 @@
 {
   "profiles": {
     "ClientApp.Cli": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "environmentVariables": {
+        "MM_ENVIRONMENT": "dev"
+      }
     }
   }
 }

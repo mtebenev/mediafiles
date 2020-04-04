@@ -14,7 +14,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
     public static IAsyncEnumerable<ICatalogItem> CreateDefaultWalker(ICatalog catalog, int catalogItemId)
     {
       var enumerator = new CatalogItemEnumerator(catalog, catalogItemId);
-      return enumerator.WalkAsync();
+      return enumerator.EnumerateAsync();
     }
   }
 }
