@@ -17,6 +17,7 @@ steps:
     targetType: 'inline'
     script: |
       Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
+      Register-PSRepository -Default
       Install-Module Invoke-Build -Scope CurrentUser -Force
       Import-Module InvokeBuild
 - task: DotNetCoreCLI@2
