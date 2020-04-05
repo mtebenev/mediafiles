@@ -32,6 +32,6 @@ steps:
     script: 'Invoke-Build Build-Package'
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: 'artifacts/*.nupkg'
+    targetPath: 'artifacts'
     artifact: 'mediafiles'
     publishLocation: 'pipeline'
