@@ -1,8 +1,9 @@
 # Synopsis: Build the app.
 task Build-App {
   exec {
-      dotnet @(
-        "build",
+    cd ClientApp.Cli
+    dotnet @(
+        "publish",
         "-v",
         "minimal",
         "-c",
