@@ -32,6 +32,13 @@ steps:
     script: 'Invoke-Build Build-Package'
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(Pipeline.Workspace)/artifacts/*.nupkg'
+    targetPath: 'artifacts/mediafiles.0.1.0-prerelease.nupkg'
     artifact: 'mediafiles'
     publishLocation: 'pipeline'
+- task: NuGetCommand@2
+  inputs:
+    command: 'push'
+    packagesToPush: 'artifacts/*.nupkg;'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '502d18c8-1d57-4902-8316-9bfd2e24c8be/70ed2b6d-1ea8-48f6-beb8-b9e422ca92f0'
+    verbosityPush: 'Normal'
