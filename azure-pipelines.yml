@@ -19,7 +19,12 @@ steps:
       choco install invoke-build
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'build'
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'ClientApp.Cli/ClientApp.Cli.csproj'
+    arguments: '-c Release'
+    zipAfterPublish: false
+    modifyOutputPath: false
 - task: PowerShell@2
   inputs:
     pwsh: true
