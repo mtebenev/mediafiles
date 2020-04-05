@@ -1,0 +1,22 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionSuffix>internal</VersionSuffix>
+    <VersionSuffix Condition="'$(VersionSuffix)'!='' AND '$(BuildNumber)' != ''">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
+    <LangVersion>latest</LangVersion>
+    <NetCoreTargetFramework>netcoreapp3.1</NetCoreTargetFramework>
+    <NetStandardTargetFramework>netstandard2.1</NetStandardTargetFramework>
+
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>Maxim Tebenev</Authors>
+    <Copyright>Maxim Tebenev, 2020</Copyright>
+    <PackageTags>media</PackageTags>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugType>portable</DebugType>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+</Project>

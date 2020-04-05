@@ -19,6 +19,10 @@ steps:
       choco install invoke-build
 - task: DotNetCoreCLI@2
   inputs:
+    command: 'build'
+    projects: 'ci.targets'
+- task: DotNetCoreCLI@2
+  inputs:
     command: 'publish'
     publishWebProjects: false
     projects: 'ClientApp.Cli/ClientApp.Cli.csproj'
@@ -29,7 +33,7 @@ steps:
   inputs:
     pwsh: true
     targetType: 'inline'
-    script: 'Invoke-Build Build-Package'
+    script: 'Invoke-Build Build-Package -PackageVersion $(MediaFilesVersion)'
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: 'artifacts/mediafiles.0.1.0-prerelease.nupkg'

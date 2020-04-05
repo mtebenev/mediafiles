@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>$(NetCoreTargetFramework)</TargetFramework>
     <RootNamespace>Mt.MediaFiles.ClientApp.Cli</RootNamespace>
-    <LangVersion>latest</LangVersion>
     <AssemblyName>mediafiles</AssemblyName>
   </PropertyGroup>
 

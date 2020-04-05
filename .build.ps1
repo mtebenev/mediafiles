@@ -1,3 +1,7 @@
+param(
+  $PackageVersion
+)
+
 # Synopsis: Build the app.
 task Build-App {
   exec {
@@ -14,6 +18,7 @@ task Build-App {
 
 # Synopsis: Build the Chocolatey package.
 task Build-Package {
+  assert(![string]::IsNullOrWhiteSpace($PackageVersion)) "Package version should be specified"
   New-Item -ItemType Directory -Force -Path artifacts | Out-Null
   cd chocolatey
   exec {
@@ -21,7 +26,9 @@ task Build-Package {
         "pack",
         "mediafiles.nuspec",
         "--out",
-        "..\artifacts"
+        "..\artifacts",
+        "--version",
+        "$PackageVersion"
       )
   }
 }
