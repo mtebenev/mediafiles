@@ -16,10 +16,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
-      Install-Module Invoke-Build -Scope CurrentUser -Force
-      Import-Module InvokeBuild
-    pwsh: true
+      choco install invoke-build
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
