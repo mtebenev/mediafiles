@@ -14,6 +14,7 @@ variables:
 steps:
 - task: PowerShell@2
   inputs:
+    pwsh: true
     targetType: 'inline'
     script: |
       Install-Module Invoke-Build -Scope CurrentUser -Force
@@ -23,6 +24,7 @@ steps:
     command: 'build'
 - task: PowerShell@2
   inputs:
+    pwsh: true
     targetType: 'inline'
     script: 'Invoke-Build Build-Package'
 - task: PublishPipelineArtifact@1
