@@ -20,7 +20,7 @@ task Build-Package {
         "pack",
         "mediafiles.nuspec",
         "--out",
-        "../artifacts"
+        "..\artifacts"
       )
   }
 }
