@@ -35,3 +35,8 @@ steps:
     targetPath: 'artifacts/mediafiles.0.1.0-prerelease.nupkg'
     artifact: 'mediafiles'
     publishLocation: 'pipeline'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'artifacts/mediafiles.0.1.0-prerelease.nupkg'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
