@@ -36,7 +36,7 @@ steps:
     script: 'Invoke-Build Build-Package -PackageVersion $(MediaFilesVersion)'
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: 'artifacts/mediafiles.0.1.0-prerelease.nupkg'
+    targetPath: 'artifacts/mediafiles.$(MediaFilesVersion).nupkg'
     artifact: 'mediafiles'
     publishLocation: 'pipeline'
 - task: NuGetCommand@2
