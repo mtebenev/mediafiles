@@ -13,15 +13,18 @@ variables:
 
 steps:
 - task: PowerShell@2
+  displayName: Install Powershell modules
   inputs:
     targetType: 'inline'
     script: |
       choco install invoke-build
 - task: DotNetCoreCLI@2
+  displayName: Set up the CI pipeline
   inputs:
     command: 'build'
     projects: 'ci.targets'
 - task: DotNetCoreCLI@2
+  displayName: Build the application
   inputs:
     command: 'publish'
     publishWebProjects: false
@@ -29,17 +32,31 @@ steps:
     arguments: '-c Release'
     zipAfterPublish: false
     modifyOutputPath: false
+- task: VSTest@2
+  displayName: Run unit tests
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\bin\$(BuildConfiguration)\**\*test*.dll
+      !**\obj\**
+      !**\xunit.runner.visualstudio.testadapter.dll
+      !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    otherConsoleOptions: '/InIsolation'
 - task: PowerShell@2
+  displayName: Build Chocolatey package
   inputs:
     pwsh: true
     targetType: 'inline'
-    script: 'Invoke-Build Build-Package -PackageVersion $(MediaFilesVersion)'
+    script: 'Invoke-Build Build-Package -PackageVersion $(MediaFilesVersion)-$(BuildID)'
 - task: PublishPipelineArtifact@1
+  displayName: Publish pipeline package
   inputs:
     targetPath: 'artifacts/mediafiles.$(MediaFilesVersion).nupkg'
     artifact: 'mediafiles'
     publishLocation: 'pipeline'
 - task: NuGetCommand@2
+  displayName: Publish to the NuGet feed
   inputs:
     command: 'push'
     packagesToPush: 'artifacts/*.nupkg;'
