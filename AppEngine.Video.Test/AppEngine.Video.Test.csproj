@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCoreInjection.TypedFactories" Version="1.2.0" />
+    <PackageReference Include="FluentAssertions" Version="5.10.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="NSubstitute" Version="4.2.1" />
     <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="9.0.4" />
@@ -18,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppEngine.Test\AppEngine.Test.csproj" />
     <ProjectReference Include="..\AppEngine.Video\AppEngine.Video.csproj" />
+    <ProjectReference Include="..\TestUtils\TestUtils.csproj" />
   </ItemGroup>
 
 </Project>

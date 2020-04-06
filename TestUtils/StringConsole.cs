@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using McMaster.Extensions.CommandLineUtils;
 
-namespace Mt.MediaMan.AppEngine.Test.TestUtils
+namespace Mt.MediaFiles.TestUtils
 {
   /// <summary>
   /// Grabs all the output to the string.

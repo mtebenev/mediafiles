@@ -4,6 +4,7 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Threading.Tasks;
 using FluentAssertions;
 using McMaster.Extensions.CommandLineUtils;
+using Mt.MediaFiles.TestUtils;
 using Mt.MediaMan.AppEngine.Commands;
 using Mt.MediaMan.AppEngine.Test.TestUtils;
 using Mt.MediaMan.ClientApp.Cli;

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using FluentAssertions;
+using Mt.MediaFiles.TestUtils;
 using Mt.MediaMan.AppEngine.Scanning;
 using Mt.MediaMan.AppEngine.Test.TestUtils;
 using Mt.MediaMan.ClientApp.Cli;

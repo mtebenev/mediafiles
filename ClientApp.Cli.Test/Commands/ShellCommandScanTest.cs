@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mt.MediaFiles.TestUtils;
 using Mt.MediaMan.AppEngine.CatalogStorage;
 using Mt.MediaMan.AppEngine.Tasks;
-using Mt.MediaMan.AppEngine.Test.TestUtils;
 using Mt.MediaMan.ClientApp.Cli;
 using Mt.MediaMan.ClientApp.Cli.Commands;
 using NSubstitute;

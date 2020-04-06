@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppEngine\AppEngine.csproj" />
+    <ProjectReference Include="..\TestUtils\TestUtils.csproj" />
   </ItemGroup>
 
 </Project>

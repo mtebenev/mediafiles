@@ -1,10 +1,10 @@
 using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Test.TestUtils;
 using System.Linq;
 using System.Threading.Tasks;
 using NSubstitute;
 using Xunit;
 using System;
+using Mt.MediaMan.AppEngine.Test.TestUtils;
 
 namespace Mt.MediaMan.AppEngine.Test.Cataloging
 {
