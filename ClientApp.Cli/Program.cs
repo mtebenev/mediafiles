@@ -17,9 +17,7 @@ using MediaToolkit;
 using AppEngine.Video.Test;
 using Mt.MediaMan.AppEngine.Tasks;
 using Mt.MediaMan.AppEngine.Common;
-using System.Collections.Generic;
-using System.IO;
-using Microsoft.Data.Sqlite;
+using Mt.MediaFiles.ClientApp.Cli.Configuration;
 
 namespace Mt.MediaMan.ClientApp.Cli
 {
@@ -41,7 +39,6 @@ namespace Mt.MediaMan.ClientApp.Cli
       int result = 0;
       try
       {
-        Console.SetWindowSize(220, 54);
         NLog.LogManager.LoadConfiguration("nlog.config");
 
         var environmentName = Environment.GetEnvironmentVariable("MM_ENVIRONMENT");
@@ -54,8 +51,11 @@ namespace Mt.MediaMan.ClientApp.Cli
           .Build();
 
         var appSettings = configuration.Get<AppSettings>();
-        if(appSettings == null)
-          appSettings = Program.CreateDefaultSettings();
+        appSettings = DefaultSettings.FillDefaultSettings(
+          appSettings,
+          new EnvironmentWrapper(),
+          new FileSystem()
+        );
 
         Program._shellAppContext = new ShellAppContext(appSettings);
 
@@ -107,14 +107,7 @@ namespace Mt.MediaMan.ClientApp.Cli
       VideoModule.ConfigureServices(services);
 
       // DB connection
-      var catalogName = appSettings.Catalogs.ContainsKey(appSettings.StartupCatalog)
-        ? appSettings.StartupCatalog
-        : appSettings.Catalogs.First().Key;
-
-      var catalogSettings = appSettings.Catalogs[catalogName];
-      if(String.IsNullOrEmpty(catalogSettings.ConnectionString))
-        catalogSettings.ConnectionString = Program.CreateDefaultConnectionString(catalogSettings.CatalogName);
-
+      var catalogSettings = appSettings.Catalogs[appSettings.StartupCatalog];
       services.AddSingleton<ICatalogSettings>(x => catalogSettings);
 
       // Modules
@@ -123,45 +116,6 @@ namespace Mt.MediaMan.ClientApp.Cli
 
       var result = services.BuildServiceProvider();
       return result;
-    }
-
-    /// <summary>
-    /// Creates the default app settings.
-    /// </summary>
-    private static AppSettings CreateDefaultSettings()
-    {
-      var defaultCatalogSettings = new CatalogSettings
-      {
-        CatalogName = "default",
-        MediaRoots = new Dictionary<string, string>()
-      };
-      var settings = new AppSettings
-      {
-        StartupCatalog = "default"
-      };
-
-      settings.Catalogs = new Dictionary<string, CatalogSettings>
-      {
-        { "default", defaultCatalogSettings }
-      };
-
-      return settings;
-    }
-
-    private static string CreateDefaultConnectionString(string catalogName)
-    {
-      var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-      var mmDataPath = Path.Combine(appDataPath, ".mediaman");
-      Directory.CreateDirectory(mmDataPath);
-      var databaseName = $"{catalogName}.db";
-      var defaultDbPath = Path.Combine(mmDataPath, databaseName);
-
-      var connectionString = new SqliteConnectionStringBuilder
-      {
-        DataSource = defaultDbPath,
-      }.ToString();
-
-      return connectionString;
     }
   }
 }
