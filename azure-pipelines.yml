@@ -46,7 +46,6 @@ steps:
 - task: PowerShell@2
   displayName: Build Chocolatey package
   inputs:
-    pwsh: true
     targetType: 'inline'
     script: 'Invoke-Build Build-Package -PackageVersion $(MediaFilesVersion)-$(BuildID)'
 - task: PublishPipelineArtifact@1
