@@ -26,10 +26,15 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: Build the application
   inputs:
+    command: 'build'
+    arguments: '-c $(BuildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: Publish the application
+  inputs:
     command: 'publish'
     publishWebProjects: false
     projects: 'ClientApp.Cli/ClientApp.Cli.csproj'
-    arguments: '-c Release'
+    arguments: '-c $(BuildConfiguration)'
     zipAfterPublish: false
     modifyOutputPath: false
 - task: VSTest@2
@@ -37,7 +42,7 @@ steps:
   inputs:
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
-      **\bin\$(BuildConfiguration)\**\*test*.dll
+      **\bin\$(BuildConfiguration)\**\*Test.dll
       !**\obj\**
       !**\xunit.runner.visualstudio.testadapter.dll
       !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
