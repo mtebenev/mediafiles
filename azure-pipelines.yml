@@ -51,7 +51,7 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: Publish pipeline package
   inputs:
-    targetPath: 'artifacts/mediafiles.$(MediaFilesVersion).nupkg'
+    targetPath: 'artifacts/mediafiles.$(MediaFilesVersion)-$(Build.BuildId).nupkg'
     artifact: 'mediafiles'
     publishLocation: 'pipeline'
 - task: NuGetCommand@2
