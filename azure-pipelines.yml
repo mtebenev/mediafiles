@@ -47,7 +47,7 @@ steps:
   displayName: Build Chocolatey package
   inputs:
     targetType: 'inline'
-    script: 'Invoke-Build Build-Package -PackageVersion $(MediaFilesVersion)-$(BuildID)'
+    script: 'Invoke-Build Build-Package -PackageVersion $(MediaFilesVersion)-$(Build.BuildId)'
 - task: PublishPipelineArtifact@1
   displayName: Publish pipeline package
   inputs:
