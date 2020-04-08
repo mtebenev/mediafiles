@@ -60,9 +60,8 @@ namespace Mt.MediaFiles.AppEngine.Scanning
       if(scanContext.ScanConfiguration.ScanServices.Any())
       {
         scanContext.ProgressOperation.UpdateStatus("Scanning files...");
-        await this.RunScanSubTasksAsync(scanContext, location);
+        await this.RunScanServicesAsync(scanContext, location);
       }
-
 
       scanContext.ProgressOperation.UpdateStatus("Done.");
       _logger.LogInformation("Scanning finished");
@@ -100,15 +99,35 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// <summary>
     /// Runs the scanning sub-tasks on the catalog items.
     /// </summary>
-    private async Task RunScanSubTasksAsync(IScanContext scanContext, CatalogItemLocation location)
+    private async Task RunScanServicesAsync(IScanContext scanContext, CatalogItemLocation location)
     {
-      var scanServiceContext = new ScanServiceContext(scanContext);
+      // We create/save catalog item data only if needed.
+      CatalogItemData catalogItemData = null;
+      int catalogItemId = 0;
+
+      var scanServiceContext = new ScanServiceContext(
+        scanContext,
+        () =>
+        {
+          if(catalogItemData == null)
+            catalogItemData = new CatalogItemData(catalogItemId);
+
+          return catalogItemData;
+        }
+      );
       var records = await scanContext.ItemStorage.QuerySubtree(location);
       foreach(var r in records)
       {
+        catalogItemId = r.CatalogItemId;
+        catalogItemData = null;
         foreach(var ss in scanContext.ScanConfiguration.ScanServices)
         {
           await ss.ScanAsync(scanServiceContext, r);
+        }
+
+        if(catalogItemData != null)
+        {
+          await scanContext.ItemStorage.SaveItemDataAsync(catalogItemId, catalogItemData);
         }
       }
     }
