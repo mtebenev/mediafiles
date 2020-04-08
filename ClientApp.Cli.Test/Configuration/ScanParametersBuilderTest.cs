@@ -10,7 +10,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
     [Fact]
     public void Create_Default_Parameters()
     {
-      var parameters = ScanParametersBuilder.Create("scan-path", "root-item");
+      var parameters = ScanParametersBuilder.Create("scan-path", "root-item", ScanProfile.Default);
       parameters.Should()
         .BeEquivalentTo(
         new
@@ -25,7 +25,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
     [Fact]
     public void Create_Quick_Parameters()
     {
-      var parameters = ScanParametersBuilder.CreateQuick("scan-path", "root-item");
+      var parameters = ScanParametersBuilder.Create("scan-path", "root-item", ScanProfile.Quick);
       parameters.Should()
         .BeEquivalentTo(
         new
@@ -40,7 +40,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
     [Fact]
     public void Create_Full_Parameters()
     {
-      var parameters = ScanParametersBuilder.CreateFull("scan-path", "root-item");
+      var parameters = ScanParametersBuilder.Create("scan-path", "root-item", ScanProfile.Full);
       parameters.Should()
         .BeEquivalentTo(
         new

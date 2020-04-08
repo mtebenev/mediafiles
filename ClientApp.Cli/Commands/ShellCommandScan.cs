@@ -24,6 +24,12 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     [Option(LongName = "name", ShortName = "n")]
     public string Name { get; set; }
 
+    /// <summary>
+    /// Scan configuration
+    /// </summary>
+    [Option(LongName = "profile", ShortName = "p")]
+    public (bool HasValue, ScanProfile ScanProfile) Profile { get; set; }
+
     public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, ICatalogSettings catalogSettings, ICatalogTaskScanFactory taskFactory)
     {
       if(string.IsNullOrWhiteSpace(PathAlias))
@@ -35,7 +41,11 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
         ? mediaRoot.Value
         : PathAlias;
 
-      var scanParameters = ScanParametersBuilder.Create(scanPath, this.Name);
+      var scanParameters = ScanParametersBuilder.Create(
+        scanPath,
+        this.Name,
+        this.Profile.HasValue ? this.Profile.ScanProfile : ScanProfile.Default
+      );
 
       var task = taskFactory.Create(scanParameters);
       var profiler = MiniProfiler.StartNew("ShellCommandScan");
