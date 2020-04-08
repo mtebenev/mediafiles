@@ -1,6 +1,6 @@
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 
-namespace Mt.MediaMan.AppEngine.Cataloging
+namespace Mt.MediaFiles.AppEngine.Cataloging
 {
   /// <summary>
   /// Encapsulates logic for creating catalog items.
@@ -25,7 +25,7 @@ namespace Mt.MediaMan.AppEngine.Cataloging
       switch(record.ItemType)
       {
         case CatalogItemType.ScanRoot:
-          result = new CatalogItemScanRoot(record, this._itemStorage, this,  this._structureAccessFactory);
+          result = new CatalogItemScanRoot(record, this._itemStorage, this, this._structureAccessFactory);
           break;
         default:
           result = new CatalogItem(record, this._itemStorage, this);

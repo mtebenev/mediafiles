@@ -1,6 +1,6 @@
 using YesSql.Indexes;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   /// <summary>
   /// Defines YesSql index for catalog items
@@ -17,7 +17,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
   {
     public override void Describe(DescribeContext<CatalogItemData> context)
     {
-      context.For<MapIndexCatalogItem>().Map(itemData => new MapIndexCatalogItem {CatalogItemId = itemData.CatalogItemId});
+      context.For<MapIndexCatalogItem>().Map(itemData => new MapIndexCatalogItem { CatalogItemId = itemData.CatalogItemId });
     }
   }
 

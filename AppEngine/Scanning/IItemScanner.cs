@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
   /// Scans something and adds to catalog

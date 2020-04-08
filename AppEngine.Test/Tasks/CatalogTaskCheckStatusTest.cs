@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Commands;
-using Mt.MediaMan.AppEngine.Test.TestUtils;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.TestUtils;
 using NSubstitute;
 using Xunit;
 
-namespace Mt.MediaMan.AppEngine.Test.Commands
+namespace Mt.MediaFiles.AppEngine.Test.Tasks
 {
   public class CatalogTaskCheckStatusTest
   {

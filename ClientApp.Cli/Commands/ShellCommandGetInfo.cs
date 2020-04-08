@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Scanning;
 
-namespace Mt.MediaMan.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Retrieves item info by name or id
@@ -32,7 +32,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
         throw new ArgumentException("Cannot load catalog item", nameof(ItemNameOrId));
 
       var infoParts = await item.GetInfoPartNamesAsync();
-      foreach(string partName in infoParts)
+      foreach(var partName in infoParts)
       {
         if(partName == nameof(InfoPartVideo))
           await PrintVideoPartAsync(item);

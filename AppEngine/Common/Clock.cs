@@ -1,6 +1,6 @@
 using System;
 
-namespace Mt.MediaMan.AppEngine.Common
+namespace Mt.MediaFiles.AppEngine.Common
 {
   public class Clock : IClock
   {

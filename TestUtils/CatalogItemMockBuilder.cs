@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Scanning;
 using NSubstitute;
 
-namespace Mt.MediaMan.AppEngine.Test.TestUtils
+namespace Mt.MediaFiles.TestUtils
 {
   public class CatalogItemMockBuilder
   {

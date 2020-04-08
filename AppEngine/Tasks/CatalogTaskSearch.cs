@@ -5,11 +5,11 @@ using Lucene.Net.Analysis.Standard;
 using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.QueryParsers.Simple;
 using Lucene.Net.Search;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Search;
 
 
-namespace Mt.MediaMan.AppEngine.Tasks
+namespace Mt.MediaFiles.AppEngine.Tasks
 {
   /// <summary>
   /// The task searches for items in the catalog.
@@ -44,7 +44,7 @@ namespace Mt.MediaMan.AppEngine.Tasks
       var analyzer = new StandardAnalyzer(SearchConstants.LuceneVersion);
       var queryParser = new SimpleQueryParser(analyzer, "Book.Title");
 
-      string escapedQuery = QueryParser.Escape(this._query);
+      var escapedQuery = QueryParserBase.Escape(this._query);
       var luceneQuery = queryParser.Parse(escapedQuery);
 
       await catalog.IndexManager.SearchAsync("default", searcher =>

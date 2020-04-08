@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 
-namespace Mt.MediaMan.AppEngine.Cataloging
+namespace Mt.MediaFiles.AppEngine.Cataloging
 {
   /// <summary>
   /// Startup storage configuration for catalog storage

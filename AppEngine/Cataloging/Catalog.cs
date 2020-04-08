@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Search;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Search;
+using Mt.MediaFiles.AppEngine.Tasks;
 
-namespace Mt.MediaMan.AppEngine.Cataloging
+namespace Mt.MediaFiles.AppEngine.Cataloging
 {
   /// <summary>
   /// The catalog implementation.

@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaMan.AppEngine.Tools;
 
-namespace Mt.MediaMan.AppEngine.Tools
+namespace Mt.MediaFiles.AppEngine.Tools
 {
   /// <summary>
   /// Contains result of duplicates search

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   /// <summary>
   /// The injectable catalog settings.

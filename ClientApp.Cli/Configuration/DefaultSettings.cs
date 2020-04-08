@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using Microsoft.Data.Sqlite;
-using Mt.MediaMan.ClientApp.Cli.Configuration;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Configuration
 {

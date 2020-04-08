@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
 
-namespace Mt.MediaMan.AppEngine.Tasks
+namespace Mt.MediaFiles.AppEngine.Tasks
 {
   /// <summary>
   /// Common catalog tasks should inherit this class.

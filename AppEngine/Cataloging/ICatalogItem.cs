@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Scanning;
 
-namespace Mt.MediaMan.AppEngine.Cataloging
+namespace Mt.MediaFiles.AppEngine.Cataloging
 {
   public interface ICatalogItem
   {

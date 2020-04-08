@@ -11,11 +11,11 @@ using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
-using Mt.MediaMan.AppEngine.Common;
+using Mt.MediaFiles.AppEngine.Common;
 using Directory = System.IO.Directory;
 using LDirectory = Lucene.Net.Store.Directory;
 
-namespace Mt.MediaMan.AppEngine.Search
+namespace Mt.MediaFiles.AppEngine.Search
 {
   /// <summary>
   /// Provides methods to manage physical Lucene indices.

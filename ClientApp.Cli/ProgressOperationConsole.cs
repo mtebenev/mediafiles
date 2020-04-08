@@ -1,7 +1,8 @@
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaMan.ClientApp.Cli;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaFiles.ClientApp.Cli
 {
   internal class ProgressOperationConsole : IProgressOperation
   {

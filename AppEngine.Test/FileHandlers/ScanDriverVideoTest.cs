@@ -4,14 +4,14 @@ using FluentAssertions;
 using MediaToolkit.Model;
 using MediaToolkit.Services;
 using MediaToolkit.Tasks;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.FileHandlers;
-using Mt.MediaMan.AppEngine.FileStorage;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.FileHandlers;
+using Mt.MediaFiles.AppEngine.FileStorage;
+using Mt.MediaFiles.AppEngine.Scanning;
 using NSubstitute;
 using Xunit;
 
-namespace Mt.MediaMan.AppEngine.Test.FileHandlers
+namespace Mt.MediaFiles.AppEngine.Test.FileHandlers
 {
   public class ScanDriverVideoTest
   {
@@ -19,7 +19,6 @@ namespace Mt.MediaMan.AppEngine.Test.FileHandlers
     public async Task Should_Extract_Video_Info()
     {
       var mockToolkitService = Substitute.For<IMediaToolkitService>();
-      var mockScanContext = Substitute.For<IScanContext>();
       var mockStoreEntry = Substitute.For<IFileStoreEntry>();
       var mockFileStore = Substitute.For<IFileStore>();
 
@@ -55,7 +54,7 @@ namespace Mt.MediaMan.AppEngine.Test.FileHandlers
         .Returns(taskResult);
 
       var driver = new ScanDriverVideo(mockToolkitService);
-      await driver.ScanAsync(mockScanContext, 1, entryContext, itemData);
+      await driver.ScanAsync(1, entryContext, itemData);
 
       var resultPart = itemData.Get<InfoPartVideo>();
       resultPart.Should()

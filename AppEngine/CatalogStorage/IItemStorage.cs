@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   internal interface IItemStorage
   {

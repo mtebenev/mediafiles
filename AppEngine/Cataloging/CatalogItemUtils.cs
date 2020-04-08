@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Common;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Common;
+using Mt.MediaFiles.AppEngine.Scanning;
 
-namespace Mt.MediaMan.AppEngine.Cataloging
+namespace Mt.MediaFiles.AppEngine.Cataloging
 {
   /// <summary>
   /// Various utilities for working with catalog

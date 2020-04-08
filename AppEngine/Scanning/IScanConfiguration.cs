@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Mt.MediaMan.AppEngine.FileHandlers;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
   /// The scan configuration interface.
@@ -11,12 +10,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
     /// <summary>
     /// The subtasks to perform.
     /// </summary>
-    IReadOnlyList<ISubTask> SubTasks { get; }
-
-    /// <summary>
-    /// Configured file handlers.
-    /// </summary>
-    IReadOnlyList<IFileHandler> FileHandlers { get; }
+    IReadOnlyList<IScanService> ScanServices { get; }
 
     /// <summary>
     /// Given scan root item name.

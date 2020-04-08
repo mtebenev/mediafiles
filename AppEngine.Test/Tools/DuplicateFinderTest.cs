@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Mt.MediaMan.AppEngine.Test.TestUtils;
+using Mt.MediaFiles.AppEngine.Tools;
+using Mt.MediaFiles.TestUtils;
 using Mt.MediaMan.AppEngine.Tools;
 using Xunit;
 
-namespace Mt.MediaMan.AppEngine.Test.Tools
+namespace Mt.MediaFiles.AppEngine.Test.Tools
 {
   public class DuplicateFinderTest
   {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using YesSql;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   /// <summary>
   /// Store module-specific data using the module storage
@@ -17,7 +17,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
       _store = store;
     }
 
-    public Task SaveDocumentAsync<TDocument>(TDocument document) where TDocument: class 
+    public Task SaveDocumentAsync<TDocument>(TDocument document) where TDocument : class
     {
       using(var session = _store.CreateSession())
       {

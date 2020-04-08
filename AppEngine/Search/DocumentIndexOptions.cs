@@ -1,6 +1,6 @@
 using System;
 
-namespace Mt.MediaMan.AppEngine.Search
+namespace Mt.MediaFiles.AppEngine.Search
 {
   [Flags]
   public enum DocumentIndexOptions

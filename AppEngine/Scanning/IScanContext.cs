@@ -1,12 +1,15 @@
 using Microsoft.Extensions.Logging;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Search;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Search;
+using Mt.MediaFiles.AppEngine.Tasks;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
-  /// Contextual objects for scan process
+  /// Contextual objects for scan process.
+  /// Design note. This is an internal interface for using inside only in this core assembly.
+  /// It provides access to the very intimate core stuff.
+  /// Extensible classes should obtain narrow contexts.
   /// </summary>
   internal interface IScanContext
   {

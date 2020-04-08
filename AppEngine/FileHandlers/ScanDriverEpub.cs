@@ -1,16 +1,16 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Scanning;
 using VersOne.Epub;
 
-namespace Mt.MediaMan.AppEngine.FileHandlers
+namespace Mt.MediaFiles.AppEngine.FileHandlers
 {
   /// <summary>
   /// Extracts meta information from epub files
   /// </summary>
   internal class ScanDriverEpub : IScanDriver
   {
-    public async Task ScanAsync(IScanContext scanContext, int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData)
+    public async Task ScanAsync(int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData)
     {
       using(var fileStream = await fileStoreEntryContext.GetFileStreamAsync())
       {

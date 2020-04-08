@@ -1,8 +1,8 @@
 using System;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Tasks;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaFiles.ClientApp.Cli
 {
   /// <summary>
   /// Implements IProgressIndicator with console UI
@@ -18,7 +18,7 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     public IProgressOperation StartOperation(string status)
     {
-      if(!String.IsNullOrWhiteSpace(status))
+      if(!string.IsNullOrWhiteSpace(status))
         _console.WriteLine(status);
 
       return new ProgressOperationConsole(_console);

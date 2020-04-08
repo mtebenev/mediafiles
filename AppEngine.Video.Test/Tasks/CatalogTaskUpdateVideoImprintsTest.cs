@@ -1,14 +1,14 @@
 using System.Threading.Tasks;
 using Xunit;
-using Mt.MediaMan.AppEngine.Video.Tasks;
 using NSubstitute;
-using Mt.MediaMan.AppEngine.Commands;
 using System.IO.Abstractions.TestingHelpers;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Test.TestUtils;
-using AppEngine.Video.VideoImprint;
+using Mt.MediaFiles.AppEngine.Video.Tasks;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.TestUtils;
+using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 
-namespace AppEngine.Video.Test.Tasks
+namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
 {
   public class CatalogTaskUpdateVideoImprintsTest
   {
@@ -47,9 +47,9 @@ namespace AppEngine.Video.Test.Tasks
       await task.ExecuteTaskAsync(mockCatalogContext);
 
       // Verify
-      await mockUpdater.Received().UpdateAsync(Arg.Is<ICatalogItem>(x => x.CatalogItemId == 100), @"x:\root_folder\folder1\video1.mp4");
-      await mockUpdater.Received().UpdateAsync(Arg.Is<ICatalogItem>(x => x.CatalogItemId == 200), @"x:\root_folder\folder1\video2.mp4");
-      await mockUpdater.Received().UpdateAsync(Arg.Is<ICatalogItem>(x => x.CatalogItemId == 300), @"x:\root_folder\folder2\video3.flv");
+      await mockUpdater.Received().UpdateAsync(Arg.Is<int>(id => id == 100), @"x:\root_folder\folder1\video1.mp4");
+      await mockUpdater.Received().UpdateAsync(Arg.Is<int>(id => id == 200), @"x:\root_folder\folder1\video2.mp4");
+      await mockUpdater.Received().UpdateAsync(Arg.Is<int>(id => id == 300), @"x:\root_folder\folder2\video3.flv");
     }
   }
 }

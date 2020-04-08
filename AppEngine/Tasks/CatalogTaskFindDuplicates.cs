@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Tools;
 using Mt.MediaMan.AppEngine.Tools;
 
-namespace Mt.MediaMan.AppEngine.Tasks
+namespace Mt.MediaFiles.AppEngine.Tasks
 {
   /// <summary>
   /// Finds file duplicates.
@@ -51,7 +52,7 @@ namespace Mt.MediaMan.AppEngine.Tasks
 
     private async Task<List<ItemHashInfo>> CollectHashesAsync(ICatalog catalog)
     {
-      int catalogItemId = catalog.RootItem.CatalogItemId; // Start from catalog root
+      var catalogItemId = catalog.RootItem.CatalogItemId; // Start from catalog root
       var walker = CatalogTreeWalker.CreateDefaultWalker(catalog, catalogItemId);
       var result = await walker
         .Select(ci => this.CreateItemHash(ci))

@@ -2,11 +2,11 @@ using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
 using MediaToolkit.Services;
 using MediaToolkit.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using NSubstitute;
 using Xunit;
 
-namespace AppEngine.Video.Test.VideoImprint
+namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
 {
   public class VideoImprintUpdaterTest
   {
@@ -19,11 +19,9 @@ namespace AppEngine.Video.Test.VideoImprint
       var thumbnailData = new byte[] { 1, 2, 3 };
       var thumbnailResult = new GetThumbnailResult(thumbnailData);
       mockService.ExecuteAsync<GetThumbnailResult>(default).ReturnsForAnyArgs(thumbnailResult);
-      var mockCi = Substitute.For<ICatalogItem>();
-      mockCi.CatalogItemId.Returns(10);
 
       var task = new VideoImprintUpdater(mockStorage, mockService);
-      await task.UpdateAsync(mockCi, @"x:\folder\file.mp4");
+      await task.UpdateAsync(10, @"x:\folder\file.mp4");
 
       await mockStorage.Received().SaveRecordAsync(Arg.Is<VideoImprintRecord>(x =>
       x.CatalogItemId == 10

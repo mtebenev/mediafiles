@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Scanning;
-using Mt.MediaMan.AppEngine.Search;
+using Mt.MediaFiles.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Search;
 
-namespace Mt.MediaMan.AppEngine.FileHandlers
+namespace Mt.MediaFiles.AppEngine.FileHandlers
 {
   /// <summary>
   /// Indexes Book info part

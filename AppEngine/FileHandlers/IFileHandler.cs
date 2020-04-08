@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.FileStorage;
-using Mt.MediaMan.AppEngine.Scanning;
-using Mt.MediaMan.AppEngine.Search;
+using Mt.MediaFiles.AppEngine.FileStorage;
+using Mt.MediaFiles.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Search;
 
-namespace Mt.MediaMan.AppEngine.FileHandlers
+namespace Mt.MediaFiles.AppEngine.FileHandlers
 {
   /// <summary>
   /// Abstract factory for file handlers.
@@ -11,7 +11,7 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
   internal interface IFileHandler
   {
     /// <summary>
-    /// Unique ID of the handler
+    /// Unique id of the file handler.
     /// </summary>
     string Id { get; }
 

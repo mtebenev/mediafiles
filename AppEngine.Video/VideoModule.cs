@@ -1,11 +1,11 @@
 using AppEngine.Video.Comparison;
-using AppEngine.Video.VideoImprint;
 using AspNetCoreInjection.TypedFactories;
 using Microsoft.Extensions.DependencyInjection;
-using Mt.MediaMan.AppEngine.Tasks;
-using Mt.MediaMan.AppEngine.Video.Tasks;
+using Mt.MediaFiles.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Video.Tasks;
+using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 
-namespace AppEngine.Video.Test
+namespace Mt.MediaFiles.AppEngine.Video
 {
   /// <summary>
   /// The video module.
@@ -19,6 +19,9 @@ namespace AppEngine.Video.Test
         .RegisterTypedFactory<ICatalogTaskUpdateVideoImprintsFactory>().ForConcreteType<CatalogTaskUpdateVideoImprints>();
       services
         .RegisterTypedFactory<ICatalogTaskFindVideoDuplicatesFactory>().ForConcreteType<CatalogTaskFindVideoDuplicates>();
+
+      // Scan services
+      services.AddTransient<IScanService, ScanServiceVideoImprint>();
 
       // Internals
       services

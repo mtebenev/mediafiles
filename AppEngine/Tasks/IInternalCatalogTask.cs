@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
 
-namespace Mt.MediaMan.AppEngine.Tasks
+namespace Mt.MediaFiles.AppEngine.Tasks
 {
   /// <summary>
   /// Internal commands (implemented in the AppEngine) should implement this interface.

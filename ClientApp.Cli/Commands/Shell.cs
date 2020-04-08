@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
 
-namespace Mt.MediaMan.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   [Command("shell")]
   [Subcommand(
@@ -32,15 +32,15 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
 
     public async Task<int> OnExecuteAsync(CommandLineApplication app, ILogger<Shell> logger)
     {
-      int commandResult = 0;
+      var commandResult = 0;
 
       // Do execution
       do
       {
-        var prompt = Shell.CreatePrompt(_shellAppContext.CurrentItem);
+        var prompt = CreatePrompt(_shellAppContext.CurrentItem);
         var commandInput = Prompt.GetString(prompt, promptColor: ConsoleColor.DarkBlue);
 
-        if(!String.IsNullOrEmpty(commandInput))
+        if(!string.IsNullOrEmpty(commandInput))
         {
           var commandArgs = commandInput.Split(' ');
           commandResult = await ExecuteShellCommandAsync(app, commandArgs, logger);
@@ -62,7 +62,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
 
     private async Task<int> ExecuteShellCommandAsync(CommandLineApplication app, string[] commandArgs, ILogger<Shell> logger)
     {
-      int commandResult = Program.CommandResultContinue;
+      var commandResult = Program.CommandResultContinue;
 
       try
       {

@@ -1,7 +1,7 @@
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 using YesSql.Indexes;
 
-namespace Mt.MediaMan.AppEngine.Ebooks.Storage
+namespace Mt.MediaFiles.AppEngine.Ebooks.Storage
 {
   /// <summary>
   /// Defines YesSql index: catalog item -> ebook
@@ -24,7 +24,7 @@ namespace Mt.MediaMan.AppEngine.Ebooks.Storage
 
         var ebookLink = itemData.Get<InfoPartEbookLink>();
         if(ebookLink != null)
-          result = new MapIndexEbook {EbookId = ebookLink.EbookId};
+          result = new MapIndexEbook { EbookId = ebookLink.EbookId };
 
         return result;
       });

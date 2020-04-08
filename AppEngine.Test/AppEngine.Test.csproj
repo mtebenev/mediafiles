@@ -3,7 +3,8 @@
   <PropertyGroup>
     <TargetFramework>$(NetCoreTargetFramework)</TargetFramework>
     <IsPackable>false</IsPackable>
-    <RootNamespace>Mt.MediaMan.AppEngine.Test</RootNamespace>
+    <RootNamespace>Mt.MediaFiles.AppEngine.Test</RootNamespace>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

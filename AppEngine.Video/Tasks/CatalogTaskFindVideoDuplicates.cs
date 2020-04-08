@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppEngine.Video.Comparison;
 using AppEngine.Video.VideoImprint;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Tools;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Tools;
 
-namespace Mt.MediaMan.AppEngine.Tasks
+namespace Mt.MediaFiles.AppEngine.Video.Tasks
 {
   public interface ICatalogTaskFindVideoDuplicatesFactory
   {
@@ -34,10 +35,10 @@ namespace Mt.MediaMan.AppEngine.Tasks
       var itemIds = await this._imprintStorage.GetCatalogItemIdsAsync();
       var duplicateGroups = new List<IList<int>>();
 
-      for(int i = 0; i < itemIds.Count; i++)
+      for(var i = 0; i < itemIds.Count; i++)
       {
         var duplicatedIds = new List<int>() { itemIds[i] };
-        for(int j = i + 1; j < itemIds.Count; j++)
+        for(var j = i + 1; j < itemIds.Count; j++)
         {
           var comparisonTask = this._videoComparisonFactory.Create();
           var isEqual = await comparisonTask.CompareItemsAsync(itemIds[i], itemIds[j]);

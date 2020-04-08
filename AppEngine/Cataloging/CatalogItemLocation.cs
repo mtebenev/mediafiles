@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Mt.MediaMan.AppEngine.Cataloging
+namespace Mt.MediaFiles.AppEngine.Cataloging
 {
   /// <summary>
   /// Identifies a location of a FS catalog item.

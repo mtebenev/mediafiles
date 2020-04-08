@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(NetStandardTargetFramework)</TargetFramework>
-    <RootNamespace>Mt.MediaMan.AppEngine.Ebooks</RootNamespace>
+    <RootNamespace>Mt.MediaFiles.AppEngine.Ebooks</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
   /// Scan driveres extract file type-specific properties and stores document
@@ -11,6 +11,6 @@ namespace Mt.MediaMan.AppEngine.Scanning
     /// <summary>
     /// Extracts information and stores it in item storage
     /// </summary>
-    Task ScanAsync(IScanContext scanContext, int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData);
+    Task ScanAsync(int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData);
   }
 }

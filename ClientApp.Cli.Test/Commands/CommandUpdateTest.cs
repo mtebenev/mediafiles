@@ -1,15 +1,14 @@
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Tasks;
-using Mt.MediaMan.AppEngine.Test.TestUtils;
-using Mt.MediaMan.AppEngine.Video.Tasks;
-using Mt.MediaMan.ClientApp.Cli;
-using Mt.MediaMan.ClientApp.Cli.Commands;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Video.Tasks;
+using Mt.MediaFiles.ClientApp.Cli.Commands;
+using Mt.MediaFiles.TestUtils;
 using NSubstitute;
 using Xunit;
 
-namespace ClientApp.Cli.Test.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 {
   internal class CommandUpdateTesing : CommandUpdate
   {
@@ -62,7 +61,7 @@ namespace ClientApp.Cli.Test.Commands
       mockFactory.Create(rootFolderItem).Returns(mockTask);
 
       var mockFs = new MockFileSystem(null, @"x:\root_folder");
-      
+
       var command = new CommandUpdateTesing(mockShellAppContext, mockFs, mockFactory);
       var result = await command.ExecuteAsync();
 

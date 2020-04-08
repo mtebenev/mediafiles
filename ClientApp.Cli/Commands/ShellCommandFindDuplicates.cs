@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaMan.AppEngine.Commands;
+using Mt.MediaFiles.AppEngine.Commands;
+using Mt.MediaFiles.AppEngine.Tools;
 using Mt.MediaMan.AppEngine.Common;
-using Mt.MediaMan.AppEngine.Tools;
 
-namespace Mt.MediaMan.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Finds duplicate items in catalog
@@ -48,7 +48,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       console.WriteLine($"{firstItem.Path}");
       console.ResetColor();
 
-      for(int i = 0; i < duplicateResult.FileInfos.Count; i++)
+      for(var i = 0; i < duplicateResult.FileInfos.Count; i++)
       {
         if(i > 0)
           wastedSize += duplicateResult.FileInfos[i].FileSize;

@@ -1,12 +1,11 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MoreLinq;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   public interface IItemScannerFactory
   {
@@ -58,12 +57,11 @@ namespace Mt.MediaMan.AppEngine.Scanning
       }
 
       // Do scan sub-tasks
-      if(scanContext.ScanConfiguration.SubTasks.Any())
+      if(scanContext.ScanConfiguration.ScanServices.Any())
       {
         scanContext.ProgressOperation.UpdateStatus("Scanning files...");
-        await this.RunScanSubTasksAsync(scanContext, location);
+        await this.RunScanServicesAsync(scanContext, location);
       }
-
 
       scanContext.ProgressOperation.UpdateStatus("Done.");
       _logger.LogInformation("Scanning finished");
@@ -78,7 +76,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
       // Create the store record
       var scanRootRecord = new CatalogItemRecord
       {
-        Path = String.IsNullOrWhiteSpace(itemName)
+        Path = string.IsNullOrWhiteSpace(itemName)
         ? "[SCAN_ROOT]"
         : itemName,
         Size = 0,
@@ -101,15 +99,18 @@ namespace Mt.MediaMan.AppEngine.Scanning
     /// <summary>
     /// Runs the scanning sub-tasks on the catalog items.
     /// </summary>
-    private async Task RunScanSubTasksAsync(IScanContext scanContext, CatalogItemLocation location)
+    private async Task RunScanServicesAsync(IScanContext scanContext, CatalogItemLocation location)
     {
+      var scanServiceContext = new ScanServiceContext(scanContext);
       var records = await scanContext.ItemStorage.QuerySubtree(location);
       foreach(var r in records)
       {
-        foreach(var subTask in scanContext.ScanConfiguration.SubTasks)
+        scanServiceContext.SetCurrentRecord(r);
+        foreach(var ss in scanContext.ScanConfiguration.ScanServices)
         {
-          await subTask.ExecuteAsync(scanContext, r);
+          await ss.ScanAsync(scanServiceContext, r);
         }
+        await scanServiceContext.SaveDataAsync(scanContext.ItemStorage);
       }
     }
   }

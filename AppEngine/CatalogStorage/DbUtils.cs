@@ -3,7 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   /// <summary>
   /// Helpers for working with the database.

@@ -1,13 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using AppEngine.Video.VideoImprint;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Ebooks;
-using Mt.MediaMan.AppEngine.Tasks;
-using Mt.MediaMan.ClientApp.Cli.Configuration;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Ebooks;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Video.VideoImprint;
+using Mt.MediaFiles.ClientApp.Cli.Configuration;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaFiles.ClientApp.Cli
 {
   /// <summary>
   /// Not sure if it's a bug but subcommand option values are not re-build if executed multiple time.

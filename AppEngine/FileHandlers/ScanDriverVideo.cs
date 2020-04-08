@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using MediaToolkit.Model;
 using MediaToolkit.Services;
 using MediaToolkit.Tasks;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Scanning;
 
-namespace Mt.MediaMan.AppEngine.FileHandlers
+namespace Mt.MediaFiles.AppEngine.FileHandlers
 {
   /// <summary>
   /// Extracts video information
@@ -24,7 +24,7 @@ namespace Mt.MediaMan.AppEngine.FileHandlers
     /// <summary>
     /// IScanDriver.
     /// </summary>
-    public async Task ScanAsync(IScanContext scanContext, int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData)
+    public async Task ScanAsync(int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData)
     {
       var infoPartVideo = catalogItemData.GetOrCreate<InfoPartVideo>();
 

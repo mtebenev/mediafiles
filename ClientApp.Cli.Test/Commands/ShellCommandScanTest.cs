@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.ClientApp.Cli.Commands;
 using Mt.MediaFiles.TestUtils;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Tasks;
-using Mt.MediaMan.ClientApp.Cli;
-using Mt.MediaMan.ClientApp.Cli.Commands;
 using NSubstitute;
 using Xunit;
 
-namespace ClientApp.Cli.Test.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 {
   public class ShellCommandScanTest
   {
@@ -23,7 +23,7 @@ namespace ClientApp.Cli.Test.Commands
         {"media_root1", "some_path" },
         {"some_media_root", "some_media_root_path" }
       });
-      
+
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
 
       var task = new ShellCommandScan();
@@ -32,7 +32,12 @@ namespace ClientApp.Cli.Test.Commands
 
       await task.OnExecuteAsync(mockShellAppContext, mockCatalogSettings, mockTaskFactory);
 
-      mockTaskFactory.Received().Create("some_media_root_path", "given_root_name");
+      mockTaskFactory.Received().Create(Arg.Is(
+        (ScanParameters p) =>
+        p.ScanPath == "some_media_root_path"
+        && p.RootItemName == "given_root_name"
+        )
+      );
     }
 
     [Fact]
@@ -52,8 +57,12 @@ namespace ClientApp.Cli.Test.Commands
       task.Name = "given_root_name";
 
       await task.OnExecuteAsync(mockShellAppContext, mockCatalogSettings, mockTaskFactory);
-
-      mockTaskFactory.Received().Create("some_fs_path", "given_root_name");
+      mockTaskFactory.Received().Create(Arg.Is(
+        (ScanParameters p) =>
+        p.ScanPath == "some_fs_path"
+        && p.RootItemName == "given_root_name"
+        )
+      );
     }
   }
 }

@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
   /// Deserialized MM scan configuration from .mmconfig.json files

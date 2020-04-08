@@ -2,13 +2,14 @@ using System.Data;
 using AspNetCoreInjection.TypedFactories;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Commands;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.FileHandlers;
+using Mt.MediaFiles.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaMan.AppEngine.Scanning;
-using Mt.MediaMan.AppEngine.Tasks;
 using YesSql.Provider.Sqlite;
 
-namespace Mt.MediaMan.AppEngine
+namespace Mt.MediaFiles.AppEngine
 {
   /// <summary>
   /// The AppEngine mdoule.
@@ -30,6 +31,13 @@ namespace Mt.MediaMan.AppEngine
       });
 
       services.AddTransient<IStorageManager, StorageManager>();
+      services.AddTransient<IScanConfigurationBuilder, ScanConfigurationBuilder>();
+
+      // Scan services
+      services.AddTransient<IScanService, ScanServiceScanInfo>();
+
+      // File handlers
+      services.AddTransient<IFileHandler, FileHandlerVideo>();
 
       // Typed factories
       services

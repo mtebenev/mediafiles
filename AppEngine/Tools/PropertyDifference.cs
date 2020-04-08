@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.Tools
+namespace Mt.MediaFiles.AppEngine.Tools
 {
   public class PropertyDifference
   {

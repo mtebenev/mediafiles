@@ -1,13 +1,13 @@
 using System.IO;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.FileStorage;
+using Mt.MediaFiles.AppEngine.FileStorage;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
   /// Defines an FS entry along with parent storage
   /// </summary>
-  internal class FileStoreEntryContext
+  public sealed class FileStoreEntryContext
   {
     public FileStoreEntryContext(IFileStoreEntry fileStoreEntry, IFileStore fileStore)
     {

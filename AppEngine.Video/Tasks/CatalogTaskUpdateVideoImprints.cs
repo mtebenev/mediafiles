@@ -1,12 +1,11 @@
 using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
-using AppEngine.Video.VideoImprint;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Commands;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 
-namespace Mt.MediaMan.AppEngine.Video.Tasks
+namespace Mt.MediaFiles.AppEngine.Video.Tasks
 {
   public interface ICatalogTaskUpdateVideoImprintsFactory
   {
@@ -62,7 +61,7 @@ namespace Mt.MediaMan.AppEngine.Video.Tasks
       {
         progressOperation.UpdateStatus($"Updating file: {catalogItem.Path}");
         var updater = this._updaterFactory.Create();
-        await updater.UpdateAsync(catalogItem, catalogItem.Path);
+        await updater.UpdateAsync(catalogItem.CatalogItemId, catalogItem.Path);
       }
     }
   }

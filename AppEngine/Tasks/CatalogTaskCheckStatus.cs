@@ -2,10 +2,9 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Cataloging;
 
-namespace Mt.MediaMan.AppEngine.Commands
+namespace Mt.MediaFiles.AppEngine.Tasks
 {
   public interface ICatalogTaskCheckStatusFactory
   {

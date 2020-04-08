@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Mt.MediaMan.AppEngine.Search
+namespace Mt.MediaFiles.AppEngine.Search
 {
   /// <summary>
   /// Performs indexing catalog item or info part

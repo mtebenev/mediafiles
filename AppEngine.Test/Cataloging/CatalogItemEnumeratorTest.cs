@@ -1,12 +1,12 @@
-using Mt.MediaMan.AppEngine.Cataloging;
 using System.Linq;
 using System.Threading.Tasks;
 using NSubstitute;
 using Xunit;
 using System;
-using Mt.MediaMan.AppEngine.Test.TestUtils;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.TestUtils;
 
-namespace Mt.MediaMan.AppEngine.Test.Cataloging
+namespace Mt.MediaFiles.AppEngine.Test.Cataloging
 {
   public class CatalogItemEnumeratorTest
   {

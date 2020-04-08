@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using Lucene.Net.Index;
 
-namespace Mt.MediaMan.AppEngine.Search
+namespace Mt.MediaFiles.AppEngine.Search
 {
   /// <summary>
   /// TODO MTE: update from Orchard
