@@ -3,12 +3,12 @@ using AppEngine.Video.Comparison;
 using AppEngine.Video.VideoImprint;
 using FluentAssertions;
 using Mt.MediaFiles.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Tasks;
-using Mt.MediaMan.AppEngine.Test.TestUtils;
+using Mt.MediaFiles.AppEngine.Video.Tasks;
+using Mt.MediaFiles.TestUtils;
 using NSubstitute;
 using Xunit;
 
-namespace AppEngine.Video.Test.Tasks
+namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
 {
   public class CatalogTaskFindVideoDuplicatesTest
   {

@@ -4,6 +4,7 @@
     <TargetFramework>$(NetCoreTargetFramework)</TargetFramework>
     <IsPackable>false</IsPackable>
     <RootNamespace>Mt.MediaFiles.AppEngine.Test</RootNamespace>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,13 +2,13 @@ using System.Threading.Tasks;
 using Xunit;
 using NSubstitute;
 using System.IO.Abstractions.TestingHelpers;
-using Mt.MediaMan.AppEngine.Test.TestUtils;
-using AppEngine.Video.VideoImprint;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
 using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.TestUtils;
+using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 
-namespace AppEngine.Video.Test.Tasks
+namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
 {
   public class CatalogTaskUpdateVideoImprintsTest
   {

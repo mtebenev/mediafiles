@@ -11,7 +11,7 @@ using Mt.MediaFiles.TestUtils;
 using NSubstitute;
 using Xunit;
 
-namespace ClientApp.Cli.Test.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 {
   internal class CommandCheckStatusTesing : CommandCheckStatus
   {

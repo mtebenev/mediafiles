@@ -2,12 +2,11 @@ using System.Threading.Tasks;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
-using Mt.MediaFiles.ClientApp.Cli;
 using Mt.MediaFiles.ClientApp.Cli.Commands;
 using NSubstitute;
 using Xunit;
 
-namespace ClientApp.Cli.Test.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 {
   public class ShellCommandUpdateTest
   {

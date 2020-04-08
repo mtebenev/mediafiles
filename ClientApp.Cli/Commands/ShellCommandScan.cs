@@ -1,13 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.ClientApp.Cli.Configuration;
 using StackExchange.Profiling;
 
-namespace Mt.MediaMan.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Scans new files to catalog
@@ -29,13 +29,15 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       if(string.IsNullOrWhiteSpace(PathAlias))
         throw new InvalidOperationException("Please provide scan path alias");
 
-      KeyValuePair<string, string> mediaRoot = catalogSettings.MediaRoots
+      var mediaRoot = catalogSettings.MediaRoots
         .FirstOrDefault(mr => mr.Key.Equals(PathAlias, StringComparison.InvariantCultureIgnoreCase));
       var scanPath = mediaRoot.Key != null
         ? mediaRoot.Value
         : PathAlias;
 
-      var task = taskFactory.Create(scanPath, this.Name);
+      var scanParameters = ScanParametersBuilder.Create(scanPath, this.Name);
+
+      var task = taskFactory.Create(scanParameters);
       var profiler = MiniProfiler.StartNew("ShellCommandScan");
       await task.ExecuteAsync(shellAppContext.Catalog);
 
