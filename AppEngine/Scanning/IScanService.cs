@@ -4,9 +4,9 @@ using Mt.MediaFiles.AppEngine.CatalogStorage;
 namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
-  /// Scan sub-tasks are additional (and optional) tasks executed for scanned items.
+  /// The scan services are performing various tasks during scanning.
   /// </summary>
-  internal interface IScanTask
+  internal interface IScanService
   {
     /// <summary>
     /// Unique id of the subtask.
@@ -16,6 +16,6 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// <summary>
     /// Executes the sub-task on the catalog item record.
     /// </summary>
-    Task ExecuteAsync(IScanContext scanContext, CatalogItemRecord record);
+    Task ScanAsync(IScanContext scanContext, CatalogItemRecord record);
   }
 }

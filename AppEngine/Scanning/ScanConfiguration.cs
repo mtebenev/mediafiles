@@ -28,7 +28,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// <summary>
     /// IScanConfiguration.
     /// </summary>
-    public IReadOnlyList<IScanTask> ScanTasks { get; set; }
+    public IReadOnlyList<IScanService> ScanServices { get; set; }
 
     /// <summary>
     /// IScanConfiguration

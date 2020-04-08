@@ -15,7 +15,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
   internal class ScanConfigurationBuilder : IScanConfigurationBuilder
   {
     private readonly Lazy<List<IFileHandler>> _fileHandlers;
-    private readonly Lazy<List<IScanTask>> _scanTasks;
+    private readonly Lazy<List<IScanService>> _scanTasks;
     private readonly IServiceProvider _serviceProvider;
 
     public ScanConfigurationBuilder(IServiceProvider serviceProvider)
@@ -35,11 +35,11 @@ namespace Mt.MediaMan.AppEngine.Scanning
         return handlerList;
       }, LazyThreadSafetyMode.PublicationOnly);
 
-      this._scanTasks = new Lazy<List<IScanTask>>(() =>
+      this._scanTasks = new Lazy<List<IScanService>>(() =>
       {
-        return new List<IScanTask>
+        return new List<IScanService>
         {
-          new ScanTaskScanInfo()
+          new ScanServiceScanInfo()
         };
       });
     }
@@ -53,7 +53,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
         .Select(id => this._fileHandlers.Value.First(fh => fh.Id == id))
         .ToList();
 
-      var subTasks = scanParameters.ScanTaskIds
+      var scanServices = scanParameters.ScanTaskIds
         .Select(id => this._scanTasks.Value.First(st => st.Id == id))
         .ToList();
 
@@ -61,7 +61,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
         new ScanConfiguration(scanParameters, mmConfig)
       {
         FileHandlers = fileHandlers,
-        ScanTasks = subTasks
+        ScanServices = scanServices
       };
 
       return Task.FromResult<IScanConfiguration>(configuration);

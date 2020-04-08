@@ -11,7 +11,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// <summary>
     /// The subtasks to perform.
     /// </summary>
-    IReadOnlyList<IScanTask> ScanTasks { get; }
+    IReadOnlyList<IScanService> ScanServices { get; }
 
     /// <summary>
     /// Configured file handlers.

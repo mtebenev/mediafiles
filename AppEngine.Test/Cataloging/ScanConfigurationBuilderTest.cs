@@ -33,8 +33,8 @@ namespace Mt.MediaFiles.AppEngine.Test.Cataloging
       Assert.Equal(1, configuration.FileHandlers.Count);
       Assert.IsType<FileHandlerVideo>(configuration.FileHandlers[0]);
 
-      Assert.Equal(1, configuration.ScanTasks.Count);
-      Assert.IsType<ScanTaskScanInfo>(configuration.ScanTasks[0]);
+      Assert.Equal(1, configuration.ScanServices.Count);
+      Assert.IsType<ScanServiceScanInfo>(configuration.ScanServices[0]);
     }
 
     [Fact]
@@ -56,7 +56,7 @@ namespace Mt.MediaFiles.AppEngine.Test.Cataloging
       var configuration = await builder.BuildAsync(scanParameters, mmConfig);
 
       Assert.Equal(0, configuration.FileHandlers.Count);
-      Assert.Equal(0, configuration.ScanTasks.Count);
+      Assert.Equal(0, configuration.ScanServices.Count);
     }
   }
 }

@@ -14,7 +14,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
   /// <summary>
   /// Scanning sub-task for retrieving file properties with scan drivers.
   /// </summary>
-  internal class ScanTaskScanInfo : IScanTask
+  internal class ScanServiceScanInfo : IScanService
   {
     /// <summary>
     /// ISubTask.
@@ -24,7 +24,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// <summary>
     /// ISubTask.
     /// </summary>
-    public async Task ExecuteAsync(IScanContext scanContext, CatalogItemRecord record)
+    public async Task ScanAsync(IScanContext scanContext, CatalogItemRecord record)
     {
       IList<IFileHandler> fileHandlers = new List<IFileHandler>();
 
