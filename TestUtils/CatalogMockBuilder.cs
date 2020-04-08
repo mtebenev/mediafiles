@@ -1,12 +1,12 @@
 using System;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Scanning;
 using Newtonsoft.Json.Linq;
 using NSubstitute;
 using System.Collections.Generic;
 using System.Linq;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Scanning;
 
-namespace Mt.MediaMan.AppEngine.Test.TestUtils
+namespace Mt.MediaFiles.TestUtils
 {
   public class CatalogMockBuilder
   {
@@ -88,7 +88,7 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
     /// </summary>
     public static CatalogMockBuilder CreateDefault()
     {
-      var result = CatalogMockBuilder.Create(CatalogDefStd);
+      var result = Create(CatalogDefStd);
       return result;
     }
 
@@ -139,7 +139,7 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
 
       // Scan root info part
       var rootPath = (string)itemDef["rootPath"];
-      if(!String.IsNullOrEmpty(rootPath))
+      if(!string.IsNullOrEmpty(rootPath))
       {
         var infoPartScanRoot = new InfoPartScanRoot
         {
@@ -160,7 +160,7 @@ namespace Mt.MediaMan.AppEngine.Test.TestUtils
       }
 
       // Info parts
-      this.BuildItemInfoParts<InfoPartVideo>(mockCatalogItem, this._infoPartsVideo);
+      this.BuildItemInfoParts(mockCatalogItem, this._infoPartsVideo);
 
       mockCatalog.GetItemByIdAsync(itemId).Returns(mockCatalogItem);
       this.DeserializeChildren(itemDef, mockCatalog, mockCatalogItem);

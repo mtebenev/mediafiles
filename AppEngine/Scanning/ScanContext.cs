@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Logging;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Search;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Search;
+using Mt.MediaFiles.AppEngine.Tasks;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   internal class ScanContext : IScanContext
   {

@@ -1,7 +1,7 @@
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Ebooks.Storage;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Ebooks.Storage;
 
-namespace Mt.MediaMan.AppEngine.Ebooks
+namespace Mt.MediaFiles.AppEngine.Ebooks
 {
   public static class EbooksModule
   {

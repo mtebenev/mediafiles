@@ -7,7 +7,7 @@ using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaMan.AppEngine.Ebooks;
 using Mt.MediaMan.ClientApp.Cli.Configuration;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaFiles.ClientApp.Cli
 {
   /// <summary>
   /// Not sure if it's a bug but subcommand option values are not re-build if executed multiple time.

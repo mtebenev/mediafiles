@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 
-namespace Mt.MediaMan.ClientApp.Cli.Configuration
+namespace Mt.MediaFiles.ClientApp.Cli.Configuration
 {
   /// <summary>
   /// The catalog settings in appsettings.json

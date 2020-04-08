@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Tasks;
-using Mt.MediaMan.AppEngine.Video.Tasks;
-using Mt.MediaMan.ClientApp.Cli;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Video.Tasks;
+using Mt.MediaFiles.ClientApp.Cli;
 using Mt.MediaMan.ClientApp.Cli.Commands;
 using NSubstitute;
 using Xunit;

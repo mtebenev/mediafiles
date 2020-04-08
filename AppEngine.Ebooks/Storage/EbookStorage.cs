@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaMan.AppEngine.Ebooks.Storage;
 
-namespace Mt.MediaMan.AppEngine.Ebooks.Storage
+namespace Mt.MediaFiles.AppEngine.Ebooks.Storage
 {
   /// <summary>
   /// Ebook-related storage operations over base storage

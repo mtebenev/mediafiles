@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Mt.MediaFiles.AppEngine.Cataloging;
-using Mt.MediaFiles.ClientApp.Cli;
-using Mt.MediaMan.ClientApp.Cli.Commands;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {

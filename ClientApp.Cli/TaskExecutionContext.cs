@@ -1,9 +1,8 @@
 using System;
 using Microsoft.Extensions.Logging;
-using Mt.MediaMan.AppEngine.Commands;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Tasks;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaFiles.ClientApp.Cli
 {
   internal class TaskExecutionContext : ITaskExecutionContext
   {

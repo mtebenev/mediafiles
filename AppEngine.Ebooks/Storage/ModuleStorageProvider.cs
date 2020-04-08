@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 using YesSql;
 using YesSql.Sql;
 
-namespace Mt.MediaMan.AppEngine.Ebooks.Storage
+namespace Mt.MediaFiles.AppEngine.Ebooks.Storage
 {
   internal class ModuleStorageProvider : IModuleStorageProvider
   {

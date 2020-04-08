@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Commands;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Tasks;
 
-namespace Mt.MediaMan.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Scans new files to catalog
@@ -31,7 +30,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       var itemIds = await task.ExecuteAsync(this._shellAppContext.Catalog);
 
       var items = new List<ICatalogItem>();
-      foreach(int itemId in itemIds)
+      foreach(var itemId in itemIds)
       {
         var item = await this._shellAppContext.Catalog.GetItemByIdAsync(itemId);
         items.Add(item);

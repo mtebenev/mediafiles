@@ -1,7 +1,7 @@
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
 using Xunit;
 
-namespace Mt.MediaMan.AppEngine.Test.Cataloging
+namespace Mt.MediaFiles.AppEngine.Test.Cataloging
 {
   public class CatalogItemLocationTest
   {

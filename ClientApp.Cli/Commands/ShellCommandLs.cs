@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaMan.ClientApp.Cli;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {

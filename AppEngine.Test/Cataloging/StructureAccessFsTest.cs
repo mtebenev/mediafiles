@@ -1,12 +1,12 @@
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 using NSubstitute;
 using Xunit;
 
-namespace Mt.MediaMan.AppEngine.Test.Cataloging
+namespace Mt.MediaFiles.AppEngine.Test.Cataloging
 {
   public class StructureAccessFsTest
   {
