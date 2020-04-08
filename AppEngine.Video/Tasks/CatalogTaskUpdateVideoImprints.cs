@@ -61,7 +61,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
       {
         progressOperation.UpdateStatus($"Updating file: {catalogItem.Path}");
         var updater = this._updaterFactory.Create();
-        await updater.UpdateAsync(catalogItem, catalogItem.Path);
+        await updater.UpdateAsync(catalogItem.CatalogItemId, catalogItem.Path);
       }
     }
   }

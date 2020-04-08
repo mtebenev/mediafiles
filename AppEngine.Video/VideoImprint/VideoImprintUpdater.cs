@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
 using MediaToolkit.Services;
 using MediaToolkit.Tasks;
-using Mt.MediaFiles.AppEngine.Cataloging;
 
 namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
 {
@@ -14,7 +13,7 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
 
   internal interface IVideoImprintUpdater
   {
-    Task UpdateAsync(ICatalogItem catalogItem, string fsPath);
+    Task UpdateAsync(int catalogItemId, string fsPath);
   }
 
   /// <summary>
@@ -31,14 +30,14 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
       this._mediaToolkitService = mediaToolkitService;
     }
 
-    public async Task UpdateAsync(ICatalogItem catalogItem, string fsPath)
+    public async Task UpdateAsync(int catalogItemId, string fsPath)
     {
-      await this._videoImprintStorage.DeleteRecordsAsync(catalogItem.CatalogItemId);
-      var imprintRecord = await this.CreateRecordAsync(catalogItem, fsPath);
+      await this._videoImprintStorage.DeleteRecordsAsync(catalogItemId);
+      var imprintRecord = await this.CreateRecordAsync(catalogItemId, fsPath);
       await this._videoImprintStorage.SaveRecordAsync(imprintRecord);
     }
 
-    private async Task<VideoImprintRecord> CreateRecordAsync(ICatalogItem catalogItem, string fsPath)
+    private async Task<VideoImprintRecord> CreateRecordAsync(int catalogItemId, string fsPath)
     {
       var options = new GetThumbnailOptions
       {
@@ -52,7 +51,7 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
       var taskResult = await this._mediaToolkitService.ExecuteAsync(thumbnailTask);
       var record = new VideoImprintRecord
       {
-        CatalogItemId = catalogItem.CatalogItemId,
+        CatalogItemId = catalogItemId,
         ImprintData = taskResult.ThumbnailData
       };
       return record;

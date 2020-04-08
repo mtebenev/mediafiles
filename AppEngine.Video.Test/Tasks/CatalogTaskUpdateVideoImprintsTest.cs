@@ -47,9 +47,9 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
       await task.ExecuteTaskAsync(mockCatalogContext);
 
       // Verify
-      await mockUpdater.Received().UpdateAsync(Arg.Is<ICatalogItem>(x => x.CatalogItemId == 100), @"x:\root_folder\folder1\video1.mp4");
-      await mockUpdater.Received().UpdateAsync(Arg.Is<ICatalogItem>(x => x.CatalogItemId == 200), @"x:\root_folder\folder1\video2.mp4");
-      await mockUpdater.Received().UpdateAsync(Arg.Is<ICatalogItem>(x => x.CatalogItemId == 300), @"x:\root_folder\folder2\video3.flv");
+      await mockUpdater.Received().UpdateAsync(Arg.Is<int>(id => id == 100), @"x:\root_folder\folder1\video1.mp4");
+      await mockUpdater.Received().UpdateAsync(Arg.Is<int>(id => id == 200), @"x:\root_folder\folder1\video2.mp4");
+      await mockUpdater.Received().UpdateAsync(Arg.Is<int>(id => id == 300), @"x:\root_folder\folder2\video3.flv");
     }
   }
 }
