@@ -101,34 +101,16 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// </summary>
     private async Task RunScanServicesAsync(IScanContext scanContext, CatalogItemLocation location)
     {
-      // We create/save catalog item data only if needed.
-      CatalogItemData catalogItemData = null;
-      int catalogItemId = 0;
-
-      var scanServiceContext = new ScanServiceContext(
-        scanContext,
-        () =>
-        {
-          if(catalogItemData == null)
-            catalogItemData = new CatalogItemData(catalogItemId);
-
-          return catalogItemData;
-        }
-      );
+      var scanServiceContext = new ScanServiceContext(scanContext);
       var records = await scanContext.ItemStorage.QuerySubtree(location);
       foreach(var r in records)
       {
-        catalogItemId = r.CatalogItemId;
-        catalogItemData = null;
+        scanServiceContext.SetCurrentRecord(r);
         foreach(var ss in scanContext.ScanConfiguration.ScanServices)
         {
           await ss.ScanAsync(scanServiceContext, r);
         }
-
-        if(catalogItemData != null)
-        {
-          await scanContext.ItemStorage.SaveItemDataAsync(catalogItemId, catalogItemData);
-        }
+        await scanServiceContext.SaveDataAsync(scanContext.ItemStorage);
       }
     }
   }
