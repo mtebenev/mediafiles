@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
 
 namespace AppEngine.Video.Discovery
 {

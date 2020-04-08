@@ -2,11 +2,10 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Commands;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Tasks;
 
-namespace Mt.MediaMan.AppEngine.Video.Tasks
+namespace Mt.MediaFiles.AppEngine.Video.Tasks
 {
   public interface ICatalogTaskUpdateVideoImprintsFactory
   {

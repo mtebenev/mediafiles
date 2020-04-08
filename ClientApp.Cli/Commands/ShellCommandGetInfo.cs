@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Scanning;
 
 namespace Mt.MediaMan.ClientApp.Cli.Commands
 {

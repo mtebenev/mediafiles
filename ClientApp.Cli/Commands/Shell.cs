@@ -2,7 +2,8 @@ using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.ClientApp.Cli.Commands;
 
 namespace Mt.MediaMan.ClientApp.Cli.Commands
 {

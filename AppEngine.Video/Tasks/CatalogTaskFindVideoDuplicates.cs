@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AppEngine.Video.Comparison;
 using AppEngine.Video.VideoImprint;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaMan.AppEngine.Tools;
 
 namespace Mt.MediaMan.AppEngine.Tasks

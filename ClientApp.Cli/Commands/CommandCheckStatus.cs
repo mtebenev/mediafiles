@@ -2,8 +2,8 @@ using System;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
+using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Commands;
 
 namespace Mt.MediaMan.ClientApp.Cli.Commands
 {
