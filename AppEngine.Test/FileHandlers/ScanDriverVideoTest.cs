@@ -19,7 +19,6 @@ namespace Mt.MediaFiles.AppEngine.Test.FileHandlers
     public async Task Should_Extract_Video_Info()
     {
       var mockToolkitService = Substitute.For<IMediaToolkitService>();
-      var mockScanContext = Substitute.For<IScanContext>();
       var mockStoreEntry = Substitute.For<IFileStoreEntry>();
       var mockFileStore = Substitute.For<IFileStore>();
 
@@ -55,7 +54,7 @@ namespace Mt.MediaFiles.AppEngine.Test.FileHandlers
         .Returns(taskResult);
 
       var driver = new ScanDriverVideo(mockToolkitService);
-      await driver.ScanAsync(mockScanContext, 1, entryContext, itemData);
+      await driver.ScanAsync(1, entryContext, itemData);
 
       var resultPart = itemData.Get<InfoPartVideo>();
       resultPart.Should()

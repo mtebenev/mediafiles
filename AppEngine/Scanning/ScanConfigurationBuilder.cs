@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Mt.MediaFiles.AppEngine.FileHandlers;
 using Mt.MediaFiles.AppEngine.Scanning;
 
 namespace Mt.MediaMan.AppEngine.Scanning
@@ -14,34 +10,11 @@ namespace Mt.MediaMan.AppEngine.Scanning
   /// </summary>
   internal class ScanConfigurationBuilder : IScanConfigurationBuilder
   {
-    private readonly Lazy<List<IFileHandler>> _fileHandlers;
-    private readonly Lazy<List<IScanService>> _scanTasks;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly List<IScanService> _scanServices;
 
-    public ScanConfigurationBuilder(IServiceProvider serviceProvider)
+    public ScanConfigurationBuilder(IEnumerable<IScanService> scanServices)
     {
-      this._serviceProvider = serviceProvider;
-      this._fileHandlers = new Lazy<List<IFileHandler>>(() =>
-      {
-        var fileHandlerTypes = new[]
-        {
-          typeof(FileHandlerVideo)
-        };
-        var handlerList = fileHandlerTypes
-          .Select(x => ActivatorUtilities.CreateInstance(this._serviceProvider, x))
-          .Cast<IFileHandler>()
-          .ToList();
-
-        return handlerList;
-      }, LazyThreadSafetyMode.PublicationOnly);
-
-      this._scanTasks = new Lazy<List<IScanService>>(() =>
-      {
-        return new List<IScanService>
-        {
-          new ScanServiceScanInfo()
-        };
-      });
+      this._scanServices = scanServices.ToList();
     }
 
     /// <summary>
@@ -49,18 +22,13 @@ namespace Mt.MediaMan.AppEngine.Scanning
     /// </summary>
     public Task<IScanConfiguration> BuildAsync(ScanParameters scanParameters, MmConfig mmConfig)
     {
-      var fileHandlers = scanParameters.FileHandlerIds
-        .Select(id => this._fileHandlers.Value.First(fh => fh.Id == id))
-        .ToList();
-
       var scanServices = scanParameters.ScanTaskIds
-        .Select(id => this._scanTasks.Value.First(st => st.Id == id))
+        .Select(id => this._scanServices.First(st => st.Id == id))
         .ToList();
 
       var configuration =
         new ScanConfiguration(scanParameters, mmConfig)
       {
-        FileHandlers = fileHandlers,
         ScanServices = scanServices
       };
 
