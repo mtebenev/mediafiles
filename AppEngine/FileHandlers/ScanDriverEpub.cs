@@ -10,7 +10,7 @@ namespace Mt.MediaFiles.AppEngine.FileHandlers
   /// </summary>
   internal class ScanDriverEpub : IScanDriver
   {
-    public async Task ScanAsync(IScanContext scanContext, int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData)
+    public async Task ScanAsync(int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData)
     {
       using(var fileStream = await fileStoreEntryContext.GetFileStreamAsync())
       {

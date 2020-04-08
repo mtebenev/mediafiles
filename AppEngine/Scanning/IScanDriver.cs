@@ -11,6 +11,6 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// <summary>
     /// Extracts information and stores it in item storage
     /// </summary>
-    Task ScanAsync(IScanContext scanContext, int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData);
+    Task ScanAsync(int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData);
   }
 }

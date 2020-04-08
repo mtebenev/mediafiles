@@ -102,12 +102,13 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// </summary>
     private async Task RunScanSubTasksAsync(IScanContext scanContext, CatalogItemLocation location)
     {
+      var scanServiceContext = new ScanServiceContext(scanContext);
       var records = await scanContext.ItemStorage.QuerySubtree(location);
       foreach(var r in records)
       {
         foreach(var ss in scanContext.ScanConfiguration.ScanServices)
         {
-          await ss.ScanAsync(scanContext, r);
+          await ss.ScanAsync(scanServiceContext, r);
         }
       }
     }

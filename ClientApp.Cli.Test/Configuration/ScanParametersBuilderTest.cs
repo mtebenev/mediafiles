@@ -18,7 +18,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
           ScanPath = "scan-path",
           RootItemName = "root-item",
           FileHandlerIds = new[] { AppEngine.HandlerIds.FileHandlerVideo },
-          ScanTaskIds = new[] { AppEngine.Video.HandlerIds.ScanTaskVideoImprints }
+          ScanTaskIds = new[] { AppEngine.Video.HandlerIds.ScanSvcVideoImprints }
         });
     }
 
@@ -48,7 +48,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
           ScanPath = "scan-path",
           RootItemName = "root-item",
           FileHandlerIds = new[] { AppEngine.HandlerIds.FileHandlerVideo },
-          ScanTaskIds = new[] { AppEngine.Video.HandlerIds.ScanTaskVideoImprints, AppEngine.HandlerIds.ScanTaskScanInfo }
+          ScanTaskIds = new[] { AppEngine.Video.HandlerIds.ScanSvcVideoImprints, AppEngine.HandlerIds.ScanSvcScanInfo }
         });
     }
   }

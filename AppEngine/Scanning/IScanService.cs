@@ -6,7 +6,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
   /// <summary>
   /// The scan services are performing various tasks during scanning.
   /// </summary>
-  internal interface IScanService
+  public interface IScanService
   {
     /// <summary>
     /// Unique id of the subtask.
@@ -16,6 +16,6 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// <summary>
     /// Executes the sub-task on the catalog item record.
     /// </summary>
-    Task ScanAsync(IScanContext scanContext, CatalogItemRecord record);
+    Task ScanAsync(IScanServiceContext context, CatalogItemRecord record);
   }
 }

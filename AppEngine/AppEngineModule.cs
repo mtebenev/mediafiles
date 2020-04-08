@@ -32,6 +32,9 @@ namespace Mt.MediaFiles.AppEngine
       services.AddTransient<IStorageManager, StorageManager>();
       services.AddTransient<IScanConfigurationBuilder, ScanConfigurationBuilder>();
 
+      // Scan services
+      services.AddTransient<IScanService, ScanServiceScanInfo>();
+
       // Typed factories
       services
         .RegisterTypedFactory<ICatalogTaskCheckStatusFactory>().ForConcreteType<CatalogTaskCheckStatus>();

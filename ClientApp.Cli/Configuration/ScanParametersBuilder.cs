@@ -44,8 +44,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
     {
       var scanTaskIds = new List<string>
       {
-        AppEngine.HandlerIds.ScanTaskScanInfo,
-        AppEngine.Video.HandlerIds.ScanTaskVideoImprints
+        AppEngine.HandlerIds.ScanSvcScanInfo,
+        AppEngine.Video.HandlerIds.ScanSvcVideoImprints
       };
 
       var fileHandlerIds = new List<string>
@@ -60,7 +60,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
     {
       var scanTaskIds = new List<string>
       {
-        AppEngine.Video.HandlerIds.ScanTaskVideoImprints
+        AppEngine.Video.HandlerIds.ScanSvcVideoImprints
       };
 
       var fileHandlerIds = new List<string>

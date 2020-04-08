@@ -6,7 +6,10 @@ using Mt.MediaFiles.AppEngine.Tasks;
 namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
-  /// Contextual objects for scan process
+  /// Contextual objects for scan process.
+  /// Design note. This is an internal interface for using inside only in this core assembly.
+  /// It provides access to the very intimate core stuff.
+  /// Extensible classes should obtain narrow contexts.
   /// </summary>
   internal interface IScanContext
   {

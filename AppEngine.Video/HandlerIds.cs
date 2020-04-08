@@ -8,6 +8,6 @@ namespace Mt.MediaFiles.AppEngine.Video
     /// <summary>
     /// Video imprints subtask.
     /// </summary>
-    public static readonly string ScanTaskVideoImprints = "video-imprints";
+    public static readonly string ScanSvcVideoImprints = "scansvc-video-imprints";
   }
 }

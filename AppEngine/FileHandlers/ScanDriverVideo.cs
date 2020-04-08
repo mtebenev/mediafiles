@@ -24,7 +24,7 @@ namespace Mt.MediaFiles.AppEngine.FileHandlers
     /// <summary>
     /// IScanDriver.
     /// </summary>
-    public async Task ScanAsync(IScanContext scanContext, int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData)
+    public async Task ScanAsync(int catalogItemId, FileStoreEntryContext fileStoreEntryContext, CatalogItemData catalogItemData)
     {
       var infoPartVideo = catalogItemData.GetOrCreate<InfoPartVideo>();
 
