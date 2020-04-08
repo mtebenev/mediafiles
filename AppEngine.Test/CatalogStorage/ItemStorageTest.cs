@@ -2,17 +2,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
 using FluentAssertions;
 using Microsoft.Data.Sqlite;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using NSubstitute;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Xunit;
 using YesSql;
 using YesSql.Provider.Sqlite;
 
-namespace Mt.MediaMan.AppEngine.Test.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.Test.CatalogStorage
 {
   /// <summary>
   /// Note: these tests are heavey: we use real store and in-memory db for testing.
@@ -82,7 +80,7 @@ namespace Mt.MediaMan.AppEngine.Test.CatalogStorage
         DataSource = "mem"
       }.ToString();
 
-      var storeConfiguration = new YesSql.Configuration();
+      var storeConfiguration = new Configuration();
       storeConfiguration.UseSqLite(connectionString, IsolationLevel.ReadUncommitted, true);
       var connection = storeConfiguration.ConnectionFactory.CreateConnection();
       connection.Open();

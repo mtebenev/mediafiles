@@ -3,19 +3,27 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.FileHandlers;
-using Mt.MediaMan.AppEngine.FileStorage;
-using Mt.MediaMan.AppEngine.Search;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.FileHandlers;
+using Mt.MediaFiles.AppEngine.FileStorage;
+using Mt.MediaFiles.AppEngine.Search;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
   /// Scanning sub-task for retrieving file properties with scan drivers.
   /// </summary>
-  internal class SubTaskScanInfo : ISubTask
+  internal class ScanTaskScanInfo : IScanTask
   {
+    /// <summary>
+    /// ISubTask.
+    /// </summary>
+    public string Id => HandlerIds.ScanTaskScanInfo;
+
+    /// <summary>
+    /// ISubTask.
+    /// </summary>
     public async Task ExecuteAsync(IScanContext scanContext, CatalogItemRecord record)
     {
       IList<IFileHandler> fileHandlers = new List<IFileHandler>();
@@ -90,7 +98,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
     /// </summary>
     private async Task RunIndexersAsync(IScanContext scanContext, CatalogItemRecord record, FileStoreEntryContext fsContext, CatalogItemData catalogItemData, IList<IFileHandler> fileHandlers)
     {
-      DocumentIndex documentIndex = new DocumentIndex(record.CatalogItemId.ToString());
+      var documentIndex = new DocumentIndex(record.CatalogItemId.ToString());
       var indexingContext = new IndexingContext(documentIndex, record, catalogItemData);
 
       // Perform indexing

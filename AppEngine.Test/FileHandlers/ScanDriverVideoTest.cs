@@ -4,14 +4,14 @@ using FluentAssertions;
 using MediaToolkit.Model;
 using MediaToolkit.Services;
 using MediaToolkit.Tasks;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.FileHandlers;
-using Mt.MediaMan.AppEngine.FileStorage;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.FileHandlers;
+using Mt.MediaFiles.AppEngine.FileStorage;
+using Mt.MediaFiles.AppEngine.Scanning;
 using NSubstitute;
 using Xunit;
 
-namespace Mt.MediaMan.AppEngine.Test.FileHandlers
+namespace Mt.MediaFiles.AppEngine.Test.FileHandlers
 {
   public class ScanDriverVideoTest
   {

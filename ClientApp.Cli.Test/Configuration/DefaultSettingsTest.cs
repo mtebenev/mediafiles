@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using FluentAssertions;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
-using Mt.MediaMan.ClientApp.Cli.Configuration;
 using NSubstitute;
 using Xunit;
 

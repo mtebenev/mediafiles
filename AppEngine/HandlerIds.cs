@@ -8,11 +8,11 @@ namespace Mt.MediaFiles.AppEngine
     /// <summary>
     /// Video file handler.
     /// </summary>
-    public static readonly string FileHandlerVideo = "video";
+    public static readonly string FileHandlerVideo = "file-handler-video";
 
     /// <summary>
     /// Info scanning sub-task.
     /// </summary>
-    public static readonly string SubTaskScanInfo = "scan-info";
+    public static readonly string ScanTaskScanInfo = "scan-task-scan-info";
   }
 }

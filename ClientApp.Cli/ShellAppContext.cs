@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Ebooks;
 using Mt.MediaFiles.AppEngine.Tasks;
-using Mt.MediaMan.AppEngine.Ebooks;
-using Mt.MediaMan.ClientApp.Cli.Configuration;
+using Mt.MediaFiles.ClientApp.Cli.Configuration;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {

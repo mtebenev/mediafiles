@@ -1,25 +1,22 @@
 using System;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Mt.MediaMan.AppEngine;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Commands;
-using Mt.MediaMan.ClientApp.Cli.Commands;
-using Mt.MediaMan.ClientApp.Cli.Configuration;
 using NLog.Extensions.Logging;
 using MediaToolkit;
-using AppEngine.Video.Test;
-using Mt.MediaMan.AppEngine.Tasks;
-using Mt.MediaMan.AppEngine.Common;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
+using Mt.MediaFiles.AppEngine.Video;
+using Mt.MediaFiles.AppEngine.Common;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.ClientApp.Cli.Commands;
+using Mt.MediaFiles.AppEngine;
 
-namespace Mt.MediaMan.ClientApp.Cli
+namespace Mt.MediaFiles.ClientApp.Cli
 {
   [Command("mediaman")]
   [Subcommand(
@@ -36,7 +33,7 @@ namespace Mt.MediaMan.ClientApp.Cli
 
     public static async Task<int> Main(string[] args)
     {
-      int result = 0;
+      var result = 0;
       try
       {
         NLog.LogManager.LoadConfiguration("nlog.config");
@@ -57,25 +54,25 @@ namespace Mt.MediaMan.ClientApp.Cli
           new FileSystem()
         );
 
-        Program._shellAppContext = new ShellAppContext(appSettings);
+        _shellAppContext = new ShellAppContext(appSettings);
 
         // Open startup or first catalog
         if(appSettings.Catalogs.Count == 0)
           throw new InvalidOperationException("No catalogs defined");
 
-        Program._services = Program.ConfigureServices(appSettings);
-        await _shellAppContext.OpenCatalog(Program._services);
+        _services = ConfigureServices(appSettings);
+        await _shellAppContext.OpenCatalog(_services);
 
         var app = new CommandLineApplication<Program>();
         app.Conventions
           .UseDefaultConventions()
-          .UseConstructorInjection(Program._services);
+          .UseConstructorInjection(_services);
 
         result = await app.ExecuteAsync(args);
       }
       finally
       {
-        Program._shellAppContext?.Catalog.Dispose();
+        _shellAppContext?.Catalog.Dispose();
       }
       return result;
     }
@@ -98,7 +95,7 @@ namespace Mt.MediaMan.ClientApp.Cli
         .AddMediaToolkit(@"C:\ffmpeg\ffmpeg.exe")
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton<IShellAppContext>(_shellAppContext)
-        .AddSingleton<ShellAppContext>(_shellAppContext)
+        .AddSingleton(_shellAppContext)
         .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton<IFileSystem, FileSystem>()
         .AddSingleton<IClock, Clock>()

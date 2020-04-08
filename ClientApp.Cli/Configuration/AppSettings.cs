@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Mt.MediaMan.ClientApp.Cli.Configuration
+namespace Mt.MediaFiles.ClientApp.Cli.Configuration
 {
   /// <summary>
   /// Serialized app settings

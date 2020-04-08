@@ -2,13 +2,13 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Scanning;
 using NSubstitute;
 using Xunit;
 
-namespace Mt.MediaMan.AppEngine.Test.Scanning
+namespace Mt.MediaFiles.AppEngine.Test.Scanning
 {
   public class ItemExplorerFileSystemTest
   {

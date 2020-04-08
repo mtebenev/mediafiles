@@ -58,7 +58,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
       }
 
       // Do scan sub-tasks
-      if(scanContext.ScanConfiguration.SubTasks.Any())
+      if(scanContext.ScanConfiguration.ScanTasks.Any())
       {
         scanContext.ProgressOperation.UpdateStatus("Scanning files...");
         await this.RunScanSubTasksAsync(scanContext, location);
@@ -106,7 +106,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
       var records = await scanContext.ItemStorage.QuerySubtree(location);
       foreach(var r in records)
       {
-        foreach(var subTask in scanContext.ScanConfiguration.SubTasks)
+        foreach(var subTask in scanContext.ScanConfiguration.ScanTasks)
         {
           await subTask.ExecuteAsync(scanContext, r);
         }

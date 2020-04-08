@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mt.MediaMan.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Scanning;
 using NSubstitute;
 using Xunit;
 
-namespace Mt.MediaMan.AppEngine.Test.Scanning
+namespace Mt.MediaFiles.AppEngine.Test.Scanning
 {
   public class ItemScannerTest
   {
