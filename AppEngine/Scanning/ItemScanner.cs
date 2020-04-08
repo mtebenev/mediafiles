@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MoreLinq;
-using Mt.MediaMan.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   public interface IItemScannerFactory
   {
@@ -78,7 +78,7 @@ namespace Mt.MediaMan.AppEngine.Scanning
       // Create the store record
       var scanRootRecord = new CatalogItemRecord
       {
-        Path = String.IsNullOrWhiteSpace(itemName)
+        Path = string.IsNullOrWhiteSpace(itemName)
         ? "[SCAN_ROOT]"
         : itemName,
         Size = 0,

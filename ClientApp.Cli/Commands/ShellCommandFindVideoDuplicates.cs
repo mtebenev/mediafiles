@@ -4,7 +4,7 @@ using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaMan.AppEngine.Tasks;
 using Mt.MediaMan.AppEngine.Tools;
 
-namespace Mt.MediaMan.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Command finds the video duplicates.
@@ -43,7 +43,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       console.WriteLine($"{firstItem.Path}");
       console.ResetColor();
 
-      for(int i = 0; i < duplicateResult.FileInfos.Count; i++)
+      for(var i = 0; i < duplicateResult.FileInfos.Count; i++)
       {
         if(i > 0)
           wastedSize += duplicateResult.FileInfos[i].FileSize;

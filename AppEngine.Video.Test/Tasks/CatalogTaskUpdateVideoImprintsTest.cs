@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
 using Xunit;
-using Mt.MediaMan.AppEngine.Video.Tasks;
 using NSubstitute;
-using Mt.MediaMan.AppEngine.Commands;
 using System.IO.Abstractions.TestingHelpers;
-using Mt.MediaMan.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Test.TestUtils;
 using AppEngine.Video.VideoImprint;
+using Mt.MediaFiles.AppEngine.Video.Tasks;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Cataloging;
 
 namespace AppEngine.Video.Test.Tasks
 {

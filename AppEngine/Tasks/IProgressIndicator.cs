@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.Tasks
+namespace Mt.MediaFiles.AppEngine.Tasks
 {
   /// <summary>
   /// Thin UI callback interface

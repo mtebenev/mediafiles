@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace Mt.MediaMan.AppEngine.Common
+namespace Mt.MediaFiles.AppEngine.Common
 {
   /// <summary>
   /// Various helpers for working with paths
@@ -27,7 +27,7 @@ namespace Mt.MediaMan.AppEngine.Common
     /// </summary>
     public static string[] GetRelativeParts(string path, string basePath)
     {
-      if(String.IsNullOrEmpty(path) || String.IsNullOrEmpty(basePath))
+      if(string.IsNullOrEmpty(path) || string.IsNullOrEmpty(basePath))
       {
         throw new Exception("Invalid path");
       }
@@ -57,19 +57,19 @@ namespace Mt.MediaMan.AppEngine.Common
     /// <exception cref="InvalidOperationException"></exception>
     public static string MakeRelativePath(string fromPath, string toPath)
     {
-      if(String.IsNullOrEmpty(fromPath))
+      if(string.IsNullOrEmpty(fromPath))
         throw new ArgumentNullException("fromPath");
-      if(String.IsNullOrEmpty(toPath))
+      if(string.IsNullOrEmpty(toPath))
         throw new ArgumentNullException("toPath");
 
-      Uri fromUri = new Uri(fromPath);
-      Uri toUri = new Uri(toPath);
+      var fromUri = new Uri(fromPath);
+      var toUri = new Uri(toPath);
 
       if(fromUri.Scheme != toUri.Scheme)
       { return toPath; } // path can't be made relative.
 
-      Uri relativeUri = fromUri.MakeRelativeUri(toUri);
-      string relativePath = Uri.UnescapeDataString(relativeUri.ToString());
+      var relativeUri = fromUri.MakeRelativeUri(toUri);
+      var relativePath = Uri.UnescapeDataString(relativeUri.ToString());
 
       if(toUri.Scheme.Equals("file", StringComparison.InvariantCultureIgnoreCase))
       {

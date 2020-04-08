@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
   /// Scan driveres extract file type-specific properties and stores document

@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using AppEngine.Video.Comparison;
 using AppEngine.Video.VideoImprint;
 using FluentAssertions;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaMan.AppEngine.Tasks;
 using Mt.MediaMan.AppEngine.Test.TestUtils;
 using NSubstitute;

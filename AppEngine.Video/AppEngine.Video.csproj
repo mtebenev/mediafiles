@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(NetStandardTargetFramework)</TargetFramework>
-    <RootNamespace>Mt.MediaMan.AppEngine.Video</RootNamespace>
+    <RootNamespace>Mt.MediaFiles.AppEngine.Video</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

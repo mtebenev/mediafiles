@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.AppEngine.Common;
 using Mt.MediaFiles.AppEngine.Search;
-using Mt.MediaMan.AppEngine.CatalogStorage;
 
 namespace Mt.MediaFiles.AppEngine.Cataloging
 {

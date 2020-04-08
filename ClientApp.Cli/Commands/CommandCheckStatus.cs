@@ -2,10 +2,10 @@ using System;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
+using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
 
-namespace Mt.MediaMan.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Checks the status of the files in the current directory.
@@ -26,7 +26,7 @@ namespace Mt.MediaMan.ClientApp.Cli.Commands
       var task = taskFactory.Create(catalogItem);
       var result = await shellAppContext.Catalog.ExecuteTaskAsync(task);
 
-      TableBuilder tb = new TableBuilder();
+      var tb = new TableBuilder();
       tb.AddRow("ID", "Path", "Status");
       tb.AddRow("--", "----", "------");
 

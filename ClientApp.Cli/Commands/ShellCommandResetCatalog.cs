@@ -1,8 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
+using Mt.MediaMan.ClientApp.Cli;
 
-namespace Mt.MediaMan.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Deletes all the data in the existing catalog.

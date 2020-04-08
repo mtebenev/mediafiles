@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
   /// Reads mm config for scanning.
