@@ -1,9 +1,8 @@
 using AppEngine.Video.Comparison;
-using AppEngine.Video.VideoImprint;
 using AspNetCoreInjection.TypedFactories;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
-using Mt.MediaMan.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 
 namespace Mt.MediaFiles.AppEngine.Video
 {

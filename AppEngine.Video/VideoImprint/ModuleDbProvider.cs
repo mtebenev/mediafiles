@@ -1,9 +1,9 @@
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 
-namespace AppEngine.Video.VideoImprint
+namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
 {
   /// <summary>
   /// The DB provider for the videoimprint module.

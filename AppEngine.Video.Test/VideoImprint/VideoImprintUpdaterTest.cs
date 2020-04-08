@@ -2,11 +2,12 @@ using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
 using MediaToolkit.Services;
 using MediaToolkit.Tasks;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using NSubstitute;
 using Xunit;
 
-namespace AppEngine.Video.Test.VideoImprint
+namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
 {
   public class VideoImprintUpdaterTest
   {

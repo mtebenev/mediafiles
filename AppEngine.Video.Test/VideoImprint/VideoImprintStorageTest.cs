@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
-using Dapper.Contrib.Extensions;
 using FluentAssertions;
 using Microsoft.Data.Sqlite;
-using Mt.MediaMan.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using Xunit;
 
-namespace AppEngine.Video.Test.VideoImprint
+namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
 {
   public class VideoImprintStorageTest
   {

@@ -1,7 +1,8 @@
+using AppEngine.Video.VideoImprint;
 using Microsoft.Extensions.DependencyInjection;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
 
-namespace AppEngine.Video.VideoImprint
+namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
 {
   /// <summary>
   /// The video imprint module.

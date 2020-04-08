@@ -1,7 +1,6 @@
 using System;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
-using AppEngine.Video.VideoImprint;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +14,7 @@ using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.ClientApp.Cli.Commands;
 using Mt.MediaFiles.AppEngine;
+using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
