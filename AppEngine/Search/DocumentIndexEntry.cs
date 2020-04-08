@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.Search
+namespace Mt.MediaFiles.AppEngine.Search
 {
   /// <summary>
   /// To be stored in lucene

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Mt.MediaMan.AppEngine.FileStorage
+namespace Mt.MediaFiles.AppEngine.FileStorage
 {
   /// <summary>
   /// Represents an abstract entry (file or directory) in a virtual file store.

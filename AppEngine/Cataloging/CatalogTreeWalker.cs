@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mt.MediaMan.AppEngine.Cataloging
+namespace Mt.MediaFiles.AppEngine.Cataloging
 {
   /// <summary>
   /// Creates various catalog walkers
   /// </summary>
-  public static class CatalogTreeWalker 
+  public static class CatalogTreeWalker
   {
     /// <summary>
     /// Creates default catalog tree walker.

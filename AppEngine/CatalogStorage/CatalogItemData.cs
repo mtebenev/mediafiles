@@ -1,6 +1,6 @@
 using Newtonsoft.Json.Linq;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   /// <summary>
   /// Contains info parts associated with catalog item. Stored as YesSql document.

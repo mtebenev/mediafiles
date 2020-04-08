@@ -2,7 +2,7 @@ using System;
 using System.Data;
 using YesSql;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   /// <summary>
   /// Provides low-level storage access

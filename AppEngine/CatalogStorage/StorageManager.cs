@@ -4,7 +4,7 @@ using Dapper;
 using Microsoft.Data.Sqlite;
 using YesSql;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   internal class StorageManager : IStorageManager
   {
@@ -37,7 +37,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
         "Identifiers",
         "VideoImprint"
       };
-      foreach (var tableName in tables)
+      foreach(var tableName in tables)
       {
         await dbConnection.ExecuteAsync($"DROP TABLE {tableName}");
       }

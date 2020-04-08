@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders;
 
-namespace Mt.MediaMan.AppEngine.FileStorage
+namespace Mt.MediaFiles.AppEngine.FileStorage
 {
   public class FileSystemStoreEntry : IFileStoreEntry
   {

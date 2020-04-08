@@ -1,6 +1,6 @@
 using Dapper.Contrib.Extensions;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   [Table("CatalogItem")]
   internal class CatalogItemRecord

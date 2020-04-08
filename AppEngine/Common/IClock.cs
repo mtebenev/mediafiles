@@ -1,6 +1,6 @@
 using System;
 
-namespace Mt.MediaMan.AppEngine.Common
+namespace Mt.MediaFiles.AppEngine.Common
 {
   /// <summary>
   /// Provides the current Utc <see cref="DateTime"/>, and time related method for cache management.

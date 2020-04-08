@@ -1,6 +1,6 @@
 using System;
 
-namespace Mt.MediaMan.AppEngine.FileStorage
+namespace Mt.MediaFiles.AppEngine.FileStorage
 {
   public class FileStoreException : Exception
   {

@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using YesSql;
 using YesSql.Sql;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   /// <summary>
   /// Modules should provide the instance to let initialize module-specific storage stuff

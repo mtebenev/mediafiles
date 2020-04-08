@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mt.MediaMan.AppEngine.FileStorage
+namespace Mt.MediaFiles.AppEngine.FileStorage
 {
   /// <summary>
   /// Represents a generic abstraction over a virtual file store.

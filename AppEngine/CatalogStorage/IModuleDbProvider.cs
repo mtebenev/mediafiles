@@ -1,7 +1,7 @@
 using System.Data;
 using System.Threading.Tasks;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   /// <summary>
   /// Modules should provide the instance to let initialize module-specific DB stuff

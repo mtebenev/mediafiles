@@ -5,11 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Dapper.Contrib.Extensions;
-using Mt.MediaMan.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Cataloging;
 using YesSql;
 using YesSql.Sql;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   internal class ItemStorage : IItemStorage
   {
@@ -52,7 +52,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// </summary>
     public async Task<int> CreateItemAsync(CatalogItemRecord itemRecord)
     {
-      int itemId = await this.DbConnection.InsertAsync(itemRecord);
+      var itemId = await this.DbConnection.InsertAsync(itemRecord);
       return itemId;
     }
 
@@ -184,7 +184,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
         .QueryAsync<CatalogItemRecord>(query,
         new
         {
-          ScanRootId = catalogItemLocation.ScanRootId,
+          catalogItemLocation.ScanRootId,
           PathPrefix = $"{catalogItemLocation.PathPrefix}%"
         });
 

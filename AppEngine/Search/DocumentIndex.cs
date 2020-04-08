@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Mt.MediaMan.AppEngine.Search
+namespace Mt.MediaFiles.AppEngine.Search
 {
   /// <summary>
   /// Indexed values for a document (catalog item or other document)

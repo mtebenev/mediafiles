@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.Cataloging
+namespace Mt.MediaFiles.AppEngine.Cataloging
 {
   /// <summary>
   /// Provides access to the core catalog facilities.

@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   public class InfoPartBook : InfoPartBase
   {

@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
   /// The info part saved for each scan root item. Contains original drive info

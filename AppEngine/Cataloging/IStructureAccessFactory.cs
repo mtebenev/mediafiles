@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Mt.MediaMan.AppEngine.Cataloging
+namespace Mt.MediaFiles.AppEngine.Cataloging
 {
   /// <summary>
   /// The structure access factory.

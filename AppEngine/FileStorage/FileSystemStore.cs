@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders.Physical;
 
-namespace Mt.MediaMan.AppEngine.FileStorage
+namespace Mt.MediaFiles.AppEngine.FileStorage
 {
   public class FileSystemStore : IFileStore
   {

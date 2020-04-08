@@ -1,8 +1,8 @@
 using System;
-using Mt.MediaMan.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Scanning;
 using Newtonsoft.Json.Linq;
 
-namespace Mt.MediaMan.AppEngine.CatalogStorage
+namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
   public static class CatalogItemDataExtensions
   {
@@ -21,7 +21,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     public static InfoPartBase Get(this CatalogItemData catalogItemData, Type infoPartType, string name)
     {
       var elementData = catalogItemData.Data[name] as JObject;
-      InfoPartBase result = (InfoPartBase) elementData?.ToObject(infoPartType);
+      var result = (InfoPartBase)elementData?.ToObject(infoPartType);
 
       if(result != null)
         result.CatalogItemData = catalogItemData;
@@ -43,7 +43,7 @@ namespace Mt.MediaMan.AppEngine.CatalogStorage
     /// </summary>
     public static TInfoPart GetOrCreate<TInfoPart>(this CatalogItemData catalogItemData, string name) where TInfoPart : InfoPartBase, new()
     {
-      var existing = catalogItemData.Get<TInfoPart>() ?? new TInfoPart {CatalogItemData = catalogItemData};
+      var existing = catalogItemData.Get<TInfoPart>() ?? new TInfoPart { CatalogItemData = catalogItemData };
       return existing;
     }
 
