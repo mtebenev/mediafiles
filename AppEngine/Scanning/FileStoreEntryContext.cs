@@ -7,7 +7,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
   /// <summary>
   /// Defines an FS entry along with parent storage
   /// </summary>
-  internal class FileStoreEntryContext
+  public sealed class FileStoreEntryContext
   {
     public FileStoreEntryContext(IFileStoreEntry fileStoreEntry, IFileStore fileStore)
     {
