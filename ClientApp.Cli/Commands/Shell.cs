@@ -30,7 +30,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
       _shellAppContext = shellAppContext;
     }
 
-    public async Task<int> OnExecuteAsync(CommandLineApplication app, ILogger<Shell> logger)
+    public async Task<int> OnExecuteAsync(IServiceProvider serviceProvider, ILogger<Shell> logger)
     {
       var commandResult = 0;
 
@@ -43,7 +43,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
         if(!string.IsNullOrEmpty(commandInput))
         {
           var commandArgs = commandInput.Split(' ');
-          commandResult = await ExecuteShellCommandAsync(app, commandArgs, logger);
+          commandResult = await ExecuteShellCommandAsync(serviceProvider, commandArgs, logger);
         }
       } while(commandResult != Program.CommandExitResult);
 
@@ -60,13 +60,20 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
       return result;
     }
 
-    private async Task<int> ExecuteShellCommandAsync(CommandLineApplication app, string[] commandArgs, ILogger<Shell> logger)
+    private async Task<int> ExecuteShellCommandAsync(IServiceProvider serviceProvider, string[] commandArgs, ILogger<Shell> logger)
     {
       var commandResult = Program.CommandResultContinue;
 
       try
       {
-        commandResult = await app.ExecuteAsync(commandArgs);
+        // Note: avoid reusing shell application because this is not a scenario the fully supported by CommandLineUtils
+        // Specifically the command options (profile option in scan) are not cleared between the calls.
+        var shellApp = new CommandLineApplication<Shell>();
+        shellApp.Conventions
+          .UseDefaultConventions()
+          .UseConstructorInjection(serviceProvider);
+
+        commandResult = await shellApp.ExecuteAsync(commandArgs);
       }
       catch(Exception e)
       {

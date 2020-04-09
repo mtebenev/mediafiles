@@ -80,7 +80,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Ui
       {
         ProgressCharacter = '─',
         CollapseWhenFinished = true,
-        BackgroundColor = ConsoleColor.Gray,
+        BackgroundColor = ConsoleColor.DarkGray,
         ForegroundColorDone = ConsoleColor.DarkGray,
         ForegroundColor = ConsoleColor.White,
       };

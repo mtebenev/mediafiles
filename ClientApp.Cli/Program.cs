@@ -81,7 +81,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
     /// <summary>
     /// Invoked only if none command could be found (the default command).
     /// </summary>
-    public Task<int> OnExecuteAsync(CommandLineApplication app, IConsole console)
+    public Task<int> OnExecuteAsync(CommandLineApplication app)
     {
       return app.ExecuteAsync(new[] { "shell" });
     }
