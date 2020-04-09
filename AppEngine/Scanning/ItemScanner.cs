@@ -103,14 +103,19 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     {
       var scanServiceContext = new ScanServiceContext(scanContext);
       var records = await scanContext.ItemStorage.QuerySubtree(location);
-      foreach(var r in records)
+
+      using(var progressOperation = scanContext.ProgressOperation.CreateChildOperation(records.Count))
       {
-        scanServiceContext.SetCurrentRecord(r);
-        foreach(var ss in scanContext.ScanConfiguration.ScanServices)
+        foreach(var r in records)
         {
-          await ss.ScanAsync(scanServiceContext, r);
+          scanServiceContext.SetCurrentRecord(r);
+          progressOperation.UpdateStatus(r.Path);
+          foreach(var ss in scanContext.ScanConfiguration.ScanServices)
+          {
+            await ss.ScanAsync(scanServiceContext, r);
+          }
+          await scanServiceContext.SaveDataAsync(scanContext.ItemStorage);
         }
-        await scanServiceContext.SaveDataAsync(scanContext.ItemStorage);
       }
     }
   }

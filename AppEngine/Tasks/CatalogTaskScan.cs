@@ -53,7 +53,9 @@ namespace Mt.MediaFiles.AppEngine.Tasks
     /// </summary>
     async Task IInternalCatalogTask.ExecuteAsync(Catalog catalog)
     {
-      using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation($"Scanning files: {this._scanParameters.ScanPath}"))
+      using(var progressOperation = this._executionContext
+        .ProgressIndicator
+        .StartOperation($"Scanning files: {this._scanParameters.ScanPath}"))
       {
         var itemExplorer = new ItemExplorerFileSystem(this._fileSystem);
         var rootItem = catalog.RootItem;

@@ -6,7 +6,7 @@ namespace Mt.MediaFiles.AppEngine.Tasks
   public interface IProgressIndicator
   {
     /// <summary>
-    /// Use to start a UI operation. status can be null
+    /// Use to start a UI operation. status can be null.
     /// </summary>
     IProgressOperation StartOperation(string status);
   }

@@ -15,6 +15,7 @@ using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.ClientApp.Cli.Commands;
 using Mt.MediaFiles.AppEngine;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
+using Mt.MediaFiles.ClientApp.Cli.Ui;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
