@@ -1,0 +1,31 @@
+# Builds the application
+parameters:
+- name: buildConfiguration
+  default: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: Build the application
+  inputs:
+    command: 'build'
+    arguments: '-c ${{ parameters.buildConfiguration }}'
+- task: DotNetCoreCLI@2
+  displayName: Publish the application
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'ClientApp.Cli/ClientApp.Cli.csproj'
+    arguments: '-c ${{ parameters.buildConfiguration }}'
+    zipAfterPublish: false
+    modifyOutputPath: false
+- task: VSTest@2
+  displayName: Run unit tests
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\bin\${{ parameters.buildConfiguration }}\**\*.Test.dll
+      !**\obj\**
+      !**\xunit.runner.visualstudio.testadapter.dll
+      !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    otherConsoleOptions: '/InIsolation'

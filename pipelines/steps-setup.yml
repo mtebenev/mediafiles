@@ -1,0 +1,13 @@
+# Sets up the CI job
+steps:
+- task: PowerShell@2
+  displayName: Install Powershell modules
+  inputs:
+    targetType: 'inline'
+    script: |
+      choco install invoke-build
+- task: DotNetCoreCLI@2
+  displayName: Set up the CI job
+  inputs:
+    command: 'build'
+    projects: 'ci.targets'

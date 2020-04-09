@@ -1,0 +1,16 @@
+# The pipeline for PR builds
+name: mediafiles-pr
+pr:
+- feature/*
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- template: steps-setup.yml
+  parameters:
+    buildConfiguration: $(BuildConfiguration)
+- template: steps-build.yml
