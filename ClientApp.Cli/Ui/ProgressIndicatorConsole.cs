@@ -1,8 +1,7 @@
-using System;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Tasks;
 
-namespace Mt.MediaFiles.ClientApp.Cli
+namespace Mt.MediaFiles.ClientApp.Cli.Ui
 {
   /// <summary>
   /// Implements IProgressIndicator with console UI
@@ -11,17 +10,23 @@ namespace Mt.MediaFiles.ClientApp.Cli
   {
     private readonly IConsole _console;
 
+    /// <summary>
+    /// Ctor.
+    /// </summary>
     public ProgressIndicatorConsole(IConsole console)
     {
-      _console = console;
+      this._console = console;
     }
 
+    /// <summary>
+    /// IProgressIndicator.
+    /// </summary>
     public IProgressOperation StartOperation(string status)
     {
       if(!string.IsNullOrWhiteSpace(status))
-        _console.WriteLine(status);
+        this._console.WriteLine(status);
 
-      return new ProgressOperationConsole(_console);
+      return new ProgressOperationConsole(0);
     }
   }
 }

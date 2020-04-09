@@ -15,6 +15,7 @@ using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.ClientApp.Cli.Commands;
 using Mt.MediaFiles.AppEngine;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
+using Mt.MediaFiles.ClientApp.Cli.Ui;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
@@ -80,7 +81,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
     /// <summary>
     /// Invoked only if none command could be found (the default command).
     /// </summary>
-    public Task<int> OnExecuteAsync(CommandLineApplication app, IConsole console)
+    public Task<int> OnExecuteAsync(CommandLineApplication app)
     {
       return app.ExecuteAsync(new[] { "shell" });
     }
