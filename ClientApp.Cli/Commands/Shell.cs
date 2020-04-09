@@ -38,7 +38,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
       do
       {
         var prompt = CreatePrompt(_shellAppContext.CurrentItem);
-        var commandInput = Prompt.GetString(prompt, promptColor: ConsoleColor.DarkBlue);
+        var commandInput = Prompt.GetString(prompt, promptColor: ConsoleColor.DarkGray);
 
         if(!string.IsNullOrEmpty(commandInput))
         {
