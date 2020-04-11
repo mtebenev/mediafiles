@@ -26,11 +26,11 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
 
-      var task = new ShellCommandScan();
-      task.PathAlias = "some_media_root";
-      task.Name = "given_root_name";
+      var command = new ShellCommandScan();
+      command.PathAlias = "some_media_root";
+      command.Name = "given_root_name";
 
-      await task.OnExecuteAsync(mockShellAppContext, mockCatalogSettings, mockTaskFactory);
+      await command.OnExecuteAsync(mockShellAppContext, mockCatalogSettings, mockTaskFactory);
 
       mockTaskFactory.Received().Create(Arg.Is(
         (ScanParameters p) =>
@@ -52,11 +52,11 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
 
-      var task = new ShellCommandScan();
-      task.PathAlias = "some_fs_path";
-      task.Name = "given_root_name";
+      var command = new ShellCommandScan();
+      command.PathAlias = "some_fs_path";
+      command.Name = "given_root_name";
 
-      await task.OnExecuteAsync(mockShellAppContext, mockCatalogSettings, mockTaskFactory);
+      await command.OnExecuteAsync(mockShellAppContext, mockCatalogSettings, mockTaskFactory);
       mockTaskFactory.Received().Create(Arg.Is(
         (ScanParameters p) =>
         p.ScanPath == "some_fs_path"

@@ -14,29 +14,23 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   [Command("update", Description = "Updates information about files starting from the current directory")]
   internal class CommandUpdate
   {
-    private readonly IShellAppContext _shellAppContext;
-    private readonly IFileSystem _fileSystem;
-    private readonly ICatalogTaskUpdateVideoImprintsFactory _updateVideoImprintsFactory;
-
-    public CommandUpdate(IShellAppContext shellAppContext, IFileSystem fileSystem, ICatalogTaskUpdateVideoImprintsFactory updateVideoImprintsFactory)
+    public async Task<int> OnExecuteAsync(
+      IShellAppContext shellAppContext,
+      IFileSystem fileSystem,
+      ICatalogTaskUpdateVideoImprintsFactory updateVideoImprintsFactory
+      )
     {
-      this._shellAppContext = shellAppContext;
-      this._fileSystem = fileSystem;
-      this._updateVideoImprintsFactory = updateVideoImprintsFactory;
-    }
-
-    public async Task<int> OnExecuteAsync()
-    {
-      var currentDirectory = this._fileSystem.Directory.GetCurrentDirectory();
+      var currentDirectory = fileSystem.Directory.GetCurrentDirectory();
       var catalogItem = await CatalogItemUtils.FindItemByFsPathAsync(
-        this._shellAppContext.Catalog,
-        currentDirectory);
+        shellAppContext.Catalog,
+        currentDirectory
+        );
 
-      if(catalogItem == null)
+      if (catalogItem == null)
         throw new InvalidOperationException("Cannot find the current directory in the catalog.");
 
-      var task = this._updateVideoImprintsFactory.Create(catalogItem);
-      await this._shellAppContext.Catalog.ExecuteTaskAsync(task);
+      var task = updateVideoImprintsFactory.Create(catalogItem);
+      await shellAppContext.Catalog.ExecuteTaskAsync(task);
 
       return Program.CommandExitResult;
     }
