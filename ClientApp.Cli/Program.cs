@@ -23,6 +23,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
   [Subcommand(
     typeof(Shell),
     typeof(Commands.CommandCheckStatus),
+    typeof(Commands.CommandScan),
     typeof(Commands.CommandUpdate))]
   internal class Program
   {

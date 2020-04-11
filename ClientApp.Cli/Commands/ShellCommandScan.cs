@@ -25,7 +25,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     public string Name { get; set; }
 
     /// <summary>
-    /// Scan configuration
+    /// Scan profile (configuration).
     /// </summary>
     [Option(LongName = "profile", ShortName = "p")]
     public (bool HasValue, ScanProfile ScanProfile) Profile { get; set; }

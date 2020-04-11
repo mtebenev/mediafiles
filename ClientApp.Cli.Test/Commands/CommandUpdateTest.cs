@@ -10,22 +10,6 @@ using Xunit;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 {
-  internal class CommandUpdateTesing : CommandUpdate
-  {
-    public CommandUpdateTesing(
-      IShellAppContext shellAppContext,
-      IFileSystem fileSystem,
-      ICatalogTaskUpdateVideoImprintsFactory updateVideoImprintsFactory
-      ) : base(shellAppContext, fileSystem, updateVideoImprintsFactory)
-    {
-    }
-
-    public Task<int> ExecuteAsync()
-    {
-      return this.OnExecuteAsync();
-    }
-  }
-
   public class CommandUpdateTest
   {
     [Fact]
@@ -62,8 +46,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 
       var mockFs = new MockFileSystem(null, @"x:\root_folder");
 
-      var command = new CommandUpdateTesing(mockShellAppContext, mockFs, mockFactory);
-      var result = await command.ExecuteAsync();
+      var command = new CommandUpdate();
+      var result = await command.OnExecuteAsync(mockShellAppContext, mockFs, mockFactory);
 
       // Verify
       await mockCatalog.Received().ExecuteTaskAsync(mockTask);
