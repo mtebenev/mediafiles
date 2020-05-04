@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -29,7 +30,7 @@ namespace Mt.MediaFiles.AppEngine.Test.FileHandlers
       {
         Format = new Format
         {
-          Duration = "20",
+          Duration = TimeSpan.FromMilliseconds(20),
           Tags = new Dictionary<string, string>
             {
               { "title", "video_title" }

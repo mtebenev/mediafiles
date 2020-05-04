@@ -16,6 +16,7 @@ using Mt.MediaFiles.ClientApp.Cli.Commands;
 using Mt.MediaFiles.AppEngine;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using Mt.MediaFiles.ClientApp.Cli.Ui;
+using MediaToolkit.Options;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
@@ -94,7 +95,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
         .AddLogging(config => config
           .SetMinimumLevel(LogLevel.Trace)
           .AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true }))
-        .AddMediaToolkit(@"C:\ffmpeg\ffmpeg.exe")
+        .AddMediaToolkit(@"C:\ProgramData\chocolatey\bin\ffmpeg.exe", null, FfLogLevel.Fatal)
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton<IShellAppContext>(_shellAppContext)
         .AddSingleton(_shellAppContext)

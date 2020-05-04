@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -112,10 +113,22 @@ namespace Mt.MediaFiles.AppEngine.Scanning
           progressOperation.UpdateStatus(r.Path);
           foreach(var ss in scanContext.ScanConfiguration.ScanServices)
           {
-            await ss.ScanAsync(scanServiceContext, r);
+            await this.RunSingleServiceScan(ss, scanServiceContext, r);
           }
           await scanServiceContext.SaveDataAsync(scanContext.ItemStorage);
         }
+      }
+    }
+
+    private async Task RunSingleServiceScan(IScanService scanService, ScanServiceContext scanServiceContext, CatalogItemRecord record)
+    {
+      try
+      {
+        await scanService.ScanAsync(scanServiceContext, record);
+      }
+      catch(Exception e)
+      {
+        this._logger.LogError(e, "Scan error.");
       }
     }
   }

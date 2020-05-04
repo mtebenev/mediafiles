@@ -11,9 +11,9 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     public int VideoHeight { get; set; }
 
     /// <summary>
-    /// Duration is in total seconds (comes from ffprobe)
+    /// Duration is in total milliseconds.
     /// </summary>
-    public float Duration { get; set; }
+    public double Duration { get; set; }
 
     /// <summary>
     /// Short codec name (i.e. h264)
