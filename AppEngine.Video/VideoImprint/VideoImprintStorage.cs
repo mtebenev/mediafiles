@@ -44,10 +44,18 @@ namespace AppEngine.Video.VideoImprint
     /// <summary>
     /// IVideoImprintStorage.
     /// </summary>
-    public Task SaveRecordAsync(VideoImprintRecord imprintRecord)
+    public Task SaveRecordsAsync(IEnumerable<VideoImprintRecord> records)
     {
-      var result = this._dbConnection.InsertAsync(imprintRecord);
-      return result;
+      using(var transaction = this._dbConnection.BeginTransaction())
+      {
+        foreach(var r in records)
+        {
+          this._dbConnection.Insert(r, transaction);
+        }
+        transaction.Commit();
+      }
+
+      return Task.CompletedTask;
     }
 
     /// <summary>
@@ -57,6 +65,14 @@ namespace AppEngine.Video.VideoImprint
     {
       var query = @"DELETE FROM VideoImprint WHERE CatalogItemId=@CatalogItemId";
       await this._dbConnection.ExecuteAsync(query, new { CatalogItemId = catalogItemId });
+    }
+
+    /// <summary>
+    /// IVideoImprintStorage.
+    /// </summary>
+    public Task FlushAsync()
+    {
+      return Task.CompletedTask;
     }
   }
 }

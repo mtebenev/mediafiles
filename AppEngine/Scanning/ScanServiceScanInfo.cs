@@ -41,6 +41,14 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     }
 
     /// <summary>
+    /// IScanService.
+    /// </summary>
+    public Task FlushAsync()
+    {
+      return Task.CompletedTask;
+    }
+
+    /// <summary>
     /// Determines all supported drivers for the scan entry
     /// TODO: make in parallel
     /// </summary>

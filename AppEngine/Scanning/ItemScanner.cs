@@ -124,6 +124,12 @@ namespace Mt.MediaFiles.AppEngine.Scanning
           }
           await scanServiceContext.SaveDataAsync(scanContext.ItemStorage);
         }
+
+        // Finalize (flush data).
+        foreach(var ss in scanContext.ScanConfiguration.ScanServices)
+        {
+          await ss.FlushAsync();
+        }
       }
     }
 

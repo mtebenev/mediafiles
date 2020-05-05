@@ -21,10 +21,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
           new VideoImprintRecord {CatalogItemId = 11, ImprintData = new byte[0] },
           new VideoImprintRecord {CatalogItemId = 12, ImprintData = new byte[0] },
         };
-        foreach(var r in records)
-        {
-          await storage.SaveRecordAsync(r);
-        }
+        await storage.SaveRecordsAsync(records);
 
         var resultIds = await storage.GetCatalogItemIdsAsync();
         Assert.Equal(new[] { 10, 11, 12 }, resultIds);
@@ -43,10 +40,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
           new VideoImprintRecord {CatalogItemId = 10, ImprintData = new byte[] { 4, 5, 6 } },
           new VideoImprintRecord {CatalogItemId = 10, ImprintData = new byte[] { 7, 8, 9 } },
         };
-        foreach(var r in records)
-        {
-          await storage.SaveRecordAsync(r);
-        }
+        await storage.SaveRecordsAsync(records);
 
         var resultRecords = await storage.GetRecordsAsync(10);
         resultRecords.Should()
@@ -69,10 +63,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
           new VideoImprintRecord {CatalogItemId = 10, ImprintData = new byte[] { 4, 5, 6 } },
           new VideoImprintRecord {CatalogItemId = 10, ImprintData = new byte[] { 7, 8, 9 } },
         };
-        foreach(var r in records)
-        {
-          await storage.SaveRecordAsync(r);
-        }
+        await storage.SaveRecordsAsync(records);
 
         await storage.DeleteRecordsAsync(10);
 

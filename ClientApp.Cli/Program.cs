@@ -106,7 +106,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
 
       VideoModule.ConfigureServices(services);
 
-      // DB connection
+      // Catalog settings
       var catalogSettings = appSettings.Catalogs[appSettings.StartupCatalog];
       services.AddSingleton<ICatalogSettings>(x => catalogSettings);
 
