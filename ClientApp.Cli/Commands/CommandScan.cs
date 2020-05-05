@@ -6,6 +6,7 @@ using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
+using Mt.MediaFiles.ClientApp.Cli.Ui;
 using StackExchange.Profiling;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
@@ -69,7 +70,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
       await task.ExecuteAsync(shellAppContext.Catalog);
 
       await profiler.StopAsync();
-      var profileResult = profiler.RenderPlainText();
+      var profileResult = profiler.RenderPlainTextMf();
       shellAppContext.Console.Write(profileResult);
 
       return Program.CommandExitResult;
