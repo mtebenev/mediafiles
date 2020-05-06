@@ -23,7 +23,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
       shellAppContext.Console.WriteLine($"{result.Count} duplicates found:");
       foreach(var duplicates in result)
       {
-        await ProcessDuplicates(shellAppContext, duplicates);
+        await this.ProcessDuplicates(shellAppContext, duplicates);
       }
 
       return Program.CommandResultContinue;
@@ -53,6 +53,5 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
 
       return wastedSize;
     }
-
   }
 }

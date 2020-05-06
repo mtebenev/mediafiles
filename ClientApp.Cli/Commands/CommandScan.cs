@@ -58,7 +58,6 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
       if(!fileSystem.Directory.Exists(scanPath))
         throw new InvalidOperationException($"Could not find directory or media root: ${scanPath}");
 
-
       var scanParameters = ScanParametersBuilder.Create(
         scanPath,
         this.Name,

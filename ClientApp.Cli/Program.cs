@@ -17,6 +17,7 @@ using Mt.MediaFiles.AppEngine;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using Mt.MediaFiles.ClientApp.Cli.Ui;
 using MediaToolkit.Options;
+using Mt.MediaFiles.ClientApp.Cli.Core;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
@@ -25,7 +26,8 @@ namespace Mt.MediaFiles.ClientApp.Cli
     typeof(Shell),
     typeof(Commands.CommandCheckStatus),
     typeof(Commands.CommandScan),
-    typeof(Commands.CommandUpdate))]
+    typeof(Commands.CommandUpdate),
+    typeof(Commands.CommandSearchVideo))]
   internal class Program
   {
     public const int CommandExitResult = -1;
@@ -102,6 +104,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
         .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton<IFileSystem, FileSystem>()
         .AddSingleton<IClock, Clock>()
+        .AddSingleton<IPathArgumentResolver, PathArgumentResolver>()
         .AddTransient<ITaskExecutionContext, TaskExecutionContext>();
 
       VideoModule.ConfigureServices(services);

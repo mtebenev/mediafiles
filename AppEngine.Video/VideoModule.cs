@@ -22,6 +22,8 @@ namespace Mt.MediaFiles.AppEngine.Video
         .RegisterTypedFactory<ICatalogTaskUpdateVideoImprintsFactory>().ForConcreteType<CatalogTaskUpdateVideoImprints>();
       services
         .RegisterTypedFactory<ICatalogTaskFindVideoDuplicatesFactory>().ForConcreteType<CatalogTaskFindVideoDuplicates>();
+      services
+        .RegisterTypedFactory<ICatalogTaskSearchVideoFactory>().ForConcreteType<CatalogTaskSearchVideo>();
 
       // Scan services
       services.AddTransient<IScanService>(
