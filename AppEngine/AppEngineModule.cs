@@ -21,7 +21,10 @@ namespace Mt.MediaFiles.AppEngine
     /// </summary>
     public static void ConfigureContainer(IServiceCollection services, ICatalogSettings catalogSettings)
     {
-      services.AddSingleton<IDbConnection>(x => new SqliteConnection(catalogSettings.ConnectionString));
+      var connection = new SqliteConnection(catalogSettings.ConnectionString);
+      connection.Open();
+
+      services.AddSingleton<IDbConnection>(connection);
       services.AddSingleton<YesSql.IConfiguration>(x =>
       {
         var storeConfiguration = new YesSql.Configuration();

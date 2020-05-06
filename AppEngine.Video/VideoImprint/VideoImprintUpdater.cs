@@ -1,8 +1,5 @@
-using System;
 using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
-using MediaToolkit.Services;
-using MediaToolkit.Tasks;
 
 namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
 {
@@ -21,40 +18,20 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
   /// </summary>
   internal class VideoImprintUpdater : IVideoImprintUpdater
   {
-    private IVideoImprintStorage _videoImprintStorage;
-    private readonly IMediaToolkitService _mediaToolkitService;
+    private readonly IVideoImprintStorage _videoImprintStorage;
+    private readonly IVideoImprintBuilder _videoImprintBuilder;
 
-    public VideoImprintUpdater(IVideoImprintStorage videoImprintStorage, IMediaToolkitService mediaToolkitService)
+    public VideoImprintUpdater(IVideoImprintStorage videoImprintStorage, IVideoImprintBuilder videoImprintBuilder)
     {
       this._videoImprintStorage = videoImprintStorage;
-      this._mediaToolkitService = mediaToolkitService;
+      this._videoImprintBuilder = videoImprintBuilder;
     }
 
     public async Task UpdateAsync(int catalogItemId, string fsPath)
     {
       await this._videoImprintStorage.DeleteRecordsAsync(catalogItemId);
-      var imprintRecord = await this.CreateRecordAsync(catalogItemId, fsPath);
-      await this._videoImprintStorage.SaveRecordAsync(imprintRecord);
-    }
-
-    private async Task<VideoImprintRecord> CreateRecordAsync(int catalogItemId, string fsPath)
-    {
-      var options = new GetThumbnailOptions
-      {
-        SeekSpan = TimeSpan.FromSeconds(1),
-        FrameSize = new FrameSize(32, 32),
-        OutputFormat = OutputFormat.RawVideo,
-        PixelFormat = PixelFormat.Gray
-      };
-      var thumbnailTask = new FfTaskGetThumbnail(fsPath, options);
-
-      var taskResult = await this._mediaToolkitService.ExecuteAsync(thumbnailTask);
-      var record = new VideoImprintRecord
-      {
-        CatalogItemId = catalogItemId,
-        ImprintData = taskResult.ThumbnailData
-      };
-      return record;
+      var imprintRecord = await this._videoImprintBuilder.CreateRecordAsync(catalogItemId, fsPath);
+      await this._videoImprintStorage.SaveRecordsAsync(new[] { imprintRecord });
     }
   }
 }

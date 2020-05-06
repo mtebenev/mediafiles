@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using MediaToolkit.Model;
@@ -32,7 +31,7 @@ namespace Mt.MediaFiles.AppEngine.FileHandlers
       var metadataTask = new FfTaskGetMetadata(filePath);
       var taskResult = await this._mediaToolkitService.ExecuteAsync(metadataTask);
 
-      infoPartVideo.Duration = float.Parse(taskResult.Metadata.Format.Duration, CultureInfo.InvariantCulture);
+      infoPartVideo.Duration = taskResult.Metadata.Format.Duration.TotalMilliseconds;
       this.FillVideoStreamInfo(taskResult.Metadata, infoPartVideo);
 
       catalogItemData.Apply(infoPartVideo);

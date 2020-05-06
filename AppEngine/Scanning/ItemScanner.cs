@@ -1,9 +1,11 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MoreLinq;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
+using StackExchange.Profiling;
 
 namespace Mt.MediaFiles.AppEngine.Scanning
 {
@@ -43,24 +45,30 @@ namespace Mt.MediaFiles.AppEngine.Scanning
       var (scanRootItemId, location) = await this.CreateScanRootItemAsync(scanContext.ItemStorage, scanContext.ScanConfiguration.ScanRootItemName);
 
       // Explore and save the items (file infos)
-      scanContext.ProgressOperation.UpdateStatus("Exploring files...");
-      var records = await this._itemExplorer.Explore(this._scanPath, scanRootItemId)
-        .ToListAsync();
-
-      scanContext.ProgressOperation.UpdateStatus("Saving file records...");
-
-      const int pageSize = 1000;
-      var chunks = records.Batch(pageSize);
-      foreach(var c in chunks)
+      using(var timing = MiniProfiler.Current.Step("Exploring and saving items"))
       {
-        await scanContext.ItemStorage.CreateManyItemsAsync(c);
+        scanContext.ProgressOperation.UpdateStatus("Exploring files...");
+        var records = await this._itemExplorer.Explore(this._scanPath, scanRootItemId)
+          .ToListAsync();
+
+        scanContext.ProgressOperation.UpdateStatus("Saving file records...");
+
+        const int pageSize = 1000;
+        var chunks = records.Batch(pageSize);
+        foreach(var c in chunks)
+        {
+          await scanContext.ItemStorage.CreateManyItemsAsync(c);
+        }
       }
 
       // Do scan sub-tasks
-      if(scanContext.ScanConfiguration.ScanServices.Any())
+      using(var timing = MiniProfiler.Current.Step("Running sub-tasks"))
       {
-        scanContext.ProgressOperation.UpdateStatus("Scanning files...");
-        await this.RunScanServicesAsync(scanContext, location);
+        if(scanContext.ScanConfiguration.ScanServices.Any())
+        {
+          scanContext.ProgressOperation.UpdateStatus("Scanning files...");
+          await this.RunScanServicesAsync(scanContext, location);
+        }
       }
 
       scanContext.ProgressOperation.UpdateStatus("Done.");
@@ -112,10 +120,31 @@ namespace Mt.MediaFiles.AppEngine.Scanning
           progressOperation.UpdateStatus(r.Path);
           foreach(var ss in scanContext.ScanConfiguration.ScanServices)
           {
-            await ss.ScanAsync(scanServiceContext, r);
+              await this.RunSingleServiceScan(ss, scanServiceContext, r);
           }
           await scanServiceContext.SaveDataAsync(scanContext.ItemStorage);
         }
+
+        // Finalize (flush data).
+        foreach(var ss in scanContext.ScanConfiguration.ScanServices)
+        {
+          await ss.FlushAsync();
+        }
+      }
+    }
+
+    private async Task RunSingleServiceScan(IScanService scanService, ScanServiceContext scanServiceContext, CatalogItemRecord record)
+    {
+      try
+      {
+        using(var timing = MiniProfiler.Current.CustomTiming(scanService.Id, "", null, false))
+        {
+          await scanService.ScanAsync(scanServiceContext, record);
+        }
+      }
+      catch(Exception e)
+      {
+        this._logger.LogError(e, "Scan error.");
       }
     }
   }

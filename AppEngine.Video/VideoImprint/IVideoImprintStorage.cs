@@ -22,7 +22,7 @@ namespace AppEngine.Video.VideoImprint
     /// <summary>
     /// Saves the record in the storage.
     /// </summary>
-    Task SaveRecordAsync(VideoImprintRecord imprintRecord);
+    Task SaveRecordsAsync(IEnumerable<VideoImprintRecord> records);
 
     /// <summary>
     /// Deletes all records for a catalog item.

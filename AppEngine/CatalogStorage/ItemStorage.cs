@@ -61,21 +61,13 @@ namespace Mt.MediaFiles.AppEngine.CatalogStorage
     /// </summary>
     public Task CreateManyItemsAsync(IEnumerable<CatalogItemRecord> records)
     {
-      try
+      using(var transaction = this.DbConnection.BeginTransaction())
       {
-        this.DbConnection.Open();
-        using(var transaction = this.DbConnection.BeginTransaction())
+        foreach(var r in records)
         {
-          foreach(var r in records)
-          {
-            this.DbConnection.Insert(r, transaction);
-          }
-          transaction.Commit();
+          this.DbConnection.Insert(r, transaction);
         }
-      }
-      finally
-      {
-        this.DbConnection.Close();
+        transaction.Commit();
       }
 
       return Task.CompletedTask;
