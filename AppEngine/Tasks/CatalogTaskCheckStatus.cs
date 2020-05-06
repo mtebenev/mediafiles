@@ -42,7 +42,7 @@ namespace Mt.MediaFiles.AppEngine.Tasks
   /// <summary>
   /// Checks status of actual FS files compared to catalog.
   /// </summary>
-  public class CatalogTaskCheckStatus : CatalogTaskBase<IList<CheckStatusResult>>
+  public sealed class CatalogTaskCheckStatus : CatalogTaskBase<IList<CheckStatusResult>>
   {
     private readonly IFileSystem _fileSystem;
     private readonly ICatalogItem _catalogItem;

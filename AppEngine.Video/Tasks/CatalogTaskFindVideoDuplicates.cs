@@ -14,14 +14,14 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
   }
 
   /// <summary>
-  /// Finds the video duplicates.
+  /// Searches for video duplicates in the catalog.
   /// </summary>
-  public class CatalogTaskFindVideoDuplicates : CatalogTaskBase<IList<DuplicateFindResult>>
+  public sealed class CatalogTaskFindVideoDuplicates : CatalogTaskBase<IList<DuplicateFindResult>>
   {
     private readonly IVideoImprintStorage _imprintStorage;
-    private readonly IVideoComparisonFactory _videoComparisonFactory;
+    private readonly IVideoComparerFactory _videoComparisonFactory;
 
-    public CatalogTaskFindVideoDuplicates(IVideoImprintStorage imprintStorage, IVideoComparisonFactory videoComparisonFactory)
+    public CatalogTaskFindVideoDuplicates(IVideoImprintStorage imprintStorage, IVideoComparerFactory videoComparisonFactory)
     {
       this._imprintStorage = imprintStorage;
       this._videoComparisonFactory = videoComparisonFactory;

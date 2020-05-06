@@ -41,12 +41,12 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
       var mockCatalogContext = Substitute.For<ICatalogContext>();
       mockCatalogContext.Catalog.Returns(mockCatalog);
 
-      var mockComparison = Substitute.For<IVideoComparison>();
+      var mockComparison = Substitute.For<IVideoComparer>();
       mockComparison.CompareItemsAsync(default, default).Returns(false);
       mockComparison.CompareItemsAsync(11, 13).Returns(true);
       mockComparison.CompareItemsAsync(12, 14).Returns(true);
 
-      var mockFactory = Substitute.For<IVideoComparisonFactory>();
+      var mockFactory = Substitute.For<IVideoComparerFactory>();
       mockFactory.Create().Returns(mockComparison);
 
       var task = new CatalogTaskFindVideoDuplicates(mockStorage, mockFactory);
