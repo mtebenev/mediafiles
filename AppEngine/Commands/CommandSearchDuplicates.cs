@@ -8,7 +8,7 @@ namespace Mt.MediaFiles.AppEngine.Commands
   /// <summary>
   /// Finds duplicates in the catalog
   /// </summary>
-  public class CommandFindDuplicates
+  public class CommandSearchDuplicates
   {
     public async Task<IList<DuplicateFindResult>> Execute(ICatalog catalog)
     {

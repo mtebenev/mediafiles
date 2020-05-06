@@ -8,7 +8,7 @@ using Mt.MediaFiles.AppEngine.Tools;
 
 namespace Mt.MediaFiles.AppEngine.Video.Tasks
 {
-  public interface ICatalogTaskFindVideoDuplicatesFactory
+  public interface ICatalogTaskSearchVideoDuplicatesFactory
   {
     public CatalogTaskBase<IList<DuplicateFindResult>> Create();
   }
@@ -16,12 +16,12 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
   /// <summary>
   /// Searches for video duplicates in the catalog.
   /// </summary>
-  public sealed class CatalogTaskFindVideoDuplicates : CatalogTaskBase<IList<DuplicateFindResult>>
+  public sealed class CatalogTaskSearchVideoDuplicates : CatalogTaskBase<IList<DuplicateFindResult>>
   {
     private readonly IVideoImprintStorage _imprintStorage;
     private readonly IVideoComparerFactory _videoComparisonFactory;
 
-    public CatalogTaskFindVideoDuplicates(IVideoImprintStorage imprintStorage, IVideoComparerFactory videoComparisonFactory)
+    public CatalogTaskSearchVideoDuplicates(IVideoImprintStorage imprintStorage, IVideoComparerFactory videoComparisonFactory)
     {
       this._imprintStorage = imprintStorage;
       this._videoComparisonFactory = videoComparisonFactory;

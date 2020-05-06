@@ -1,41 +1,46 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaFiles.AppEngine.Commands;
 using Mt.MediaFiles.AppEngine.Tools;
-using Mt.MediaMan.AppEngine.Common;
+using Mt.MediaFiles.AppEngine.Video.Tasks;
+using Mt.MediaFiles.ClientApp.Cli.Core;
+using Mt.MediaFiles.ClientApp.Cli.Ui;
+using StackExchange.Profiling;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
-  /// <summary>
-  /// Finds duplicate items in catalog
-  /// </summary>
-  [Command("find-duplicates", Description = "Finds duplicate items in the catalog")]
-  internal class ShellCommandFindDuplicates : ShellCommandBase
+  [Command("search-video", Description = "Compares videos in local file system with cataloged videos.")]
+  internal class CommandSearchVideo
   {
-    /// <summary>
-    /// ShellCommandBase.
-    /// </summary>
-    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext)
-    {
-      var command = new CommandFindDuplicates();
-      var result = await command.Execute(shellAppContext.Catalog);
+    [Argument(0, "pathAlias")]
+    public string PathAlias { get; set; }
 
-      long totalWastedSize = 0;
+    public async Task<int> OnExecuteAsync(
+      IShellAppContext shellAppContext,
+      IPathArgumentResolver pathResolver,
+      ICatalogTaskSearchVideoFactory taskFactory
+    )
+    {
+      var paths = pathResolver.ResolveMany(this.PathAlias);
+      var task = taskFactory.Create(paths);
+      var profiler = MiniProfiler.StartNew("CommandSearchVideo");
+      var result = await shellAppContext.Catalog.ExecuteTaskAsync(task);
+
       shellAppContext.Console.WriteLine($"{result.Count} duplicates found:");
       foreach(var duplicates in result)
       {
-        var wastedSize = await this.ProcessDuplicates(shellAppContext, duplicates);
-        totalWastedSize += wastedSize;
+        await this.ProcessDuplicates(shellAppContext, duplicates);
       }
 
-      shellAppContext.Console.WriteLine($"Total wasted size: {StringUtils.BytesToString(totalWastedSize)}");
+      await profiler.StopAsync();
+      var profileResult = profiler.RenderPlainTextMf();
+      shellAppContext.Console.Write(profileResult);
 
-      return Program.CommandResultContinue;
+      return Program.CommandExitResult;
     }
 
     /// <summary>
-    /// Prints duplicate info and returns wasted file size in bytes
+    /// Prints duplicate info
     /// </summary>
     private async Task<long> ProcessDuplicates(IShellAppContext shellAppContext, DuplicateFindResult duplicateResult)
     {
