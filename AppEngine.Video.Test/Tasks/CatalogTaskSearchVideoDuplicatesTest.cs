@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using AppEngine.Video.Comparison;
 using AppEngine.Video.VideoImprint;
@@ -10,7 +11,7 @@ using Xunit;
 
 namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
 {
-  public class CatalogTaskFindVideoDuplicatesTest
+  public class CatalogTaskSearchVideoDuplicatesTest
   {
     [Fact]
     public async Task Should_Execute_Comparison_Tasks()
@@ -36,20 +37,35 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
       var mockCatalog = CatalogMockBuilder.Create(catalogDef).Build();
 
       var mockStorage = Substitute.For<IVideoImprintStorage>();
-      mockStorage.GetCatalogItemIdsAsync().Returns(new[] { 11, 12, 13, 14 });
+      mockStorage.GetAllRecordsAsync().Returns(
+        new[]
+        {
+          new VideoImprintRecord { CatalogItemId = 11, ImprintData = new byte[] { 1, 1, 1 } },
+          new VideoImprintRecord { CatalogItemId = 12, ImprintData = new byte[] { 2, 2, 2 } },
+          new VideoImprintRecord { CatalogItemId = 13, ImprintData = new byte[] { 3, 3, 3 } },
+          new VideoImprintRecord { CatalogItemId = 14, ImprintData = new byte[] { 4, 4, 4 } },
+        });
 
       var mockCatalogContext = Substitute.For<ICatalogContext>();
       mockCatalogContext.Catalog.Returns(mockCatalog);
 
-      var mockComparison = Substitute.For<IVideoComparison>();
-      mockComparison.CompareItemsAsync(default, default).Returns(false);
-      mockComparison.CompareItemsAsync(11, 13).Returns(true);
-      mockComparison.CompareItemsAsync(12, 14).Returns(true);
+      var mockComparer = Substitute.For<IVideoImprintComparer>();
+      mockComparer.Compare(default, default).Returns(false);
 
-      var mockFactory = Substitute.For<IVideoComparisonFactory>();
-      mockFactory.Create().Returns(mockComparison);
+      mockComparer.Compare(
+        Arg.Is<byte[]>(a => a.SequenceEqual(new byte[]{ 1, 1, 1 })),
+        Arg.Is<byte[]>(a => a.SequenceEqual(new byte[] { 3, 3, 3 })))
+        .Returns(true);
 
-      var task = new CatalogTaskFindVideoDuplicates(mockStorage, mockFactory);
+      mockComparer.Compare(
+        Arg.Is<byte[]>(a => a.SequenceEqual(new byte[] { 2, 2, 2 })),
+        Arg.Is<byte[]>(a => a.SequenceEqual(new byte[] { 4, 4, 4 })))
+        .Returns(true);
+
+      var mockFactory = Substitute.For<IVideoImprintComparerFactory>();
+      mockFactory.Create().Returns(mockComparer);
+
+      var task = new CatalogTaskSearchVideoDuplicates(mockStorage, mockFactory);
       var result = await task.ExecuteTaskAsync(mockCatalogContext);
 
       var expectedResult = new[]

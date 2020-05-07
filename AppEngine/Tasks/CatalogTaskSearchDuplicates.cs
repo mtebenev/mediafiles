@@ -10,7 +10,7 @@ namespace Mt.MediaFiles.AppEngine.Tasks
   /// <summary>
   /// Finds file duplicates.
   /// </summary>
-  public class CatalogTaskFindDuplicates : CatalogTaskBase<IList<DuplicateFindResult>>
+  public sealed class CatalogTaskSearchDuplicates : CatalogTaskBase<IList<DuplicateFindResult>>
   {
     /// <summary>
     /// CatalogTaskBase.

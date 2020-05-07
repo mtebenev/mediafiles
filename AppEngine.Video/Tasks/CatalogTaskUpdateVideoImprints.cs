@@ -15,7 +15,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
   /// <summary>
   /// Updates all video imprints starting from a given catalog item.
   /// </summary>
-  public class CatalogTaskUpdateVideoImprints : CatalogTaskBase
+  public sealed class CatalogTaskUpdateVideoImprints : CatalogTaskBase
   {
     private readonly ITaskExecutionContext _executionContext;
     private readonly IFileSystem _fileSystem;

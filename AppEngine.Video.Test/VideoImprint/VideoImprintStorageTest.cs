@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
 using FluentAssertions;
@@ -23,31 +24,8 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
         };
         await storage.SaveRecordsAsync(records);
 
-        var resultIds = await storage.GetCatalogItemIdsAsync();
-        Assert.Equal(new[] { 10, 11, 12 }, resultIds);
-      }
-    }
-
-    [Fact]
-    public async Task Load_Imprints_For_Item()
-    {
-      var (connection, storage) = await this.CreateTestStorageAsync();
-      using(connection)
-      {
-        var records = new[]
-        {
-          new VideoImprintRecord {CatalogItemId = 10, ImprintData = new byte[] { 1, 2, 3 } },
-          new VideoImprintRecord {CatalogItemId = 10, ImprintData = new byte[] { 4, 5, 6 } },
-          new VideoImprintRecord {CatalogItemId = 10, ImprintData = new byte[] { 7, 8, 9 } },
-        };
-        await storage.SaveRecordsAsync(records);
-
-        var resultRecords = await storage.GetRecordsAsync(10);
-        resultRecords.Should()
-          .BeEquivalentTo(
-          records,
-          c => c.Excluding(p => p.VideoImprintId)
-          );
+        var result = await storage.GetAllRecordsAsync();
+        Assert.Equal(new[] { 10, 11, 12 }, result.Select(r => r.CatalogItemId).ToList());
       }
     }
 
@@ -67,7 +45,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
 
         await storage.DeleteRecordsAsync(10);
 
-        var resultRecords = await storage.GetRecordsAsync(10);
+        var resultRecords = await storage.GetAllRecordsAsync();
         resultRecords.Should().BeEmpty();
       }
     }

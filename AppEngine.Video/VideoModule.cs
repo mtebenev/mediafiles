@@ -21,7 +21,9 @@ namespace Mt.MediaFiles.AppEngine.Video
       services
         .RegisterTypedFactory<ICatalogTaskUpdateVideoImprintsFactory>().ForConcreteType<CatalogTaskUpdateVideoImprints>();
       services
-        .RegisterTypedFactory<ICatalogTaskFindVideoDuplicatesFactory>().ForConcreteType<CatalogTaskFindVideoDuplicates>();
+        .RegisterTypedFactory<ICatalogTaskSearchVideoDuplicatesFactory>().ForConcreteType<CatalogTaskSearchVideoDuplicates>();
+      services
+        .RegisterTypedFactory<ICatalogTaskSearchVideoFactory>().ForConcreteType<CatalogTaskSearchVideo>();
 
       // Scan services
       services.AddTransient<IScanService>(
@@ -33,7 +35,7 @@ namespace Mt.MediaFiles.AppEngine.Video
 
       // Internals
       services
-        .RegisterTypedFactory<IVideoComparisonFactory>().ForConcreteType<VideoComparison>();
+        .RegisterTypedFactory<IVideoImprintComparerFactory>().ForConcreteType<VideoImprintComparer>();
       services
         .RegisterTypedFactory<IVideoImprintUpdaterFactory>().ForConcreteType<VideoImprintUpdater>();
       services.AddTransient<IVideoImprintBuilder, VideoImprintBuilder>();

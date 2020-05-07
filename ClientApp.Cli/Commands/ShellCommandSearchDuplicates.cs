@@ -1,36 +1,41 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
+using Mt.MediaFiles.AppEngine.Commands;
 using Mt.MediaFiles.AppEngine.Tools;
-using Mt.MediaFiles.AppEngine.Video.Tasks;
+using Mt.MediaMan.AppEngine.Common;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   /// <summary>
-  /// Command finds the video duplicates.
+  /// Finds duplicate items in catalog
   /// </summary>
-  [Command("find-vdups", Description = "Finds duplicate videos")]
-  internal class ShellCommandFindVideoDuplicates : ShellCommandBase
+  [Command("search-duplicates", Description = "Searches for duplicate items in the catalog")]
+  internal class ShellCommandSearchDuplicates : ShellCommandBase
   {
     /// <summary>
     /// ShellCommandBase.
     /// </summary>
-    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, ICatalogTaskFindVideoDuplicatesFactory taskFactory)
+    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext)
     {
-      var task = taskFactory.Create();
-      var result = await shellAppContext.Catalog.ExecuteTaskAsync(task);
+      var command = new CommandSearchDuplicates();
+      var result = await command.Execute(shellAppContext.Catalog);
 
+      long totalWastedSize = 0;
       shellAppContext.Console.WriteLine($"{result.Count} duplicates found:");
       foreach(var duplicates in result)
       {
-        await ProcessDuplicates(shellAppContext, duplicates);
+        var wastedSize = await this.ProcessDuplicates(shellAppContext, duplicates);
+        totalWastedSize += wastedSize;
       }
+
+      shellAppContext.Console.WriteLine($"Total wasted size: {StringUtils.BytesToString(totalWastedSize)}");
 
       return Program.CommandResultContinue;
     }
 
     /// <summary>
-    /// Prints duplicate info
+    /// Prints duplicate info and returns wasted file size in bytes
     /// </summary>
     private async Task<long> ProcessDuplicates(IShellAppContext shellAppContext, DuplicateFindResult duplicateResult)
     {
@@ -53,6 +58,5 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
 
       return wastedSize;
     }
-
   }
 }
