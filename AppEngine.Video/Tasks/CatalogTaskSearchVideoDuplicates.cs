@@ -19,12 +19,12 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
   public sealed class CatalogTaskSearchVideoDuplicates : CatalogTaskBase<IList<DuplicateFindResult>>
   {
     private readonly IVideoImprintStorage _imprintStorage;
-    private readonly IVideoComparerFactory _videoComparisonFactory;
+    private readonly IVideoImprintComparerFactory _comparerFactory;
 
-    public CatalogTaskSearchVideoDuplicates(IVideoImprintStorage imprintStorage, IVideoComparerFactory videoComparisonFactory)
+    public CatalogTaskSearchVideoDuplicates(IVideoImprintStorage imprintStorage, IVideoImprintComparerFactory comparerFactory)
     {
       this._imprintStorage = imprintStorage;
-      this._videoComparisonFactory = videoComparisonFactory;
+      this._comparerFactory = comparerFactory;
     }
 
     /// <summary>
@@ -32,19 +32,19 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
     /// </summary>
     protected override async Task<IList<DuplicateFindResult>> ExecuteAsync(ICatalogContext catalogContext)
     {
-      var itemIds = await this._imprintStorage.GetCatalogItemIdsAsync();
+      var imprintRecords = await this._imprintStorage.GetAllRecordsAsync();
       var duplicateGroups = new List<IList<int>>();
 
-      for(var i = 0; i < itemIds.Count; i++)
+      for(var i = 0; i < imprintRecords.Count; i++)
       {
-        var duplicatedIds = new List<int>() { itemIds[i] };
-        for(var j = i + 1; j < itemIds.Count; j++)
+        var duplicatedIds = new List<int>() { imprintRecords[i].CatalogItemId };
+        for(var j = i + 1; j < imprintRecords.Count; j++)
         {
-          var comparisonTask = this._videoComparisonFactory.Create();
-          var isEqual = await comparisonTask.CompareItemsAsync(itemIds[i], itemIds[j]);
+          var comparisonTask = this._comparerFactory.Create();
+          var isEqual = comparisonTask.Compare(imprintRecords[i].ImprintData, imprintRecords[j].ImprintData);
           if(isEqual)
           {
-            duplicatedIds.Add(itemIds[j]);
+            duplicatedIds.Add(imprintRecords[j].CatalogItemId);
           }
         }
         if(duplicatedIds.Count > 1)

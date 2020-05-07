@@ -9,15 +9,10 @@ namespace AppEngine.Video.VideoImprint
   public interface IVideoImprintStorage
   {
     /// <summary>
-    /// Retrieves IDs of all items in the catalog having stored video imprints.
+    /// Retrieves all stored video imprints.
     /// </summary>
-    /// <returns></returns>
-    Task<IReadOnlyList<int>> GetCatalogItemIdsAsync();
+    Task<IList<VideoImprintRecord>> GetAllRecordsAsync();
 
-    /// <summary>
-    /// Loads all records for the given catalog item from the storage.
-    /// </summary>
-    Task<IList<VideoImprintRecord>> GetRecordsAsync(int catalogItemId);
 
     /// <summary>
     /// Saves the record in the storage.

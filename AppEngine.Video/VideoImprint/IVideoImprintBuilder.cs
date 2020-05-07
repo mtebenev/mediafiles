@@ -6,7 +6,7 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
   /// <summary>
   /// Common interface for video imprint builders.
   /// </summary>
-  interface IVideoImprintBuilder
+  public interface IVideoImprintBuilder
   {
     /// <summary>
     /// Creates the video imprint record for given file

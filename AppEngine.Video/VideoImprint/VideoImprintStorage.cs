@@ -22,21 +22,10 @@ namespace AppEngine.Video.VideoImprint
     /// <summary>
     /// IVideoImprintStorage.
     /// </summary>
-    public async Task<IReadOnlyList<int>> GetCatalogItemIdsAsync()
+    public async Task<IList<VideoImprintRecord>> GetAllRecordsAsync()
     {
-      var query = @"SELECT DISTINCT CatalogItemId FROM VideoImprint";
-      var catalogItemIds = await this._dbConnection.QueryAsync<int>(query);
-
-      return catalogItemIds.ToList();
-    }
-
-    /// <summary>
-    /// IVideoImprintStorage.
-    /// </summary>
-    public async Task<IList<VideoImprintRecord>> GetRecordsAsync(int catalogItemId)
-    {
-      var query = @"SELECT * from VideoImprint WHERE CatalogItemId=@CatalogItemId";
-      var records = await this._dbConnection.QueryAsync<VideoImprintRecord>(query, new { CatalogItemId = catalogItemId });
+      var query = @"SELECT * FROM VideoImprint";
+      var records = await this._dbConnection.QueryAsync<VideoImprintRecord>(query);
 
       return records.ToList();
     }

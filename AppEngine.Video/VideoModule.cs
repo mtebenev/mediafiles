@@ -35,7 +35,7 @@ namespace Mt.MediaFiles.AppEngine.Video
 
       // Internals
       services
-        .RegisterTypedFactory<IVideoComparerFactory>().ForConcreteType<VideoComparer>();
+        .RegisterTypedFactory<IVideoImprintComparerFactory>().ForConcreteType<VideoImprintComparer>();
       services
         .RegisterTypedFactory<IVideoImprintUpdaterFactory>().ForConcreteType<VideoImprintUpdater>();
       services.AddTransient<IVideoImprintBuilder, VideoImprintBuilder>();
