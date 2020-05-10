@@ -6,15 +6,9 @@ using Mt.MediaFiles.AppEngine.Video.Tasks;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
-  /// <summary>
-  /// Command finds the video duplicates.
-  /// </summary>
-  [Command("search-vdups", Description = "Search for duplicated videos.")]
-  internal class ShellCommandSearchVideoDuplicates : ShellCommandBase
+  [Command("search-vdups", Description = "Search for duplicated videos in the catalog.")]
+  internal class CommandSearchVideoDuplicates
   {
-    /// <summary>
-    /// ShellCommandBase.
-    /// </summary>
     public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, ICatalogTaskSearchVideoDuplicatesFactory taskFactory)
     {
       var task = taskFactory.Create();
@@ -26,7 +20,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
         await this.ProcessDuplicates(shellAppContext, duplicates);
       }
 
-      return Program.CommandResultContinue;
+      return Program.CommandExitResult;
     }
 
     /// <summary>

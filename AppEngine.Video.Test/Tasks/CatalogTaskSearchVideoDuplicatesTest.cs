@@ -4,6 +4,7 @@ using AppEngine.Video.Comparison;
 using AppEngine.Video.VideoImprint;
 using FluentAssertions;
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
 using Mt.MediaFiles.TestUtils;
 using NSubstitute;
@@ -64,8 +65,9 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
 
       var mockFactory = Substitute.For<IVideoImprintComparerFactory>();
       mockFactory.Create().Returns(mockComparer);
+      var mockExecutionContext = Substitute.For<ITaskExecutionContext>();
 
-      var task = new CatalogTaskSearchVideoDuplicates(mockStorage, mockFactory);
+      var task = new CatalogTaskSearchVideoDuplicates(mockExecutionContext, mockStorage, mockFactory);
       var result = await task.ExecuteTaskAsync(mockCatalogContext);
 
       var expectedResult = new[]

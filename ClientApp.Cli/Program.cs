@@ -30,7 +30,8 @@ namespace Mt.MediaFiles.ClientApp.Cli
     typeof(Commands.CommandCheckStatus),
     typeof(Commands.CommandScan),
     typeof(Commands.CommandUpdate),
-    typeof(Commands.CommandSearchVideo))]
+    typeof(Commands.CommandSearchVideo),
+    typeof(Commands.CommandSearchVideoDuplicates))]
   internal class Program
   {
     public const int CommandExitResult = -1;
@@ -182,7 +183,10 @@ namespace Mt.MediaFiles.ClientApp.Cli
       }
       catch(Exception e)
       {
-        throw new InvalidOperationException("Could not open the sqlite database. Please make sure that the specified directory exists", e);
+        throw new InvalidOperationException(
+          $"Could not open the sqlite database \"{catalogSettings.ConnectionString}\". Please make sure that the specified directory exists",
+          e
+        );
       }
 
       return result;

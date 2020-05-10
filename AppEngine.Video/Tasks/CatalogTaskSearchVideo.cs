@@ -51,7 +51,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
       var fsImprints = await this.CreateFsImprintsAsync();
       var comparer = this._comparerFactory.Create();
 
-      using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation("Finding videos..."))
+      using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation("Searching for videos..."))
       using(var taskProgress = progressOperation.CreateChildOperation(imprintRecords.Count))
       {
         for(var i = 0; i < imprintRecords.Count; i++)

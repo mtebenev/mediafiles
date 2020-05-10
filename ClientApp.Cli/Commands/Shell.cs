@@ -13,7 +13,6 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     typeof(ShellCommandCls),
     typeof(ShellCommandExit),
     typeof(ShellCommandSearchDuplicates),
-    typeof(ShellCommandSearchVideoDuplicates),
     typeof(ShellCommandGetInfo),
     typeof(ShellCommandLs),
     typeof(ShellCommandResetCatalog),
