@@ -18,6 +18,7 @@ using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using Mt.MediaFiles.ClientApp.Cli.Ui;
 using MediaToolkit.Options;
 using Mt.MediaFiles.ClientApp.Cli.Core;
+using McMaster.Extensions.CommandLineUtils.Conventions;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
@@ -68,11 +69,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
         _services = ConfigureServices(appSettings);
         await _shellAppContext.OpenCatalog(_services);
 
-        var app = new CommandLineApplication<Program>();
-        app.Conventions
-          .UseDefaultConventions()
-          .UseConstructorInjection(_services);
-
+        var app = CreateCommandLineApplication(appSettings);
         result = await app.ExecuteAsync(args);
       }
       finally
@@ -119,6 +116,34 @@ namespace Mt.MediaFiles.ClientApp.Cli
 
       var result = services.BuildServiceProvider();
       return result;
+    }
+
+    /// <summary>
+    /// Creates and configures the command-line application object.
+    /// </summary>
+    private static CommandLineApplication<Program> CreateCommandLineApplication(AppSettings appSettings)
+    {
+      var app = new CommandLineApplication<Program>();
+      app.Conventions
+        .AddConvention(new AttributeConvention())
+        .UseCommandAttribute()
+        .UseVersionOptionFromMemberAttribute()
+        .UseVersionOptionAttribute()
+        .UseHelpOptionAttribute()
+        .UseOptionAttributes()
+        .UseArgumentAttributes()
+        .AddConvention(new SubcommandAttributeConventionEx(appSettings.ExperimentalMode))
+        .SetAppNameFromEntryAssembly()
+        .SetRemainingArgsPropertyOnModel()
+        .SetSubcommandPropertyOnModel()
+        .SetParentPropertyOnModel()
+        .UseOnExecuteMethodFromModel()
+        .UseOnValidateMethodFromModel()
+        .UseOnValidationErrorMethodFromModel()
+        .UseDefaultHelpOption()
+        .UseCommandNameFromModelType()
+        .UseConstructorInjection(_services);
+      return app;
     }
   }
 }

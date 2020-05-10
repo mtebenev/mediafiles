@@ -3,10 +3,11 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Logging;
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.ClientApp.Cli.Core;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
-  [Command("shell")]
+  [Command("shell", Description = "Launches the app shell (the default command")]
   [Subcommand(
     typeof(ShellCommandCd),
     typeof(ShellCommandCls),
@@ -21,6 +22,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     typeof(ShellCommandSearchFiles),
     typeof(ShellCommandUpdate)
     )]
+  [ExperimentalCommand]
   internal class Shell
   {
     private readonly IShellAppContext _shellAppContext;

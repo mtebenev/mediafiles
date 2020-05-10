@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.ClientApp.Cli.Core;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
@@ -11,6 +12,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   /// Checks the status of the files in the current directory.
   /// </summary>
   [Command("status", Description = "Checks the status of the files in the current directory")]
+  [ExperimentalCommand]
   internal class CommandCheckStatus
   {
     public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, IFileSystem fileSystem, ICatalogTaskCheckStatusFactory taskFactory, IConsole console)

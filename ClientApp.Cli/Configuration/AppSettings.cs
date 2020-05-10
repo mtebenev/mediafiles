@@ -21,12 +21,18 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
     {
       if(other != null)
       {
+        this.ExperimentalMode = other.ExperimentalMode;
         this.StartupCatalog = other.StartupCatalog;
         this.Catalogs = new Dictionary<string, CatalogSettings>(
           other.Catalogs ?? new Dictionary<string, CatalogSettings>()
         );
       }
     }
+
+    /// <summary>
+    /// Dev-mode commands/options.
+    /// </summary>
+    public bool ExperimentalMode { get; set; }
 
     /// <summary>
     /// Catalog to open on startup
