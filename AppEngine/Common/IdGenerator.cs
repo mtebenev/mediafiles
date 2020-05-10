@@ -1,6 +1,6 @@
 using System;
 
-namespace Mt.MediaMan.AppEngine.Common
+namespace Mt.MediaFiles.AppEngine.Common
 {
   public class IdGenerator : IIdGenerator
   {
@@ -22,33 +22,33 @@ namespace Mt.MediaMan.AppEngine.Common
     {
       var charBuffer = new char[26];
 
-      charBuffer[0] = _encode32Chars[(int) (hs >> 60) & 31];
-      charBuffer[1] = _encode32Chars[(int) (hs >> 55) & 31];
-      charBuffer[2] = _encode32Chars[(int) (hs >> 50) & 31];
-      charBuffer[3] = _encode32Chars[(int) (hs >> 45) & 31];
-      charBuffer[4] = _encode32Chars[(int) (hs >> 40) & 31];
-      charBuffer[5] = _encode32Chars[(int) (hs >> 35) & 31];
-      charBuffer[6] = _encode32Chars[(int) (hs >> 30) & 31];
-      charBuffer[7] = _encode32Chars[(int) (hs >> 25) & 31];
-      charBuffer[8] = _encode32Chars[(int) (hs >> 20) & 31];
-      charBuffer[9] = _encode32Chars[(int) (hs >> 15) & 31];
-      charBuffer[10] = _encode32Chars[(int) (hs >> 10) & 31];
-      charBuffer[11] = _encode32Chars[(int) (hs >> 5) & 31];
-      charBuffer[12] = _encode32Chars[(int) hs & 31];
+      charBuffer[0] = _encode32Chars[(int)(hs >> 60) & 31];
+      charBuffer[1] = _encode32Chars[(int)(hs >> 55) & 31];
+      charBuffer[2] = _encode32Chars[(int)(hs >> 50) & 31];
+      charBuffer[3] = _encode32Chars[(int)(hs >> 45) & 31];
+      charBuffer[4] = _encode32Chars[(int)(hs >> 40) & 31];
+      charBuffer[5] = _encode32Chars[(int)(hs >> 35) & 31];
+      charBuffer[6] = _encode32Chars[(int)(hs >> 30) & 31];
+      charBuffer[7] = _encode32Chars[(int)(hs >> 25) & 31];
+      charBuffer[8] = _encode32Chars[(int)(hs >> 20) & 31];
+      charBuffer[9] = _encode32Chars[(int)(hs >> 15) & 31];
+      charBuffer[10] = _encode32Chars[(int)(hs >> 10) & 31];
+      charBuffer[11] = _encode32Chars[(int)(hs >> 5) & 31];
+      charBuffer[12] = _encode32Chars[(int)hs & 31];
 
-      charBuffer[13] = _encode32Chars[(int) (ls >> 60) & 31];
-      charBuffer[14] = _encode32Chars[(int) (ls >> 55) & 31];
-      charBuffer[15] = _encode32Chars[(int) (ls >> 50) & 31];
-      charBuffer[16] = _encode32Chars[(int) (ls >> 45) & 31];
-      charBuffer[17] = _encode32Chars[(int) (ls >> 40) & 31];
-      charBuffer[18] = _encode32Chars[(int) (ls >> 35) & 31];
-      charBuffer[19] = _encode32Chars[(int) (ls >> 30) & 31];
-      charBuffer[20] = _encode32Chars[(int) (ls >> 25) & 31];
-      charBuffer[21] = _encode32Chars[(int) (ls >> 20) & 31];
-      charBuffer[22] = _encode32Chars[(int) (ls >> 15) & 31];
-      charBuffer[23] = _encode32Chars[(int) (ls >> 10) & 31];
-      charBuffer[24] = _encode32Chars[(int) (ls >> 5) & 31];
-      charBuffer[25] = _encode32Chars[(int) ls & 31];
+      charBuffer[13] = _encode32Chars[(int)(ls >> 60) & 31];
+      charBuffer[14] = _encode32Chars[(int)(ls >> 55) & 31];
+      charBuffer[15] = _encode32Chars[(int)(ls >> 50) & 31];
+      charBuffer[16] = _encode32Chars[(int)(ls >> 45) & 31];
+      charBuffer[17] = _encode32Chars[(int)(ls >> 40) & 31];
+      charBuffer[18] = _encode32Chars[(int)(ls >> 35) & 31];
+      charBuffer[19] = _encode32Chars[(int)(ls >> 30) & 31];
+      charBuffer[20] = _encode32Chars[(int)(ls >> 25) & 31];
+      charBuffer[21] = _encode32Chars[(int)(ls >> 20) & 31];
+      charBuffer[22] = _encode32Chars[(int)(ls >> 15) & 31];
+      charBuffer[23] = _encode32Chars[(int)(ls >> 10) & 31];
+      charBuffer[24] = _encode32Chars[(int)(ls >> 5) & 31];
+      charBuffer[25] = _encode32Chars[(int)ls & 31];
 
       return new string(charBuffer);
     }

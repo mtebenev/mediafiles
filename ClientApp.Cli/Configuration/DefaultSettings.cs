@@ -44,7 +44,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
     private static string CreateDefaultConnectionString(string catalogName, IEnvironment environment, IFileSystem fileSystem)
     {
       var appDataPath = environment.GetDataPath();
-      var mmDataPath = fileSystem.Path.Combine(appDataPath, ".mediaman");
+      var mmDataPath = fileSystem.Path.Combine(appDataPath, ".mediafiles");
       fileSystem.Directory.CreateDirectory(mmDataPath);
       var databaseName = $"{catalogName}.db";
       var defaultDbPath = fileSystem.Path.Combine(mmDataPath, databaseName);

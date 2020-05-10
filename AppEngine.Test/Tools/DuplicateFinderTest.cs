@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Mt.MediaFiles.AppEngine.Tools;
 using Mt.MediaFiles.TestUtils;
-using Mt.MediaMan.AppEngine.Tools;
 using Xunit;
 
 namespace Mt.MediaFiles.AppEngine.Test.Tools

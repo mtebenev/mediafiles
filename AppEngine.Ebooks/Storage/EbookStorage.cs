@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
-using Mt.MediaMan.AppEngine.Ebooks.Storage;
 
 namespace Mt.MediaFiles.AppEngine.Ebooks.Storage
 {

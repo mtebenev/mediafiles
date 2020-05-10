@@ -1,6 +1,4 @@
 using Mt.MediaFiles.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Tools;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

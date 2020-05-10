@@ -22,7 +22,7 @@ using McMaster.Extensions.CommandLineUtils.Conventions;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
-  [Command("mediaman")]
+  [Command("mediafiles")]
   [Subcommand(
     typeof(Shell),
     typeof(Commands.CommandCheckStatus),
@@ -82,9 +82,19 @@ namespace Mt.MediaFiles.ClientApp.Cli
     /// <summary>
     /// Invoked only if none command could be found (the default command).
     /// </summary>
-    public Task<int> OnExecuteAsync(CommandLineApplication app)
+    public Task<int> OnExecuteAsync(CommandLineApplication app, AppSettings appSettings, IConsole console)
     {
-      return app.ExecuteAsync(new[] { "shell" });
+      Task<int> result;
+      if(appSettings.ExperimentalMode)
+        result = app.ExecuteAsync(new[] { "shell" });
+      else
+      {
+        console.WriteLine("Please specify a command.");
+        app.ShowHelp();
+        return Task.FromResult(0);
+      }
+
+      return result;
     }
 
     private static IServiceProvider ConfigureServices(AppSettings appSettings)
@@ -95,6 +105,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
           .SetMinimumLevel(LogLevel.Trace)
           .AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true }))
         .AddMediaToolkit(@"C:\ProgramData\chocolatey\bin\ffmpeg.exe", null, FfLogLevel.Fatal)
+        .AddSingleton<AppSettings>(appSettings)
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton<IShellAppContext>(_shellAppContext)
         .AddSingleton(_shellAppContext)

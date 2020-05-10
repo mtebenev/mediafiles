@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.Common
+namespace Mt.MediaFiles.AppEngine.Common
 {
   /// <summary>
   /// Generates unique id

@@ -6,7 +6,6 @@ using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.AppEngine.FileHandlers;
 using Mt.MediaFiles.AppEngine.Scanning;
 using Mt.MediaFiles.AppEngine.Tasks;
-using Mt.MediaMan.AppEngine.Scanning;
 using YesSql.Provider.Sqlite;
 
 namespace Mt.MediaFiles.AppEngine

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mt.MediaFiles.AppEngine.Scanning;
 
-namespace Mt.MediaMan.AppEngine.Scanning
+namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
   /// Builds the scan configuration according to required settings.
@@ -28,9 +27,9 @@ namespace Mt.MediaMan.AppEngine.Scanning
 
       var configuration =
         new ScanConfiguration(scanParameters, mmConfig)
-      {
-        ScanServices = scanServices
-      };
+        {
+          ScanServices = scanServices
+        };
 
       return Task.FromResult<IScanConfiguration>(configuration);
     }

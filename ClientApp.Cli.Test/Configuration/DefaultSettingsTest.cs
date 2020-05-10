@@ -35,9 +35,9 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
       mockEnvironment.GetDataPath().Returns("user-data-path");
 
       var mockFs = Substitute.For<IFileSystem>();
-      const string defaultDataSource = @"user-data-path\.mediaman\default.db";
-      mockFs.Path.Combine("user-data-path", ".mediaman").Returns(@"user-data-path\.mediaman");
-      mockFs.Path.Combine(@"user-data-path\.mediaman", "default.db").Returns(defaultDataSource);
+      const string defaultDataSource = @"user-data-path\.mediafiles\default.db";
+      mockFs.Path.Combine("user-data-path", ".mediafiles").Returns(@"user-data-path\.mediafiles");
+      mockFs.Path.Combine(@"user-data-path\.mediafiles", "default.db").Returns(defaultDataSource);
 
       var resultSettings = DefaultSettings.FillDefaultSettings(null, mockEnvironment, mockFs);
 
@@ -66,9 +66,9 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
       mockEnvironment.GetDataPath().Returns("user-data-path");
 
       var mockFs = Substitute.For<IFileSystem>();
-      const string defaultDataSource = @"user-data-path\.mediaman\default.db";
-      mockFs.Path.Combine("user-data-path", ".mediaman").Returns(@"user-data-path\.mediaman");
-      mockFs.Path.Combine(@"user-data-path\.mediaman", "default.db").Returns(defaultDataSource);
+      const string defaultDataSource = @"user-data-path\.mediafiles\default.db";
+      mockFs.Path.Combine("user-data-path", ".mediafiles").Returns(@"user-data-path\.mediafiles");
+      mockFs.Path.Combine(@"user-data-path\.mediafiles", "default.db").Returns(defaultDataSource);
 
       var resultSettings = DefaultSettings.FillDefaultSettings(new AppSettings(), mockEnvironment, mockFs);
 

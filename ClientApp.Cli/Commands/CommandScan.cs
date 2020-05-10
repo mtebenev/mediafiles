@@ -11,7 +11,7 @@ using StackExchange.Profiling;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
-  [Command("scan", Description = "Scans files in the directory")]
+  [Command("scan", Description = "Scans files in the directory.")]
   internal class CommandScan
   {
     [Argument(0, "pathAlias")]

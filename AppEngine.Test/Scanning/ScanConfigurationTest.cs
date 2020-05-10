@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Mt.MediaFiles.AppEngine.Scanning;
 using Xunit;
 
-namespace Mt.MediaMan.AppEngine.Test.Scanning
+namespace Mt.MediaFiles.AppEngine.Test.Scanning
 {
   public class ScanConfigurationTest
   {
@@ -16,7 +16,7 @@ namespace Mt.MediaMan.AppEngine.Test.Scanning
         new List<string>());
 
       var config = new MmConfig();
-      config.Ignore = new [] {"Item1", "Item2"};
+      config.Ignore = new[] { "Item1", "Item2" };
 
 
       var sut = new ScanConfiguration(paramters, config);

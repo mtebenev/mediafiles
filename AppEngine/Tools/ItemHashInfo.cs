@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.Tools
+namespace Mt.MediaFiles.AppEngine.Tools
 {
   /// <summary>
   /// Contains item ID along with hash
