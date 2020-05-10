@@ -19,6 +19,8 @@ using Mt.MediaFiles.ClientApp.Cli.Ui;
 using MediaToolkit.Options;
 using Mt.MediaFiles.ClientApp.Cli.Core;
 using McMaster.Extensions.CommandLineUtils.Conventions;
+using System.Data;
+using Microsoft.Data.Sqlite;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
@@ -40,6 +42,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
     public static async Task<int> Main(string[] args)
     {
       var result = 0;
+      var isCatalogOpen = false;
       try
       {
         NLog.LogManager.LoadConfiguration("nlog.config");
@@ -64,17 +67,29 @@ namespace Mt.MediaFiles.ClientApp.Cli
 
         // Open startup or first catalog
         if(appSettings.Catalogs.Count == 0)
-          throw new InvalidOperationException("No catalogs defined");
+          throw new InvalidOperationException("No catalogs defined. Please check and fix app configuration.");
 
-        _services = ConfigureServices(appSettings);
+        var catalogSettings = appSettings.Catalogs[appSettings.StartupCatalog];
+        var dbConnection = OpenDbConnection(catalogSettings);
+
+        _services = ConfigureServices(appSettings, catalogSettings, dbConnection);
         await _shellAppContext.OpenCatalog(_services);
+        isCatalogOpen = true;
 
         var app = CreateCommandLineApplication(appSettings);
         result = await app.ExecuteAsync(args);
       }
+      catch(Exception e)
+      {
+        Console.WriteLine("An error occurred.");
+        Console.WriteLine(e.ToString());
+      }
       finally
       {
-        _shellAppContext?.Catalog.Dispose();
+        if(isCatalogOpen)
+        {
+          _shellAppContext?.Catalog?.Dispose();
+        }
       }
       return result;
     }
@@ -97,7 +112,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
       return result;
     }
 
-    private static IServiceProvider ConfigureServices(AppSettings appSettings)
+    private static IServiceProvider ConfigureServices(AppSettings appSettings, ICatalogSettings catalogSettings, IDbConnection dbConnection)
     {
       // Init service container
       var services = new ServiceCollection()
@@ -106,6 +121,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
           .AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true }))
         .AddMediaToolkit(@"C:\ProgramData\chocolatey\bin\ffmpeg.exe", null, FfLogLevel.Fatal)
         .AddSingleton<AppSettings>(appSettings)
+        .AddSingleton<ICatalogSettings>(catalogSettings)
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton<IShellAppContext>(_shellAppContext)
         .AddSingleton(_shellAppContext)
@@ -117,12 +133,8 @@ namespace Mt.MediaFiles.ClientApp.Cli
 
       VideoModule.ConfigureServices(services);
 
-      // Catalog settings
-      var catalogSettings = appSettings.Catalogs[appSettings.StartupCatalog];
-      services.AddSingleton<ICatalogSettings>(x => catalogSettings);
-
       // Modules
-      AppEngineModule.ConfigureContainer(services, catalogSettings);
+      AppEngineModule.ConfigureContainer(services, catalogSettings, dbConnection);
       VideoImprintModule.ConfigureContainer(services);
 
       var result = services.BuildServiceProvider();
@@ -155,6 +167,25 @@ namespace Mt.MediaFiles.ClientApp.Cli
         .UseCommandNameFromModelType()
         .UseConstructorInjection(_services);
       return app;
+    }
+
+    /// <summary>
+    /// Initializes connection.
+    /// </summary>
+    private static IDbConnection OpenDbConnection(ICatalogSettings catalogSettings)
+    {
+      IDbConnection result = null;
+      try
+      {
+        result = new SqliteConnection(catalogSettings.ConnectionString);
+        result.Open();
+      }
+      catch(Exception e)
+      {
+        throw new InvalidOperationException("Could not open the sqlite database. Please make sure that the specified directory exists", e);
+      }
+
+      return result;
     }
   }
 }
