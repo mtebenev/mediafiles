@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.Tools;
 using Mt.MediaFiles.TestUtils;
+using NSubstitute;
 using Xunit;
 
-namespace Mt.MediaFiles.AppEngine.Test.Tools
+namespace Mt.MediaFiles.AppEngine.Test.Tasks
 {
-  public class DuplicateFinderTest
+  public class CatalogTaskSearchDuplicatesTest
   {
     [Fact]
     public async Task Should_Find_Duplicates()
@@ -30,9 +33,13 @@ namespace Mt.MediaFiles.AppEngine.Test.Tools
 ";
 
       var mockCatalog = CatalogMockBuilder.Create(catalogDef).Build();
-      var duplicateFinder = new DuplicateFinder(mockCatalog);
 
-      var result = await duplicateFinder.FindAsync();
+      var mockCatalogContext = Substitute.For<ICatalogContext>();
+      mockCatalogContext.Catalog.Returns(mockCatalog);
+
+      var catalogTask = new CatalogTaskSearchDuplicates();
+
+      var result = await catalogTask.ExecuteTaskAsync(mockCatalogContext);
       Assert.Equal(1, result.Count);
 
       var expectedInfos = new List<BriefFileInfo>

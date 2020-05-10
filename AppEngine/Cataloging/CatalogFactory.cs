@@ -19,8 +19,9 @@ namespace Mt.MediaFiles.AppEngine.Cataloging
       var storageManager = serviceProvider.GetRequiredService<IStorageManager>();
       var clock = serviceProvider.GetRequiredService<IClock>();
       var fileSystem = serviceProvider.GetRequiredService<IFileSystem>();
+      var appEngineSettings = serviceProvider.GetRequiredService<AppEngineSettings>();
 
-      var indexManager = new LuceneIndexManager(clock);
+      var indexManager = new LuceneIndexManager(clock, fileSystem, appEngineSettings);
       var catalog = new Catalog(catalogSettings.CatalogName, storageManager, indexManager, fileSystem);
 
       await catalog.OpenAsync(storageConfiguration);

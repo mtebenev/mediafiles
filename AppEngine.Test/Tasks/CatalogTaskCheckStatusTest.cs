@@ -44,8 +44,8 @@ namespace Mt.MediaFiles.AppEngine.Test.Tasks
           { @"x:\root_folder\folder1\folder2\file2.txt", new MockFileData("abc") },
         });
 
-      var command = new CatalogTaskCheckStatus(mockFs, mockCi);
-      var result = await command.ExecuteTaskAsync(mockCatalogContext);
+      var catalogTask = new CatalogTaskCheckStatus(mockFs, mockCi);
+      var result = await catalogTask.ExecuteTaskAsync(mockCatalogContext);
       var expected = new[]
       {
         new CheckStatusResult {Path = @"x:\root_folder\folder1\folder2\file1.txt", Status = FsItemStatus.Ok},

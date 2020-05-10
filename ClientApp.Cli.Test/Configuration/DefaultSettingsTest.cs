@@ -24,7 +24,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
         StartupCatalog = "some-catalog"
       };
 
-      var resultSettings = DefaultSettings.FillDefaultSettings(appSettings, mockEnvironment, mockFs);
+      var resultSettings = DefaultSettings.FillDefaultAppSettings(appSettings, mockEnvironment, mockFs);
       resultSettings.Should().BeEquivalentTo(appSettings);
     }
 
@@ -39,7 +39,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
       mockFs.Path.Combine("user-data-path", ".mediafiles").Returns(@"user-data-path\.mediafiles");
       mockFs.Path.Combine(@"user-data-path\.mediafiles", "default.db").Returns(defaultDataSource);
 
-      var resultSettings = DefaultSettings.FillDefaultSettings(null, mockEnvironment, mockFs);
+      var resultSettings = DefaultSettings.FillDefaultAppSettings(null, mockEnvironment, mockFs);
 
       resultSettings.Should().BeEquivalentTo(
         new AppSettings
@@ -70,7 +70,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
       mockFs.Path.Combine("user-data-path", ".mediafiles").Returns(@"user-data-path\.mediafiles");
       mockFs.Path.Combine(@"user-data-path\.mediafiles", "default.db").Returns(defaultDataSource);
 
-      var resultSettings = DefaultSettings.FillDefaultSettings(new AppSettings(), mockEnvironment, mockFs);
+      var resultSettings = DefaultSettings.FillDefaultAppSettings(new AppSettings(), mockEnvironment, mockFs);
 
       resultSettings.Should().BeEquivalentTo(
         new AppSettings
@@ -105,7 +105,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
         }
       };
 
-      var resultSettings = DefaultSettings.FillDefaultSettings(settings, mockEnvironment, mockFs);
+      var resultSettings = DefaultSettings.FillDefaultAppSettings(settings, mockEnvironment, mockFs);
 
       Assert.Equal("catalog1", resultSettings.StartupCatalog);
     }
@@ -126,7 +126,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
         }
       };
 
-      var resultSettings = DefaultSettings.FillDefaultSettings(settings, mockEnvironment, mockFs);
+      var resultSettings = DefaultSettings.FillDefaultAppSettings(settings, mockEnvironment, mockFs);
 
       Assert.Equal("catalog1", resultSettings.StartupCatalog);
     }

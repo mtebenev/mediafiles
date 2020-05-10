@@ -57,11 +57,10 @@ namespace Mt.MediaFiles.ClientApp.Cli
           .Build();
 
         var appSettings = configuration.Get<AppSettings>();
-        appSettings = DefaultSettings.FillDefaultSettings(
-          appSettings,
-          new EnvironmentWrapper(),
-          new FileSystem()
-        );
+        var environmentWrapper = new EnvironmentWrapper();
+        var fileSystem = new FileSystem();
+        appSettings = DefaultSettings.FillDefaultAppSettings(appSettings, environmentWrapper, fileSystem);
+        var appEngineSettings = DefaultSettings.FillDefaultAppEngineSettings(environmentWrapper, fileSystem);
 
         _shellAppContext = new ShellAppContext(appSettings);
 
@@ -72,7 +71,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
         var catalogSettings = appSettings.Catalogs[appSettings.StartupCatalog];
         var dbConnection = OpenDbConnection(catalogSettings);
 
-        _services = ConfigureServices(appSettings, catalogSettings, dbConnection);
+        _services = ConfigureServices(appSettings, appEngineSettings, catalogSettings, dbConnection);
         await _shellAppContext.OpenCatalog(_services);
         isCatalogOpen = true;
 
@@ -112,7 +111,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
       return result;
     }
 
-    private static IServiceProvider ConfigureServices(AppSettings appSettings, ICatalogSettings catalogSettings, IDbConnection dbConnection)
+    private static IServiceProvider ConfigureServices(AppSettings appSettings, AppEngineSettings appEngineSettings, ICatalogSettings catalogSettings, IDbConnection dbConnection)
     {
       // Init service container
       var services = new ServiceCollection()
@@ -121,6 +120,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
           .AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true }))
         .AddMediaToolkit(@"C:\ProgramData\chocolatey\bin\ffmpeg.exe", null, FfLogLevel.Fatal)
         .AddSingleton<AppSettings>(appSettings)
+        .AddSingleton<AppEngineSettings>(appEngineSettings)
         .AddSingleton<ICatalogSettings>(catalogSettings)
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton<IShellAppContext>(_shellAppContext)

@@ -64,7 +64,7 @@ namespace Mt.MediaFiles.AppEngine.Tasks
     {
       var hash = new
       {
-        item.Path,
+        item.Name,
         item.Size
       }.GetHashCode();
 

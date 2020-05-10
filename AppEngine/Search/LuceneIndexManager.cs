@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using Lucene.Net.Analysis.Standard;
@@ -20,13 +21,12 @@ namespace Mt.MediaFiles.AppEngine.Search
   /// <summary>
   /// Provides methods to manage physical Lucene indices.
   /// This class is provided as a singleton to that the index searcher can be reused across requests.
-  /// TODO: update from orchard
   /// </summary>
   internal class LuceneIndexManager : IDisposable
   {
     private readonly IClock _clock;
     private readonly string _rootPath;
-    private readonly DirectoryInfo _rootDirectory;
+    private readonly IDirectoryInfo _rootDirectory;
     private bool _disposing;
 
     private readonly ConcurrentDictionary<string, IndexReaderPool> _indexPools;
@@ -35,11 +35,11 @@ namespace Mt.MediaFiles.AppEngine.Search
 
     private static LuceneVersion LuceneVersion = LuceneVersion.LUCENE_48;
 
-    public LuceneIndexManager(IClock clock)
+    public LuceneIndexManager(IClock clock, IFileSystem fileSystem, AppEngineSettings appEngineSettings)
     {
       _clock = clock;
-      _rootPath = @"C:\_mediaman_lucene";
-      _rootDirectory = Directory.CreateDirectory(_rootPath);
+      _rootPath = fileSystem.Path.Combine(appEngineSettings.DataDirectory, "lucene");
+      _rootDirectory = fileSystem.Directory.CreateDirectory(_rootPath);
 
       _indexPools = new ConcurrentDictionary<string, IndexReaderPool>(StringComparer.OrdinalIgnoreCase);
       _writers = new ConcurrentDictionary<string, IndexWriterWrapper>(StringComparer.OrdinalIgnoreCase);
