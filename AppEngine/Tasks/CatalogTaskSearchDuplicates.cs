@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.Tools;
-using Mt.MediaMan.AppEngine.Tools;
 
 namespace Mt.MediaFiles.AppEngine.Tasks
 {
@@ -65,7 +64,7 @@ namespace Mt.MediaFiles.AppEngine.Tasks
     {
       var hash = new
       {
-        item.Path,
+        item.Name,
         item.Size
       }.GetHashCode();
 

@@ -13,7 +13,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   /// <summary>
   /// Scans new files to catalog
   /// </summary>
-  [Command("scan", Description = "Scans files to catalog")]
+  [Command("scan", Description = "Scan files into the catalog.")]
   internal class ShellCommandScan : ShellCommandBase
   {
     [Argument(0, "pathAlias")]

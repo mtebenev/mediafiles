@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mt.MediaFiles.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Tools;
 
 namespace Mt.MediaFiles.AppEngine.Tools
 {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Common;
+using Mt.MediaFiles.AppEngine.Common;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {

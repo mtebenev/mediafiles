@@ -1,6 +1,6 @@
 using Lucene.Net.Util;
 
-namespace Mt.MediaMan.AppEngine.Search
+namespace Mt.MediaFiles.AppEngine.Search
 {
   internal class SearchConstants
   {

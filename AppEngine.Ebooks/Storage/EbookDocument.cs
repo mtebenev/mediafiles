@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.Ebooks.Storage
+namespace Mt.MediaFiles.AppEngine.Ebooks.Storage
 {
   /// <summary>
   /// Contains information about ebook and stored in catalog

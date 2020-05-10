@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.FileHandlers
+namespace Mt.MediaFiles.AppEngine.FileHandlers
 {
   internal class IndexerVideo
   {

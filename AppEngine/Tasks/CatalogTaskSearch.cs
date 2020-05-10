@@ -6,8 +6,7 @@ using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.QueryParsers.Simple;
 using Lucene.Net.Search;
 using Mt.MediaFiles.AppEngine.Cataloging;
-using Mt.MediaMan.AppEngine.Search;
-
+using Mt.MediaFiles.AppEngine.Search;
 
 namespace Mt.MediaFiles.AppEngine.Tasks
 {

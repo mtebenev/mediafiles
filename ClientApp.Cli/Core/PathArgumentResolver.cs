@@ -45,7 +45,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Core
       }
 
       if(!this._fileSystem.Directory.Exists(rootDir))
-        throw new InvalidOperationException($"Could not find directory or media root: ${rootDir}");
+        throw new InvalidOperationException($"Could not find directory or media root: \"{rootDir}\"");
 
       var result = this._fileSystem.Directory
         .EnumerateFiles(rootDir)

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Mt.MediaMan.AppEngine.FileHandlers
+namespace Mt.MediaFiles.AppEngine.FileHandlers
 {
-    class InfoPartIndexerVideo
-    {
-    }
+  class InfoPartIndexerVideo
+  {
+  }
 }

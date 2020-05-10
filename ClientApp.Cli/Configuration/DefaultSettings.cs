@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using Microsoft.Data.Sqlite;
+using Mt.MediaFiles.AppEngine;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Configuration
 {
@@ -13,7 +14,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
     /// <summary>
     /// Creates the default app settings.
     /// </summary>
-    public static AppSettings FillDefaultSettings(AppSettings appSettings, IEnvironment environment, IFileSystem fileSystem)
+    public static AppSettings FillDefaultAppSettings(AppSettings appSettings, IEnvironment environment, IFileSystem fileSystem)
     {
       var settings = new AppSettings(appSettings);
       if(settings.Catalogs == null || settings.Catalogs.Count == 0)
@@ -41,10 +42,19 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
       return settings;
     }
 
+    /// <summary>
+    /// Creates the default app engine settings.
+    /// </summary>
+    public static AppEngineSettings FillDefaultAppEngineSettings(IEnvironment environment, IFileSystem fileSystem)
+    {
+      var mmDataPath = GetDefaultDataPath(environment, fileSystem);
+      var appEngineSettings = new AppEngineSettings(mmDataPath);
+      return appEngineSettings;
+    }
+
     private static string CreateDefaultConnectionString(string catalogName, IEnvironment environment, IFileSystem fileSystem)
     {
-      var appDataPath = environment.GetDataPath();
-      var mmDataPath = fileSystem.Path.Combine(appDataPath, ".mediaman");
+      var mmDataPath = GetDefaultDataPath(environment, fileSystem);
       fileSystem.Directory.CreateDirectory(mmDataPath);
       var databaseName = $"{catalogName}.db";
       var defaultDbPath = fileSystem.Path.Combine(mmDataPath, databaseName);
@@ -57,5 +67,15 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
       return connectionString;
     }
 
+    /// <summary>
+    /// Composes the default data path (where sqlite db and lucene indexes located).
+    /// </summary>
+    private static string GetDefaultDataPath(IEnvironment environment, IFileSystem fileSystem)
+    {
+      var appDataPath = environment.GetDataPath();
+      var mmDataPath = fileSystem.Path.Combine(appDataPath, ".mediafiles");
+
+      return mmDataPath;
+    }
   }
 }

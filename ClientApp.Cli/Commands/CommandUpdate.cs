@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
+using Mt.MediaFiles.ClientApp.Cli.Core;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
@@ -12,6 +13,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   /// For now used to retrieve video imprints
   /// </summary>
   [Command("update", Description = "Updates information about files starting from the current directory")]
+  [ExperimentalCommand]
   internal class CommandUpdate
   {
     public async Task<int> OnExecuteAsync(

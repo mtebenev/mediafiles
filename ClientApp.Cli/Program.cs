@@ -18,10 +18,13 @@ using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using Mt.MediaFiles.ClientApp.Cli.Ui;
 using MediaToolkit.Options;
 using Mt.MediaFiles.ClientApp.Cli.Core;
+using McMaster.Extensions.CommandLineUtils.Conventions;
+using System.Data;
+using Microsoft.Data.Sqlite;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
-  [Command("mediaman")]
+  [Command("mediafiles")]
   [Subcommand(
     typeof(Shell),
     typeof(Commands.CommandCheckStatus),
@@ -39,6 +42,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
     public static async Task<int> Main(string[] args)
     {
       var result = 0;
+      var isCatalogOpen = false;
       try
       {
         NLog.LogManager.LoadConfiguration("nlog.config");
@@ -53,31 +57,38 @@ namespace Mt.MediaFiles.ClientApp.Cli
           .Build();
 
         var appSettings = configuration.Get<AppSettings>();
-        appSettings = DefaultSettings.FillDefaultSettings(
-          appSettings,
-          new EnvironmentWrapper(),
-          new FileSystem()
-        );
+        var environmentWrapper = new EnvironmentWrapper();
+        var fileSystem = new FileSystem();
+        appSettings = DefaultSettings.FillDefaultAppSettings(appSettings, environmentWrapper, fileSystem);
+        var appEngineSettings = DefaultSettings.FillDefaultAppEngineSettings(environmentWrapper, fileSystem);
 
         _shellAppContext = new ShellAppContext(appSettings);
 
         // Open startup or first catalog
         if(appSettings.Catalogs.Count == 0)
-          throw new InvalidOperationException("No catalogs defined");
+          throw new InvalidOperationException("No catalogs defined. Please check and fix app configuration.");
 
-        _services = ConfigureServices(appSettings);
+        var catalogSettings = appSettings.Catalogs[appSettings.StartupCatalog];
+        var dbConnection = OpenDbConnection(catalogSettings);
+
+        _services = ConfigureServices(appSettings, appEngineSettings, catalogSettings, dbConnection);
         await _shellAppContext.OpenCatalog(_services);
+        isCatalogOpen = true;
 
-        var app = new CommandLineApplication<Program>();
-        app.Conventions
-          .UseDefaultConventions()
-          .UseConstructorInjection(_services);
-
+        var app = CreateCommandLineApplication(appSettings);
         result = await app.ExecuteAsync(args);
+      }
+      catch(Exception e)
+      {
+        Console.WriteLine("An error occurred.");
+        Console.WriteLine(e.ToString());
       }
       finally
       {
-        _shellAppContext?.Catalog.Dispose();
+        if(isCatalogOpen)
+        {
+          _shellAppContext?.Catalog?.Dispose();
+        }
       }
       return result;
     }
@@ -85,12 +96,22 @@ namespace Mt.MediaFiles.ClientApp.Cli
     /// <summary>
     /// Invoked only if none command could be found (the default command).
     /// </summary>
-    public Task<int> OnExecuteAsync(CommandLineApplication app)
+    public Task<int> OnExecuteAsync(CommandLineApplication app, AppSettings appSettings, IConsole console)
     {
-      return app.ExecuteAsync(new[] { "shell" });
+      Task<int> result;
+      if(appSettings.ExperimentalMode)
+        result = app.ExecuteAsync(new[] { "shell" });
+      else
+      {
+        console.WriteLine("Please specify a command.");
+        app.ShowHelp();
+        return Task.FromResult(0);
+      }
+
+      return result;
     }
 
-    private static IServiceProvider ConfigureServices(AppSettings appSettings)
+    private static IServiceProvider ConfigureServices(AppSettings appSettings, AppEngineSettings appEngineSettings, ICatalogSettings catalogSettings, IDbConnection dbConnection)
     {
       // Init service container
       var services = new ServiceCollection()
@@ -98,6 +119,9 @@ namespace Mt.MediaFiles.ClientApp.Cli
           .SetMinimumLevel(LogLevel.Trace)
           .AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true }))
         .AddMediaToolkit(@"C:\ProgramData\chocolatey\bin\ffmpeg.exe", null, FfLogLevel.Fatal)
+        .AddSingleton<AppSettings>(appSettings)
+        .AddSingleton<AppEngineSettings>(appEngineSettings)
+        .AddSingleton<ICatalogSettings>(catalogSettings)
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton<IShellAppContext>(_shellAppContext)
         .AddSingleton(_shellAppContext)
@@ -109,15 +133,58 @@ namespace Mt.MediaFiles.ClientApp.Cli
 
       VideoModule.ConfigureServices(services);
 
-      // Catalog settings
-      var catalogSettings = appSettings.Catalogs[appSettings.StartupCatalog];
-      services.AddSingleton<ICatalogSettings>(x => catalogSettings);
-
       // Modules
-      AppEngineModule.ConfigureContainer(services, catalogSettings);
+      AppEngineModule.ConfigureContainer(services, catalogSettings, dbConnection);
       VideoImprintModule.ConfigureContainer(services);
 
       var result = services.BuildServiceProvider();
+      return result;
+    }
+
+    /// <summary>
+    /// Creates and configures the command-line application object.
+    /// </summary>
+    private static CommandLineApplication<Program> CreateCommandLineApplication(AppSettings appSettings)
+    {
+      var app = new CommandLineApplication<Program>();
+      app.Conventions
+        .AddConvention(new AttributeConvention())
+        .UseCommandAttribute()
+        .UseVersionOptionFromMemberAttribute()
+        .UseVersionOptionAttribute()
+        .UseHelpOptionAttribute()
+        .UseOptionAttributes()
+        .UseArgumentAttributes()
+        .AddConvention(new SubcommandAttributeConventionEx(appSettings.ExperimentalMode))
+        .SetAppNameFromEntryAssembly()
+        .SetRemainingArgsPropertyOnModel()
+        .SetSubcommandPropertyOnModel()
+        .SetParentPropertyOnModel()
+        .UseOnExecuteMethodFromModel()
+        .UseOnValidateMethodFromModel()
+        .UseOnValidationErrorMethodFromModel()
+        .UseDefaultHelpOption()
+        .UseCommandNameFromModelType()
+        .UseConstructorInjection(_services);
+      return app;
+    }
+
+    /// <summary>
+    /// Initializes connection.
+    /// </summary>
+    private static IDbConnection OpenDbConnection(ICatalogSettings catalogSettings)
+    {
+      IDbConnection result = null;
+      try
+      {
+        result = new SqliteConnection(catalogSettings.ConnectionString);
+        result.Open();
+      }
+      catch(Exception e)
+      {
+        throw new InvalidOperationException("Could not open the sqlite database. Please make sure that the specified directory exists", e);
+      }
+
       return result;
     }
   }

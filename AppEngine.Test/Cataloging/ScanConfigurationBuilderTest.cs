@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mt.MediaFiles.AppEngine.Scanning;
-using Mt.MediaMan.AppEngine.Scanning;
 using NSubstitute;
 using Xunit;
 

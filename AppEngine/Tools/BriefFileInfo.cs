@@ -1,4 +1,4 @@
-namespace Mt.MediaMan.AppEngine.Tools
+namespace Mt.MediaFiles.AppEngine.Tools
 {
   /// <summary>
   /// Contains summary information about a file related to a catalog item

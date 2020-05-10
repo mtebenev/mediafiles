@@ -1,16 +1,16 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaFiles.AppEngine.Commands;
+using Mt.MediaFiles.AppEngine.Common;
+using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.Tools;
-using Mt.MediaMan.AppEngine.Common;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   /// <summary>
   /// Finds duplicate items in catalog
   /// </summary>
-  [Command("search-duplicates", Description = "Searches for duplicate items in the catalog")]
+  [Command("search-duplicates", Description = "Search for duplicate items in the catalog.")]
   internal class ShellCommandSearchDuplicates : ShellCommandBase
   {
     /// <summary>
@@ -18,8 +18,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     /// </summary>
     public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext)
     {
-      var command = new CommandSearchDuplicates();
-      var result = await command.Execute(shellAppContext.Catalog);
+      var task = new CatalogTaskSearchDuplicates();
+      var result = await shellAppContext.Catalog.ExecuteTaskAsync(task);
 
       long totalWastedSize = 0;
       shellAppContext.Console.WriteLine($"{result.Count} duplicates found:");

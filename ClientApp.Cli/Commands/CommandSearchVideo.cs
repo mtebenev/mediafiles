@@ -12,8 +12,10 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   [Command("search-video", Description = "Compares videos in local file system with cataloged videos.")]
   internal class CommandSearchVideo
   {
-    [Argument(0, "pathAlias")]
-    public string PathAlias { get; set; }
+    [Argument(0, "path", Description = @"The path to scan, can be one of the following:
+- omit to search for video files in the current directory
+- an absolute or relative path to a directory with videos to search for.")]
+    public string ThePath { get; set; }
 
     public async Task<int> OnExecuteAsync(
       IShellAppContext shellAppContext,
@@ -21,7 +23,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
       ICatalogTaskSearchVideoFactory taskFactory
     )
     {
-      var paths = pathResolver.ResolveMany(this.PathAlias);
+      var paths = pathResolver.ResolveMany(this.ThePath);
       var task = taskFactory.Create(paths);
       var profiler = MiniProfiler.StartNew("CommandSearchVideo");
       var result = await shellAppContext.Catalog.ExecuteTaskAsync(task);
