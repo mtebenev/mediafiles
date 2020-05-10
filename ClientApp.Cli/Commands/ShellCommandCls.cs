@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaFiles.ClientApp.Cli;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
-  [Command("cls", Description = "Clears screen")]
+  [Command("cls", Description = "Clear the console history.")]
   internal class ShellCommandCls : ShellCommandBase
   {
     public Task<int> OnExecuteAsync()

@@ -9,7 +9,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   /// <summary>
   /// Retrieves item info by name or id
   /// </summary>
-  [Command("get-info", Description = "Prints full information on a catalog item")]
+  [Command("get-info", Description = "Print full information about a catalog item.")]
   internal class ShellCommandGetInfo : ShellCommandBase
   {
     private readonly IShellAppContext _shellAppContext;

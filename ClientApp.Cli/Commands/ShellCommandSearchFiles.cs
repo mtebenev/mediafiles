@@ -9,7 +9,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   /// <summary>
   /// Scans new files to catalog
   /// </summary>
-  [Command("search-files", Description = "Searches for files in catalog")]
+  [Command("search-files", Description = "Search for files in the catalog.")]
   internal class ShellCommandSearchFiles : ShellCommandBase
   {
     private readonly ITaskExecutionContext _executionContext;

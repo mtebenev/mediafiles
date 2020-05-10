@@ -6,7 +6,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   /// <summary>
   /// Scans new files to catalog
   /// </summary>
-  [Command("ls", Description = "Prints content of the current folder")]
+  [Command("ls", Description = "Print the content of the current directory in the catalog.")]
   internal class ShellCommandLs : ShellCommandBase
   {
     public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext)

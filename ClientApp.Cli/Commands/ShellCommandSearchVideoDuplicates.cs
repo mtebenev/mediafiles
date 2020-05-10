@@ -9,7 +9,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   /// <summary>
   /// Command finds the video duplicates.
   /// </summary>
-  [Command("find-vdups", Description = "Finds duplicate videos")]
+  [Command("search-vdups", Description = "Search for duplicated videos.")]
   internal class ShellCommandSearchVideoDuplicates : ShellCommandBase
   {
     /// <summary>

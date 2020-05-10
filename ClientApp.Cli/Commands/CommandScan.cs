@@ -14,19 +14,25 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   [Command("scan", Description = "Scans files in the directory.")]
   internal class CommandScan
   {
-    [Argument(0, "pathAlias")]
+    [Argument(0, "pathAlias", Description = @"Path to scan, can be one of the following:
+- omit to scan the current directory.
+- an absolute or relative path to scan.
+- media root alias (defined in configuration file).")]
     public string PathAlias { get; set; }
 
     /// <summary>
     /// Name for the scan root. If not set, then '[SCAN_ROOT]' by default
     /// </summary>
-    [Option(LongName = "name", ShortName = "n")]
+    [Option(LongName = "name", ShortName = "n", Description = "Name in the catalog for the root item.")]
     public string Name { get; set; }
 
     /// <summary>
     /// Scan profile (configuration).
     /// </summary>
-    [Option(LongName = "profile", ShortName = "p")]
+    [Option(LongName = "profile", ShortName = "p", Description = @"Scan configuration. Can be one of the following:
+quick: scan only basic file information.
+default: scan basic file information + video imprints.
+full: file information + video imprints + media info.")]
     public (bool HasValue, ScanProfile ScanProfile) Profile { get; set; }
 
     public async Task<int> OnExecuteAsync(
