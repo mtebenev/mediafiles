@@ -13,7 +13,7 @@ namespace AppEngine.Video.Comparison
     public bool Compare(byte[] videoImprintData1, byte[] videoImprintData2)
     {
       // Compare
-      const int MarginDiff = 90; // Margin difference. If diff > maring => similar
+      const int MarginDiff = 96; // Margin difference. If diff > maring => similar
       const float minDiff = ((float)100 - MarginDiff) / 100;
       var diff = this.CalculateDifference(videoImprintData1, videoImprintData2);
       var result = diff < minDiff;

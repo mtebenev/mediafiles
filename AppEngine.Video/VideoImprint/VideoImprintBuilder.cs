@@ -25,7 +25,7 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
     {
       var options = new GetThumbnailOptions
       {
-        SeekSpan = TimeSpan.FromSeconds(1),
+        SeekSpan = TimeSpan.FromSeconds(5),
         FrameSize = new FrameSize(32, 32),
         OutputFormat = OutputFormat.RawVideo,
         PixelFormat = PixelFormat.Gray
