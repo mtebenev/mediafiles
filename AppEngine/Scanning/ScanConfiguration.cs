@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mt.MediaFiles.AppEngine.FileHandlers;
 
 namespace Mt.MediaFiles.AppEngine.Scanning
 {

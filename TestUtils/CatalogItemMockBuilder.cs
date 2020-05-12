@@ -6,6 +6,9 @@ using NSubstitute;
 
 namespace Mt.MediaFiles.TestUtils
 {
+  /// <summary>
+  /// Helper for creating catalog item mocks.
+  /// </summary>
   public class CatalogItemMockBuilder
   {
     private ICatalogItem _mockCi;

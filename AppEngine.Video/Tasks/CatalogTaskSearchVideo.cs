@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AppEngine.Video.Comparison;
 using AppEngine.Video.VideoImprint;
+using MediaToolkit.Services;
+using MediaToolkit.Tasks;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.Tools;
@@ -24,6 +26,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
     private readonly IVideoImprintStorage _imprintStorage;
     private readonly IVideoImprintBuilder _imprintBuilder;
     private readonly IVideoImprintComparerFactory _comparerFactory;
+    private readonly IMediaToolkitService _mediaToolkitService;
     private readonly IList<string> _paths;
 
     public CatalogTaskSearchVideo(
@@ -31,6 +34,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
       IVideoImprintStorage imprintStorage,
       IVideoImprintComparerFactory comparerFactory,
       IVideoImprintBuilder imprintBuilder,
+      IMediaToolkitService mediaToolkitService,
       IEnumerable<string> paths
     )
     {
@@ -38,6 +42,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
       this._imprintStorage = imprintStorage;
       this._imprintBuilder = imprintBuilder;
       this._comparerFactory = comparerFactory;
+      this._mediaToolkitService = mediaToolkitService;
       this._paths = paths.ToList();
     }
 
@@ -51,7 +56,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
       var fsImprints = await this.CreateFsImprintsAsync();
       var comparer = this._comparerFactory.Create();
 
-      using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation("Finding videos..."))
+      using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation("Searching for videos..."))
       using(var taskProgress = progressOperation.CreateChildOperation(imprintRecords.Count))
       {
         for(var i = 0; i < imprintRecords.Count; i++)
@@ -95,13 +100,22 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
           .ToAsyncEnumerable()
           .SelectAwait(async p =>
           {
-            var r = await this._imprintBuilder.CreateRecordAsync(0, p);
+            var videoDuration = await this.GetVideoDurationAsync(p);
+            var r = await this._imprintBuilder.CreateRecordAsync(0, p, videoDuration);
             return (p, r);
           })
           .ToListAsync();
       }
 
       return result;
+    }
+
+    private async Task<double> GetVideoDurationAsync(string filePath)
+    {
+      var metadataTask = new FfTaskGetMetadata(filePath);
+      var taskResult = await this._mediaToolkitService.ExecuteAsync(metadataTask);
+
+      return taskResult.Metadata.Format.Duration.TotalMilliseconds;
     }
   }
 }

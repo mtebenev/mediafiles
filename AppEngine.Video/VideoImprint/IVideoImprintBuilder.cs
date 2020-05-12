@@ -11,6 +11,6 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
     /// <summary>
     /// Creates the video imprint record for given file
     /// </summary>
-    Task<VideoImprintRecord> CreateRecordAsync(int catalogItemId, string fsPath);
+    Task<VideoImprintRecord> CreateRecordAsync(int catalogItemId, string fsPath, double videoDuration);
   }
 }

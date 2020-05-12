@@ -18,11 +18,17 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
   /// </summary>
   public sealed class CatalogTaskSearchVideoDuplicates : CatalogTaskBase<IList<DuplicateFindResult>>
   {
+    private readonly ITaskExecutionContext _executionContext;
     private readonly IVideoImprintStorage _imprintStorage;
     private readonly IVideoImprintComparerFactory _comparerFactory;
 
-    public CatalogTaskSearchVideoDuplicates(IVideoImprintStorage imprintStorage, IVideoImprintComparerFactory comparerFactory)
+    public CatalogTaskSearchVideoDuplicates(
+      ITaskExecutionContext executionContext,
+      IVideoImprintStorage imprintStorage,
+      IVideoImprintComparerFactory comparerFactory
+      )
     {
+      this._executionContext = executionContext;
       this._imprintStorage = imprintStorage;
       this._comparerFactory = comparerFactory;
     }
@@ -32,38 +38,53 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
     /// </summary>
     protected override async Task<IList<DuplicateFindResult>> ExecuteAsync(ICatalogContext catalogContext)
     {
-      var imprintRecords = await this._imprintStorage.GetAllRecordsAsync();
-      var duplicateGroups = new List<IList<int>>();
+      IList<DuplicateFindResult> result = null;
 
-      for(var i = 0; i < imprintRecords.Count; i++)
+      using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation("Searching for videos..."))
       {
-        var duplicatedIds = new List<int>() { imprintRecords[i].CatalogItemId };
-        for(var j = i + 1; j < imprintRecords.Count; j++)
+        var imprintRecords = await this._imprintStorage.GetAllRecordsAsync();
+        var duplicateGroups = new List<IList<int>>();
+
+        using(var subOperation = progressOperation.CreateChildOperation(imprintRecords.Count))
         {
-          var comparisonTask = this._comparerFactory.Create();
-          var isEqual = comparisonTask.Compare(imprintRecords[i].ImprintData, imprintRecords[j].ImprintData);
-          if(isEqual)
+          for(var i = 0; i < imprintRecords.Count; i++)
           {
-            duplicatedIds.Add(imprintRecords[j].CatalogItemId);
+            subOperation.UpdateStatus(i.ToString());
+            var duplicatedIds = new List<int>() { imprintRecords[i].CatalogItemId };
+            for(var j = i + 1; j < imprintRecords.Count; j++)
+            {
+              var comparisonTask = this._comparerFactory.Create();
+              var isEqual = comparisonTask.Compare(imprintRecords[i].ImprintData, imprintRecords[j].ImprintData);
+              if(isEqual)
+              {
+                duplicatedIds.Add(imprintRecords[j].CatalogItemId);
+              }
+            }
+            if(duplicatedIds.Count > 1)
+            {
+              duplicateGroups.Add(duplicatedIds);
+            }
           }
         }
-        if(duplicatedIds.Count > 1)
-        {
-          duplicateGroups.Add(duplicatedIds);
-        }
-      }
 
-      var result = await this.CreateResultAsync(catalogContext, duplicateGroups);
+        result = await this.CreateResultAsync(catalogContext, progressOperation, duplicateGroups);
+      }
       return result;
     }
 
-    private async Task<IList<DuplicateFindResult>> CreateResultAsync(ICatalogContext catalogContext, IList<IList<int>> duplicateGroups)
+    private async Task<IList<DuplicateFindResult>> CreateResultAsync(ICatalogContext catalogContext, IProgressOperation progressOperation, IList<IList<int>> duplicateGroups)
     {
       var result = new List<DuplicateFindResult>();
-      foreach(var group in duplicateGroups)
+      using(var subOperation = progressOperation.CreateChildOperation(duplicateGroups.Count))
       {
-        var r = await DuplicateFindResult.CreateAsync(catalogContext.Catalog, group);
-        result.Add(r);
+        var counter = 0;
+        foreach(var group in duplicateGroups)
+        {
+          subOperation.UpdateStatus(counter.ToString());
+          var r = await DuplicateFindResult.CreateAsync(catalogContext.Catalog, group);
+          result.Add(r);
+          counter++;
+        }
       }
 
       return result;

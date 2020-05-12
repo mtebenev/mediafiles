@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
 
@@ -12,6 +13,11 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// Unique id of the subtask.
     /// </summary>
     string Id { get; }
+
+    /// <summary>
+    /// Dependency IDs.
+    /// </summary>
+    IReadOnlyList<string> Dependencies { get; }
 
     /// <summary>
     /// Executes the sub-task on the catalog item record.

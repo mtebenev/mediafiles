@@ -21,6 +21,11 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// </summary>
     public string Id => HandlerIds.ScanSvcScanInfo;
 
+    /// <summary>
+    /// IScanService.
+    /// </summary>
+    public IReadOnlyList<string> Dependencies => new string[0];
+
     public ScanServiceScanInfo(IEnumerable<IFileHandler> fileHandlers)
     {
       this._fileHandlers = fileHandlers.ToList();

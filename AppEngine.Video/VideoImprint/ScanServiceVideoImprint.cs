@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,14 +38,24 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
     /// <summary>
     /// IScanService.
     /// </summary>
+    public IReadOnlyList<string> Dependencies => new[] { AppEngine.HandlerIds.ScanSvcScanInfo };
+
+    /// <summary>
+    /// IScanService.
+    /// </summary>
     public async Task ScanAsync(IScanServiceContext context, CatalogItemRecord record)
     {
       var extension = Path.GetExtension(record.Path);
       var supportedExtensions = new[] { ".flv", ".mp4", ".wmv", ".avi", ".mkv" };
       if(supportedExtensions.Any(e => e.Equals(extension)))
       {
-        var imprintRecord = await this._builder.CreateRecordAsync(record.CatalogItemId, record.Path);
-        await this.SaveRecordAsync(imprintRecord);
+        var itemData = context.GetItemData();
+        var infoPartVideo = itemData.Get<InfoPartVideo>();
+        if(infoPartVideo != null)
+        {
+          var imprintRecord = await this._builder.CreateRecordAsync(record.CatalogItemId, record.Path, infoPartVideo.Duration);
+          await this.SaveRecordAsync(imprintRecord);
+        }
       }
     }
 
