@@ -23,11 +23,11 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
     /// <summary>
     /// IVideoImprintBuilder.
     /// </summary>
-    public async Task<VideoImprintRecord> CreateRecordAsync(int catalogItemId, string fsPath)
+    public async Task<VideoImprintRecord> CreateRecordAsync(int catalogItemId, string fsPath, double videoDuration)
     {
       var options = new GetThumbnailOptions
       {
-        SeekSpan = TimeSpan.FromSeconds(5),
+        SeekSpan = TimeSpan.FromMilliseconds(videoDuration / 2),
         FrameSize = new FrameSize(AppEngineConstants.ImprintThumbnailSize, AppEngineConstants.ImprintThumbnailSize),
         OutputFormat = OutputFormat.RawVideo,
         PixelFormat = PixelFormat.Gray

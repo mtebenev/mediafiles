@@ -20,7 +20,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
         await this.ProcessDuplicates(shellAppContext, duplicates);
       }
 
-      return Program.CommandExitResult;
+      return Program.CommandResultContinue;
     }
 
     /// <summary>

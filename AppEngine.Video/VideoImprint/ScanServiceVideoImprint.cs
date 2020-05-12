@@ -49,8 +49,13 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
       var supportedExtensions = new[] { ".flv", ".mp4", ".wmv", ".avi", ".mkv" };
       if(supportedExtensions.Any(e => e.Equals(extension)))
       {
-        var imprintRecord = await this._builder.CreateRecordAsync(record.CatalogItemId, record.Path);
-        await this.SaveRecordAsync(imprintRecord);
+        var itemData = context.GetItemData();
+        var infoPartVideo = itemData.Get<InfoPartVideo>();
+        if(infoPartVideo != null)
+        {
+          var imprintRecord = await this._builder.CreateRecordAsync(record.CatalogItemId, record.Path, infoPartVideo.Duration);
+          await this.SaveRecordAsync(imprintRecord);
+        }
       }
     }
 

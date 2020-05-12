@@ -23,7 +23,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
         new GetThumbnailResult(thumbnailData));
 
       var builder = new VideoImprintBuilder(mockService);
-      var record = await builder.CreateRecordAsync(100, @"x:\folder\file.mp4");
+      var record = await builder.CreateRecordAsync(100, @"x:\folder\file.mp4", default);
 
       var expectedHash = new AHash(AppEngineConstants.ImprintThumbnailSize).ComputeHash(thumbnailData);
 
