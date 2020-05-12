@@ -19,6 +19,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     typeof(ShellCommandScan),
     typeof(ShellCommandSearch),
     typeof(ShellCommandSearchFiles),
+    typeof(ShellCommandSearchVideoDuplicates),
     typeof(ShellCommandUpdate)
     )]
   [ExperimentalCommand]

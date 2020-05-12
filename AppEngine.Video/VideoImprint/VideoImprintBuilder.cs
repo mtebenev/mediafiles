@@ -12,10 +12,12 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
   internal class VideoImprintBuilder : IVideoImprintBuilder
   {
     private readonly IMediaToolkitService _mediaToolkitService;
+    private readonly AHash _ahash;
 
     public VideoImprintBuilder(IMediaToolkitService mediaToolkitService)
     {
       this._mediaToolkitService = mediaToolkitService;
+      this._ahash = new AHash(AppEngineConstants.ImprintThumbnailSize);
     }
 
     /// <summary>
@@ -26,7 +28,7 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
       var options = new GetThumbnailOptions
       {
         SeekSpan = TimeSpan.FromSeconds(5),
-        FrameSize = new FrameSize(32, 32),
+        FrameSize = new FrameSize(AppEngineConstants.ImprintThumbnailSize, AppEngineConstants.ImprintThumbnailSize),
         OutputFormat = OutputFormat.RawVideo,
         PixelFormat = PixelFormat.Gray
       };
@@ -36,7 +38,7 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
       var record = new VideoImprintRecord
       {
         CatalogItemId = catalogItemId,
-        ImprintData = taskResult.ThumbnailData
+        ImprintData = this._ahash.ComputeHash(taskResult.ThumbnailData)
       };
       return record;
     }
