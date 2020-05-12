@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
 using FluentAssertions;
@@ -14,18 +15,23 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
     [Fact]
     public async Task Create_Record_From_File()
     {
+      var thumbnailData = new byte[256];
+      new Random().NextBytes(thumbnailData);
+
       var mockService = Substitute.For<IMediaToolkitService>();
       mockService.ExecuteAsync<GetThumbnailResult>(default).ReturnsForAnyArgs(
-        new GetThumbnailResult(new byte[] { 1, 2, 3 }));
+        new GetThumbnailResult(thumbnailData));
 
       var builder = new VideoImprintBuilder(mockService);
       var record = await builder.CreateRecordAsync(100, @"x:\folder\file.mp4");
+
+      var expectedHash = new AHash(AppEngineConstants.ImprintThumbnailSize).ComputeHash(thumbnailData);
 
       record.Should().BeEquivalentTo(
         new VideoImprintRecord
         {
           CatalogItemId = 100,
-          ImprintData = new byte[] { 1, 2, 3 },
+          ImprintData = expectedHash,
           VideoImprintId = 0
         });
     }

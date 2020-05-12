@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,6 +34,11 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
     /// IScanService.
     /// </summary>
     public string Id => AppEngine.Video.HandlerIds.ScanSvcVideoImprints;
+
+    /// <summary>
+    /// IScanService.
+    /// </summary>
+    public IReadOnlyList<string> Dependencies => new[] { AppEngine.HandlerIds.ScanSvcScanInfo };
 
     /// <summary>
     /// IScanService.
