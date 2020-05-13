@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
+  /// <summary>
+  /// Resets the catalog data.
+  /// </summary>
   [Command("reset-catalog", Description = "Reset the catalog storage.")]
   internal class CommandResetCatalog
   {

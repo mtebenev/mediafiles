@@ -20,9 +20,6 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
         case ScanProfile.Quick:
           objectIds = GetObjectIdsQuick();
           break;
-        case ScanProfile.Full:
-          objectIds = GetObjectIdsFull();
-          break;
         default:
           objectIds = GetObjectIdsDefault();
           break;
@@ -40,26 +37,11 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
       return (scanTaskIds, fileHandlerIds);
     }
 
-    private static (List<string> scanTaskIds, List<string> fileHandlerIds) GetObjectIdsFull()
-    {
-      var scanTaskIds = new List<string>
-      {
-        AppEngine.HandlerIds.ScanSvcScanInfo,
-        AppEngine.Video.HandlerIds.ScanSvcVideoImprints
-      };
-
-      var fileHandlerIds = new List<string>
-      {
-        AppEngine.HandlerIds.FileHandlerVideo
-      };
-
-      return (scanTaskIds, fileHandlerIds);
-    }
-
     private static (List<string> scanTaskIds, List<string> fileHandlerIds) GetObjectIdsDefault()
     {
       var scanTaskIds = new List<string>
       {
+        AppEngine.HandlerIds.ScanSvcScanInfo,
         AppEngine.Video.HandlerIds.ScanSvcVideoImprints
       };
 
