@@ -28,10 +28,11 @@ namespace Mt.MediaFiles.ClientApp.Cli
   [Subcommand(
     typeof(Shell),
     typeof(Commands.CommandCheckStatus),
+    typeof(Commands.CommandResetCatalog),
     typeof(Commands.CommandScan),
-    typeof(Commands.CommandUpdate),
     typeof(Commands.CommandSearchVideo),
-    typeof(Commands.CommandSearchVideoDuplicates))]
+    typeof(Commands.CommandSearchVideoDuplicates),
+    typeof(Commands.CommandUpdate))]
   internal class Program
   {
     public const int CommandExitResult = -1;

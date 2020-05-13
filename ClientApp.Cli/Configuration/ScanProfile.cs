@@ -13,13 +13,6 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
     /// <summary>
     /// Quick scan (no sub-tasks, all file handlers).
     /// </summary>
-    Quick,
-
-    /// <summary>
-    /// Full scan.
-    /// Sub-tasks: video imprints, metadata scanning.
-    /// All file handlers.
-    /// </summary>
-    Full
+    Quick
   }
 }
