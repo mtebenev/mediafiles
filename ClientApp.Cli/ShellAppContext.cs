@@ -72,18 +72,12 @@ namespace Mt.MediaFiles.ClientApp.Cli
 
     /// <summary>
     /// Resets catalog data
-    /// TODO: For now just quit the app after the catalog reset. Cannot re-open the catalog.
     /// </summary>
     public async Task ResetCatalogStorage(IServiceProvider serviceProvider)
     {
       var catalogName = _catalog.CatalogName;
-
-      // Reset storage
       var task = new CatalogTaskResetStorage(catalogName, _appSettings.Catalogs[catalogName].ConnectionString);
       await task.ExecuteAsync(this._catalog);
-
-      // Re-open the current catalog
-      await this.OpenCatalog(serviceProvider);
     }
   }
 }
