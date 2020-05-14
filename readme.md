@@ -31,3 +31,14 @@ mediafiles search-vdups
 mediafiles search-video
 ```
 
+## Building
+* Use IDE to build the solution
+* To build using the command line install Invoke-Build first:
+```bash
+Install-Module InvokeBuild
+Import-Module InvokeBuild
+```
+Then:
+```bash
+Invoke-Build
+```

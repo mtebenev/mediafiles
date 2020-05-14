@@ -16,7 +16,7 @@
     <projectUrl>https://github.com/mtebenev/mediafiles</projectUrl>
     <copyright>(C) Maxim Tebenev, 2020</copyright>
     <licenseUrl>https://github.com/mtebenev/mediafiles/blob/develop/LICENSE.md</licenseUrl>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>-->
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/mtebenev/mediafiles</projectSourceUrl>
     <tags>mediafiles, media, video, audio, converter, ffmpeg, flv, mp4, flash, h264</tags>
     <summary>The tool for cataloging and searching media files.</summary>
@@ -24,7 +24,7 @@
     <dependencies>
       <dependency id="ffmpeg" version="4.2.2" />
       <dependency id="dotnetcore-runtime" version="3.1.0" />
-    </dependencies>-->
+    </dependencies>
   </metadata>
   <files>
     <!-- this section controls what actually gets packaged into the Chocolatey package -->
