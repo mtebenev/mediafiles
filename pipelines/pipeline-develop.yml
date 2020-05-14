@@ -29,5 +29,5 @@ steps:
     command: 'push'
     packagesToPush: 'artifacts/*.nupkg;'
     nuGetFeedType: 'internal'
-    publishVstsFeed: '502d18c8-1d57-4902-8316-9bfd2e24c8be/70ed2b6d-1ea8-48f6-beb8-b9e422ca92f0'
+    publishVstsFeed: 'f16e3e3f-c420-4b68-a707-00a361027c73/d1d61a83-9400-4f73-b8c0-8740b808b4ee'
     verbosityPush: 'Normal'
