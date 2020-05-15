@@ -8,14 +8,14 @@ steps:
   displayName: Build the application
   inputs:
     command: 'build'
-    arguments: '-c ${{ parameters.buildConfiguration }}'
+    arguments: '-c ${{ parameters.buildConfiguration }} -r win-x64'
 - task: DotNetCoreCLI@2
   displayName: Publish the application
   inputs:
     command: 'publish'
     publishWebProjects: false
     projects: 'ClientApp.Cli/ClientApp.Cli.csproj'
-    arguments: '-c ${{ parameters.buildConfiguration }}'
+    arguments: '-c ${{ parameters.buildConfiguration }} -r win-x64 --self-contained true -p:PublishSingleFile=false -p:PublishTrimmed=true'
     zipAfterPublish: false
     modifyOutputPath: false
 - task: VSTest@2
