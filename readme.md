@@ -16,19 +16,19 @@ choco install mediafiles -pre
 
 ### Scanning files into the catalog
 ```bash
-mediafiles scan c:\my_media
+mf scan c:\my_media
 ```
 
 ### Searching for video duplicates
 ```bash
-mediafiles search-vdups
+mf search-vdups
 ```
 
 ### Search for duplicated video among local files (compared to cataloged)
 
 ### Searching for video duplicates
 ```bash
-mediafiles search-video
+mf search-video
 ```
 
 ## Building

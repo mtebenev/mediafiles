@@ -23,13 +23,12 @@
     <description>The mediafiles can catalog mediafiles and then search for duplicates.</description>
     <dependencies>
       <dependency id="ffmpeg" version="4.2.2" />
-      <dependency id="dotnetcore-runtime" version="3.1.0" />
     </dependencies>
   </metadata>
   <files>
     <!-- this section controls what actually gets packaged into the Chocolatey package -->
     <file src="tools\**" target="tools" />
-    <file src="..\ClientApp.Cli\bin\Release\netcoreapp3.1\publish\**" target="tools" />
+    <file src="..\ClientApp.Cli\bin\Release\netcoreapp3.1\win-x64\publish\**" target="tools" />
     <!--Building from Linux? You may need this instead: <file src="tools/**" target="tools" />-->
   </files>
 </package>
