@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>$(NetCoreTargetFramework)</TargetFramework>
     <RootNamespace>Mt.MediaFiles.ClientApp.Cli</RootNamespace>
-    <AssemblyName>mediafiles</AssemblyName>
+    <AssemblyName>mf</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
