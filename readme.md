@@ -1,6 +1,8 @@
 # mediafiles
 The tool for searching duplicate video files.
 
+[![Build Status](https://dev.azure.com/mtebenev/mediafiles/_apis/build/status/mediafiles-develop?branchName=develop)](https://dev.azure.com/mtebenev/mediafiles/_build/latest?definitionId=19&branchName=develop)
+
 ## Installing
 Use Chocolatey package manager to install the mediafiles.
 1. Add dev feed to the package manager:
