@@ -4,6 +4,7 @@ using AspNetCoreInjection.TypedFactories;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaFiles.AppEngine.Scanning;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
+using Mt.MediaFiles.AppEngine.Video.Thumbnail;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 
 namespace Mt.MediaFiles.AppEngine.Video
@@ -32,6 +33,8 @@ namespace Mt.MediaFiles.AppEngine.Video
           c.GetRequiredService<IVideoImprintStorage>(),
           ImprintBufferSize
       ));
+
+      services.AddTransient<IScanService, ScanServiceThumbnail>();
 
       // Internals
       services

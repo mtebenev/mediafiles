@@ -11,7 +11,7 @@ namespace Mt.MediaFiles.TestUtils
     /// <summary>
     /// Creates a mock with a single video info part.
     /// </summary>
-    public static CatalogItemData CreateVideoPart(double duration)
+    public static CatalogItemData CreateVideoPart(int duration)
     {
       var infoPart = new InfoPartVideo
       {

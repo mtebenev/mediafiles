@@ -6,8 +6,13 @@ namespace Mt.MediaFiles.AppEngine.Video
   public class HandlerIds
   {
     /// <summary>
-    /// Video imprints subtask.
+    /// Video imprints scan service.
     /// </summary>
     public static readonly string ScanSvcVideoImprints = "scansvc-video-imprints";
+
+    /// <summary>
+    /// Thumbnail extractor scan service.
+    /// </summary>
+    public static readonly string ScanSvcThumbnail = "scansvc-thumbnail";
   }
 }

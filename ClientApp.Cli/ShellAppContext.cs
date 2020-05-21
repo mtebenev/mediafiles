@@ -4,6 +4,7 @@ using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.Ebooks;
 using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Video.Thumbnail;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
 
@@ -58,6 +59,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
       var storageConfiguration = new StorageConfiguration();
       EbooksModule.CreateStorageConfiguration(storageConfiguration);
       VideoImprintModule.ConfigureStorage(storageConfiguration);
+      ThumbnailModule.ConfigureStorage(storageConfiguration);
 
       var catalog = await CatalogFactory.OpenCatalogAsync(serviceProvider, storageConfiguration);
 

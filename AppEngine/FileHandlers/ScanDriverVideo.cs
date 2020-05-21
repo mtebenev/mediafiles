@@ -31,7 +31,7 @@ namespace Mt.MediaFiles.AppEngine.FileHandlers
       var metadataTask = new FfTaskGetMetadata(filePath);
       var taskResult = await this._mediaToolkitService.ExecuteAsync(metadataTask);
 
-      infoPartVideo.Duration = taskResult.Metadata.Format.Duration.TotalMilliseconds;
+      infoPartVideo.Duration = (int)taskResult.Metadata.Format.Duration.TotalMilliseconds;
       this.FillVideoStreamInfo(taskResult.Metadata, infoPartVideo);
 
       catalogItemData.Apply(infoPartVideo);
