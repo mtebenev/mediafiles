@@ -6,13 +6,18 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
   internal enum ScanProfile
   {
     /// <summary>
-    /// Normal scan (video imprints sub-task).
+    /// Normal scan (video imprints service).
     /// </summary>
     Default,
 
     /// <summary>
-    /// Quick scan (no sub-tasks, all file handlers).
+    /// Quick scan (no scan services, all file handlers).
     /// </summary>
-    Quick
+    Quick,
+
+    /// <summary>
+    /// All available scan services
+    /// </summary>
+    Full
   }
 }

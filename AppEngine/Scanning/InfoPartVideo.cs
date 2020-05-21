@@ -13,7 +13,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// <summary>
     /// Duration is in total milliseconds.
     /// </summary>
-    public double Duration { get; set; }
+    public int Duration { get; set; }
 
     /// <summary>
     /// Short codec name (i.e. h264)

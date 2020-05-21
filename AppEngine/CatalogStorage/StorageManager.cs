@@ -35,7 +35,8 @@ namespace Mt.MediaFiles.AppEngine.CatalogStorage
         "MapIndexEbook",
         "Document",
         "Identifiers",
-        "VideoImprint"
+        "VideoImprint",
+        "Thumbnail"
       };
       foreach(var tableName in tables)
       {

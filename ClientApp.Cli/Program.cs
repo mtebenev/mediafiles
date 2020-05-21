@@ -21,6 +21,7 @@ using Mt.MediaFiles.ClientApp.Cli.Core;
 using McMaster.Extensions.CommandLineUtils.Conventions;
 using System.Data;
 using Microsoft.Data.Sqlite;
+using Mt.MediaFiles.AppEngine.Video.Thumbnail;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
@@ -138,6 +139,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
       // Modules
       AppEngineModule.ConfigureContainer(services, catalogSettings, dbConnection);
       VideoImprintModule.ConfigureContainer(services);
+      ThumbnailModule.ConfigureContainer(services);
 
       var result = services.BuildServiceProvider();
       return result;

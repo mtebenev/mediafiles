@@ -31,7 +31,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     /// </summary>
     [Option(LongName = "profile", ShortName = "p", Description = @"Scan configuration. Can be one of the following:
 quick: scan only basic file information.
-default: scan basic file information + video imprints.")]
+default: scan basic file information + video imprints.
+full: scan basic file information + video imprints + thumbnails.")]
     public (bool HasValue, ScanProfile ScanProfile) Profile { get; set; }
 
     public async Task<int> OnExecuteAsync(
