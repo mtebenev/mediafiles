@@ -59,7 +59,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
         if (infoPartVideo != null)
         {
           var offsets = this.CalculateOffsets(infoPartVideo);
-          var thumbnailRecords = await this.CreateThumbnailRecordsAsync(offsets, record);
+          var thumbnailRecords = await this.CreateThumbnailRecordsAsync(offsets, record, infoPartVideo);
           await this._storage.SaveRecordsAsync(thumbnailRecords);
         }
       }
@@ -83,12 +83,12 @@ namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
       return result;
     }
 
-    private async Task<ThumbnailRecord[]> CreateThumbnailRecordsAsync(int[] offsets, CatalogItemRecord record)
+    private async Task<ThumbnailRecord[]> CreateThumbnailRecordsAsync(int[] offsets, CatalogItemRecord record, InfoPartVideo infoPartVideo)
     {
       var result = new ThumbnailRecord[offsets.Length];
       var options = new GetThumbnailOptions
       {
-        FrameSize = new FrameSize(250, 250),
+        FrameSize = ThumbnailSizeCalculator.CalculateFrameSize(infoPartVideo.VideoWidth, infoPartVideo.VideoHeight),
         OutputFormat = OutputFormat.Image2
       };
 
