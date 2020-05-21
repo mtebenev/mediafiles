@@ -22,7 +22,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
         var query = @"CREATE TABLE Thumbnail (
     ThumbnailId    INTEGER            NOT NULL PRIMARY KEY AUTOINCREMENT,
     CatalogItemId  INTEGER            NOT NULL,
-    Position       INTEGER            NOT NULL,
+    Offset         INTEGER            NOT NULL,
     ThumbnailData  BLOB NOT NULL
 );";
         await dbConnection.ExecuteAsync(query);

@@ -5,9 +5,10 @@ namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
   /// <summary>
   /// The thumbnail record.
   /// </summary>
-  [Table("VideoImprint")]
+  [Table("Thumbnail")]
   public class ThumbnailRecord
   {
+    [Key]
     public int ThumbnailId { get; set; }
 
     /// <summary>

@@ -12,5 +12,10 @@ namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
     /// Saves records into the storage.
     /// </summary>
     Task SaveRecordsAsync(IList<ThumbnailRecord> records);
+
+    /// <summary>
+    /// Loads records for the catalog item.
+    /// </summary>
+    Task<IList<ThumbnailRecord>> GetCatalogItemRecordsAsync(int catalogItemId);
   }
 }
