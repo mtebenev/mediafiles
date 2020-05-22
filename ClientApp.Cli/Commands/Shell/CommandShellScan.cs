@@ -14,7 +14,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
   /// Scans new files to catalog
   /// </summary>
   [Command("scan", Description = "Scan files into the catalog.")]
-  internal class ShellCommandScan : ShellCommandBase
+  internal class CommandShellScan : CommandShellBase
   {
     [Argument(0, "pathAlias")]
     public string PathAlias { get; set; }

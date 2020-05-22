@@ -2,7 +2,6 @@ using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
 using System;
 using System.IO.Abstractions;
-using System.Threading.Tasks;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands.Catalog
 {

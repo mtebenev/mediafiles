@@ -11,7 +11,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
   /// Finds duplicate items in catalog
   /// </summary>
   [Command("search-duplicates", Description = "Search for duplicate items in the catalog.")]
-  internal class ShellCommandSearchDuplicates : ShellCommandBase
+  internal class CommandShellSearchDuplicates : CommandShellBase
   {
     /// <summary>
     /// ShellCommandBase.

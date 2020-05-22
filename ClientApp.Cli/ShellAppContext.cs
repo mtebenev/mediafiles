@@ -69,7 +69,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
       this._catalog = catalog;
       this.CurrentItem = this._catalog.RootItem;
 
-      this.Console.WriteLine($"Opened catalog: {this.Catalog.CatalogName}");
+      this.Console.WriteLine($"Using catalog: {this.Catalog.CatalogName}");
     }
 
     /// <summary>

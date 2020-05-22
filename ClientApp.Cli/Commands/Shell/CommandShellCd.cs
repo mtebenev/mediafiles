@@ -8,7 +8,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
   /// Scans new files to catalog
   /// </summary>
   [Command("cd", Description = "Change the current directory in the catalog.")]
-  internal class ShellCommandCd : ShellCommandBase
+  internal class CommandShellCd : CommandShellBase
   {
     [Argument(0, "itemNameOrId")]
     public string ItemNameOrId { get; set; }

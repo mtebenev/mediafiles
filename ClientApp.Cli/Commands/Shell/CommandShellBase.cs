@@ -7,7 +7,7 @@ using Mt.MediaFiles.AppEngine.Cataloging;
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   [HelpOption("--help")]
-  internal abstract class ShellCommandBase
+  internal abstract class CommandShellBase
   {
     /// <summary>
     /// Load a catalog item by name (among current children) or ID (if parameter starts with ':')

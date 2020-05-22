@@ -7,7 +7,7 @@ using Mt.MediaFiles.AppEngine.Video.Tasks;
 namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 {
   [Command("search-vdups", Description = "Search for duplicated videos in the catalog.")]
-  internal class ShellCommandSearchVideoDuplicates
+  internal class CommandShellSearchVideoDuplicates
   {
     public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, ICatalogTaskSearchVideoDuplicatesFactory taskFactory)
     {

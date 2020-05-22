@@ -30,7 +30,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
       mockShellAppContext.Console.Returns(console);
       mockShellAppContext.Catalog.GetItemByIdAsync(2).Returns(mockCi);
 
-      var command = new ShellCommandGetInfo(mockShellAppContext);
+      var command = new CommandShellGetInfo(mockShellAppContext);
       command.ItemNameOrId = ":2";
 
       var result = await command.OnExecuteAsync();

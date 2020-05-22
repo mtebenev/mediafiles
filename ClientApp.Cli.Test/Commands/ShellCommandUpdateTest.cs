@@ -21,7 +21,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
       var mockTask = Substitute.For<CatalogTaskBase>();
       mockFactory.Create(mockCurrentItem).Returns(mockTask);
 
-      var command = new ShellCommandUpdate(mockShellAppContext, mockFactory);
+      var command = new CommandShellUpdate(mockShellAppContext, mockFactory);
       await command.OnExecuteAsync();
 
       // Verify

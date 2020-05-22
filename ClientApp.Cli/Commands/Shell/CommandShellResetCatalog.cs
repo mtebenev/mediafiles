@@ -8,7 +8,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
   /// Deletes all the data in the existing catalog.
   /// </summary>
   [Command("reset-catalog", Description = "Reset the catalog storage.")]
-  internal class ShellCommandResetCatalog : ShellCommandBase
+  internal class CommandShellResetCatalog : CommandShellBase
   {
     public async Task<int> OnExecuteAsync(ShellAppContext shellAppContext, IServiceProvider serviceProvider)
     {

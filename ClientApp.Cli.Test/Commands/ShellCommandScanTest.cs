@@ -26,7 +26,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
 
-      var command = new ShellCommandScan();
+      var command = new CommandShellScan();
       command.PathAlias = "some_media_root";
       command.Name = "given_root_name";
 
@@ -52,7 +52,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
 
-      var command = new ShellCommandScan();
+      var command = new CommandShellScan();
       command.PathAlias = "some_fs_path";
       command.Name = "given_root_name";
 

@@ -9,18 +9,18 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 {
   [Command("shell", Description = "Launches the app shell (the default command")]
   [Subcommand(
-    typeof(ShellCommandCd),
-    typeof(ShellCommandCls),
-    typeof(ShellCommandExit),
-    typeof(ShellCommandSearchDuplicates),
-    typeof(ShellCommandGetInfo),
-    typeof(ShellCommandLs),
-    typeof(ShellCommandResetCatalog),
-    typeof(ShellCommandScan),
-    typeof(ShellCommandSearch),
-    typeof(ShellCommandSearchFiles),
-    typeof(ShellCommandSearchVideoDuplicates),
-    typeof(ShellCommandUpdate)
+    typeof(CommandShellCd),
+    typeof(CommandShellCls),
+    typeof(CommandShellExit),
+    typeof(CommandShellSearchDuplicates),
+    typeof(CommandShellGetInfo),
+    typeof(CommandShellLs),
+    typeof(CommandShellResetCatalog),
+    typeof(CommandShellScan),
+    typeof(CommandShellSearch),
+    typeof(CommandShellSearchFiles),
+    typeof(CommandShellSearchVideoDuplicates),
+    typeof(CommandShellUpdate)
     )]
   [ExperimentalCommand]
   internal class CommandShell
