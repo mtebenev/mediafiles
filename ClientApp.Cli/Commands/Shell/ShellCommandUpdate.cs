@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
 
-namespace Mt.MediaFiles.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 {
   [Command("update", Description = "Update items starting from the current location or item id.")]
   internal class ShellCommandUpdate : ShellCommandBase

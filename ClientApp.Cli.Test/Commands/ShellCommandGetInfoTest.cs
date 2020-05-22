@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Mt.MediaFiles.AppEngine.Scanning;
-using Mt.MediaFiles.ClientApp.Cli.Commands;
+using Mt.MediaFiles.ClientApp.Cli.Commands.Shell;
 using Mt.MediaFiles.TestUtils;
 using NSubstitute;
 using Xunit;

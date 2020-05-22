@@ -11,7 +11,6 @@ using Mt.MediaFiles.AppEngine.Video;
 using Mt.MediaFiles.AppEngine.Common;
 using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
-using Mt.MediaFiles.ClientApp.Cli.Commands;
 using Mt.MediaFiles.AppEngine;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using Mt.MediaFiles.ClientApp.Cli.Ui;
@@ -22,6 +21,7 @@ using System.Data;
 using Microsoft.Data.Sqlite;
 using Mt.MediaFiles.AppEngine.Video.Thumbnail;
 using System.Reflection;
+using Mt.MediaFiles.ClientApp.Cli.Commands.Shell;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
@@ -30,7 +30,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
     FullName = "mediafiles",
     Description = "Media files cataloging software.")]
   [Subcommand(
-    typeof(Shell),
+    typeof(CommandShell),
     typeof(Commands.CommandCheckStatus),
     typeof(Commands.CommandResetCatalog),
     typeof(Commands.CommandScan),

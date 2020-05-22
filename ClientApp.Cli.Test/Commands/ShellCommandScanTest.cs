@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.AppEngine.Scanning;
 using Mt.MediaFiles.AppEngine.Tasks;
-using Mt.MediaFiles.ClientApp.Cli.Commands;
+using Mt.MediaFiles.ClientApp.Cli.Commands.Shell;
 using Mt.MediaFiles.TestUtils;
 using NSubstitute;
 using Xunit;

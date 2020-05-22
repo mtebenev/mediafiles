@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Cataloging;
-using Mt.MediaFiles.ClientApp.Cli;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
