@@ -16,12 +16,12 @@ namespace Mt.MediaFiles.ClientApp.Cli
   /// </summary>
   internal class ShellAppContext : IShellAppContext
   {
-    private readonly AppSettings _appSettings;
+    private readonly IAppSettingsManager _appSettingsManager;
     private ICatalog _catalog;
 
-    public ShellAppContext(AppSettings appSettings)
+    public ShellAppContext(IAppSettingsManager appSettingsManager)
     {
-      this._appSettings = appSettings;
+      this._appSettingsManager = appSettingsManager;
       this._catalog = null;
       this.CurrentItem = null;
     }
@@ -51,7 +51,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
     }
 
     /// <summary>
-    /// Opens catalog
+    /// Opens a catalog.
     /// </summary>
     public async Task OpenCatalog(IServiceProvider serviceProvider)
     {
@@ -78,8 +78,17 @@ namespace Mt.MediaFiles.ClientApp.Cli
     public async Task ResetCatalogStorage(IServiceProvider serviceProvider)
     {
       var catalogName = _catalog.CatalogName;
-      var task = new CatalogTaskResetStorage(catalogName, _appSettings.Catalogs[catalogName].ConnectionString);
+      var connectionString = _appSettingsManager.AppSettings.Catalogs[catalogName].ConnectionString;
+      var task = new CatalogTaskResetStorage(catalogName, connectionString);
       await task.ExecuteAsync(this._catalog);
+    }
+
+    /// <summary>
+    /// Updates the settings file.
+    /// </summary>
+    internal void UpdateSettings()
+    {
+      this._appSettingsManager.Update();
     }
   }
 }

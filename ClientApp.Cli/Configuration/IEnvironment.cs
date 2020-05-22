@@ -9,5 +9,10 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
     /// Returns path the user data directory.
     /// </summary>
     string GetDataPath();
+
+    /// <summary>
+    /// Returns an environment variable value.
+    /// </summary>
+    string GetEnvironmentVariable(string name);
   }
 }

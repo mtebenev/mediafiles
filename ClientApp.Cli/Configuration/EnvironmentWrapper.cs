@@ -14,5 +14,13 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
     {
       return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
     }
+
+    /// <summary>
+    /// IEnvironment.
+    /// </summary>
+    public string GetEnvironmentVariable(string name)
+    {
+      return Environment.GetEnvironmentVariable(name);
+    }
   }
 }
