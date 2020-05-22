@@ -15,7 +15,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   [ExperimentalCommand]
   internal class CommandCheckStatus
   {
-    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, IFileSystem fileSystem, ICatalogTaskCheckStatusFactory taskFactory, IConsole console)
+    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, IFileSystem fileSystem, ICatalogTaskCheckStatusFactory taskFactory)
     {
       var currentDirectory = fileSystem.Directory.GetCurrentDirectory();
       var catalogItem = await CatalogItemUtils.FindItemByFsPathAsync(
@@ -35,7 +35,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
       foreach(var ri in result)
         tb.AddRow(ri.CatalogItemId, ri.Path, ri.Status.ToString());
 
-      console.Write(tb.Output());
+      shellAppContext.Console.Write(tb.Output());
 
       return Program.CommandExitResult;
     }

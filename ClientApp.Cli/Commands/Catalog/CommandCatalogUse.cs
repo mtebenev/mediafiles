@@ -18,9 +18,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Catalog
     [Option(ShortName = "c", LongName = "create", Description = "Forces the new catalog creation.")]
     public bool Create { get; set; }
 
-    public async Task<int> OnExecute(
+    public int OnExecute(
       AppSettings appSettings,
-      IConsole console,
       ShellAppContext shellAppContext,
       IEnvironment environment,
       IFileSystem fileSystem)
@@ -31,7 +30,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Catalog
         {
           throw new InvalidOperationException($"Unknown catalog: {this.CatalogName}");
         }
-        console.WriteLine($"Creating catalog: {this.CatalogName}");
+        shellAppContext.Console.WriteLine($"Creating catalog: {this.CatalogName}");
         var catalogSettings = DefaultSettings.CreateCatalogSettings(this.CatalogName, environment, fileSystem);
         appSettings.Catalogs.Add(this.CatalogName, catalogSettings);
       }

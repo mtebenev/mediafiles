@@ -3,9 +3,7 @@ using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Threading.Tasks;
 using FluentAssertions;
-using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Tasks;
-using Mt.MediaFiles.ClientApp.Cli;
 using Mt.MediaFiles.ClientApp.Cli.Commands;
 using Mt.MediaFiles.TestUtils;
 using NSubstitute;
@@ -15,9 +13,9 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 {
   internal class CommandCheckStatusTesing : CommandCheckStatus
   {
-    public Task<int> ExecuteAsync(IShellAppContext shellAppContext, IFileSystem fileSystem, ICatalogTaskCheckStatusFactory taskFactory, IConsole console)
+    public Task<int> ExecuteAsync(IShellAppContext shellAppContext, IFileSystem fileSystem, ICatalogTaskCheckStatusFactory taskFactory)
     {
-      return this.OnExecuteAsync(shellAppContext, fileSystem, taskFactory, console);
+      return this.OnExecuteAsync(shellAppContext, fileSystem, taskFactory);
     }
   }
 
@@ -39,11 +37,12 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 }
 ";
       var mockCatalog = CatalogMockBuilder.Create(catalogDef).Build();
+      var console = new StringConsole();
       var mockShellAppContext = Substitute.For<IShellAppContext>();
       mockShellAppContext.Catalog.Returns(mockCatalog);
+      mockShellAppContext.Console.Returns(console);
 
       var mockTaskFactory = Substitute.For<ICatalogTaskCheckStatusFactory>();
-      var console = new StringConsole();
 
       mockCatalog.ExecuteTaskAsync<IList<CheckStatusResult>>(default).ReturnsForAnyArgs(new[]
       {
@@ -55,7 +54,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
       var mockFs = new MockFileSystem(null, @"x:\root_folder");
 
       var command = new CommandCheckStatusTesing();
-      var result = await command.ExecuteAsync(mockShellAppContext, mockFs, mockTaskFactory, console);
+      var result = await command.ExecuteAsync(mockShellAppContext, mockFs, mockTaskFactory);
 
       var output = console.GetText();
       output.Should().ContainEquivalentOf(
