@@ -26,6 +26,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
       Assert.Equal("default", manager.AppSettings.StartupCatalog);
       Assert.Single(manager.AppSettings.Catalogs);
       Assert.Equal("default", manager.AppSettings.Catalogs["default"].CatalogName);
+      mockFs.File.Received().WriteAllText(@"x:\data_path\.mediafiles\appsettings.json", Arg.Any<string>()); // Should save the new configuration
     }
 
     [Fact]
@@ -55,6 +56,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
       Assert.Equal("local", manager.AppSettings.StartupCatalog);
       Assert.Single(manager.AppSettings.Catalogs);
       Assert.Equal("local", manager.AppSettings.Catalogs["local"].CatalogName);
+      mockFs.File.DidNotReceiveWithAnyArgs().WriteAllText(Arg.Any<string>(), Arg.Any<string>());
     }
 
     [Fact]
@@ -98,6 +100,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
       Assert.Equal("dev", manager.AppSettings.StartupCatalog);
       Assert.Single(manager.AppSettings.Catalogs);
       Assert.Equal("dev", manager.AppSettings.Catalogs["dev"].CatalogName);
+      mockFs.File.DidNotReceiveWithAnyArgs().WriteAllText(Arg.Any<string>(), Arg.Any<string>());
     }
   }
 }

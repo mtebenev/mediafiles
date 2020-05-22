@@ -1,30 +1,36 @@
 using Microsoft.Extensions.Configuration;
 using Mt.MediaFiles.AppEngine;
 using System.IO.Abstractions;
+using System.Text.Json;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Configuration
 {
   /// <summary>
-  /// Utility class keeping track of the settings source and able to update the settings.
+  /// IAppSettingsManager implementation.
   /// </summary>
-  internal class AppSettingsManager
+  internal class AppSettingsManager : IAppSettingsManager
   {
+    private readonly IFileSystem _fileSystem;
+    private readonly string _settingsFilePath;
+
     /// <summary>
     /// Ctor.
     /// </summary>
-    private AppSettingsManager(AppSettings appSettings, AppEngineSettings appEngineSettings)
+    private AppSettingsManager(IFileSystem fileSystem, AppSettings appSettings, AppEngineSettings appEngineSettings, string settingsFilePath)
     {
+      this._fileSystem = fileSystem;
       this.AppSettings = appSettings;
       this.AppEngineSettings = appEngineSettings;
+      this._settingsFilePath = settingsFilePath;
     }
 
     /// <summary>
-    /// The app settings.
+    /// IAppSettingsManager.
     /// </summary>
     public AppSettings AppSettings { get; }
 
     /// <summary>
-    /// The app engine settings.
+    /// IAppSettingsManager.
     /// </summary>
     public AppEngineSettings AppEngineSettings { get; }
 
@@ -54,18 +60,45 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
         }
       }
 
+      var isNewConfig = true;
       if (!string.IsNullOrEmpty(settingsPath))
       {
+        isNewConfig = false;
         var configStream = fileSystem.File.OpenRead(settingsPath);
         configurationBuilder.AddJsonStream(configStream);
+      }
+      else
+      {
+        settingsPath = fileSystem.Path.Combine(appEngineSettings.DataDirectory, "appsettings.json");
       }
 
       var configuration = configurationBuilder.Build();
       var appSettings = configuration.Get<AppSettings>();
       appSettings = DefaultSettings.FillDefaultAppSettings(appSettings, environment, fileSystem);
 
-      var result = new AppSettingsManager(appSettings, appEngineSettings);
+      var result = new AppSettingsManager(fileSystem, appSettings, appEngineSettings, settingsPath);
+      if(isNewConfig)
+      {
+        result.Update();
+      }
+
       return result;
+    }
+
+    /// <summary>
+    /// IAppSettingsManager.
+    /// </summary>
+    public void Update()
+    {
+      var serialized = JsonSerializer.Serialize(
+        this.AppSettings,
+        new JsonSerializerOptions
+        {
+          PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+          WriteIndented = true
+        }
+      );
+      this._fileSystem.File.WriteAllText(this._settingsFilePath, serialized);
     }
   }
 }

@@ -95,9 +95,8 @@ namespace Mt.MediaFiles.ClientApp.Cli
         result = app.ExecuteAsync(new[] { "shell" });
       else
       {
-        console.WriteLine("Please specify a command.");
         app.ShowHelp();
-        return Task.FromResult(0);
+        return Task.FromResult(Program.CommandExitResult);
       }
 
       return result;
