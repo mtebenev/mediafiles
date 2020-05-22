@@ -3,7 +3,9 @@ using System.Collections.Generic;
 namespace Mt.MediaFiles.ClientApp.Cli.Configuration
 {
   /// <summary>
-  /// Serialized app settings
+  /// App settings.
+  /// Design note: the settings object is mutable and can saved back to a settings file.
+  /// We don't watch for futher changes in the settings assuming short-living nature of the application.
   /// </summary>
   public class AppSettings
   {

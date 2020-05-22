@@ -2,7 +2,6 @@ using System;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
@@ -33,7 +32,8 @@ namespace Mt.MediaFiles.ClientApp.Cli
     typeof(Commands.CommandScan),
     typeof(Commands.CommandSearchVideo),
     typeof(Commands.CommandSearchVideoDuplicates),
-    typeof(Commands.CommandUpdate))]
+    typeof(Commands.CommandUpdate),
+    typeof(Commands.Catalog.CommandCatalog))]
   internal class Program
   {
     public const int CommandExitResult = -1;
@@ -50,35 +50,24 @@ namespace Mt.MediaFiles.ClientApp.Cli
       {
         NLog.LogManager.LoadConfiguration("nlog.config");
 
-        var environmentName = Environment.GetEnvironmentVariable("MM_ENVIRONMENT");
-
-        var configuration = new ConfigurationBuilder()
-          .SetBasePath(AppContext.BaseDirectory)
-          .AddJsonFile("appsettings.json", true)
-          .AddJsonFile($"appsettings.{environmentName}.json", true)
-          .AddEnvironmentVariables()
-          .Build();
-
-        var appSettings = configuration.Get<AppSettings>();
         var environmentWrapper = new EnvironmentWrapper();
         var fileSystem = new FileSystem();
-        appSettings = DefaultSettings.FillDefaultAppSettings(appSettings, environmentWrapper, fileSystem);
-        var appEngineSettings = DefaultSettings.FillDefaultAppEngineSettings(environmentWrapper, fileSystem);
+        var appSettingsManager = AppSettingsManager.Create(environmentWrapper, fileSystem);
 
-        _shellAppContext = new ShellAppContext(appSettings);
+        _shellAppContext = new ShellAppContext(appSettingsManager);
 
         // Open startup or first catalog
-        if(appSettings.Catalogs.Count == 0)
+        if(appSettingsManager.AppSettings.Catalogs.Count == 0)
           throw new InvalidOperationException("No catalogs defined. Please check and fix app configuration.");
 
-        var catalogSettings = appSettings.Catalogs[appSettings.StartupCatalog];
+        var catalogSettings = appSettingsManager.AppSettings.Catalogs[appSettingsManager.AppSettings.StartupCatalog];
         var dbConnection = OpenDbConnection(catalogSettings);
 
-        _services = ConfigureServices(appSettings, appEngineSettings, catalogSettings, dbConnection);
+        _services = ConfigureServices(appSettingsManager, catalogSettings, dbConnection);
         await _shellAppContext.OpenCatalog(_services);
         isCatalogOpen = true;
 
-        var app = CreateCommandLineApplication(appSettings);
+        var app = CreateCommandLineApplication(appSettingsManager.AppSettings.ExperimentalMode);
         result = await app.ExecuteAsync(args);
       }
       catch(Exception e)
@@ -114,7 +103,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
       return result;
     }
 
-    private static IServiceProvider ConfigureServices(AppSettings appSettings, AppEngineSettings appEngineSettings, ICatalogSettings catalogSettings, IDbConnection dbConnection)
+    private static IServiceProvider ConfigureServices(AppSettingsManager appSettingsManager, ICatalogSettings catalogSettings, IDbConnection dbConnection)
     {
       // Init service container
       var services = new ServiceCollection()
@@ -122,8 +111,8 @@ namespace Mt.MediaFiles.ClientApp.Cli
           .SetMinimumLevel(LogLevel.Trace)
           .AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true }))
         .AddMediaToolkit(@"C:\ProgramData\chocolatey\bin\ffmpeg.exe", null, FfLogLevel.Fatal)
-        .AddSingleton<AppSettings>(appSettings)
-        .AddSingleton<AppEngineSettings>(appEngineSettings)
+        .AddSingleton<AppSettings>(appSettingsManager.AppSettings)
+        .AddSingleton<AppEngineSettings>(appSettingsManager.AppEngineSettings)
         .AddSingleton<ICatalogSettings>(catalogSettings)
         .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton<IShellAppContext>(_shellAppContext)
@@ -148,7 +137,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
     /// <summary>
     /// Creates and configures the command-line application object.
     /// </summary>
-    private static CommandLineApplication<Program> CreateCommandLineApplication(AppSettings appSettings)
+    private static CommandLineApplication<Program> CreateCommandLineApplication(bool isExperimentalMode)
     {
       var app = new CommandLineApplication<Program>();
       app.Conventions
@@ -159,7 +148,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
         .UseHelpOptionAttribute()
         .UseOptionAttributes()
         .UseArgumentAttributes()
-        .AddConvention(new SubcommandAttributeConventionEx(appSettings.ExperimentalMode))
+        .AddConvention(new SubcommandAttributeConventionEx(isExperimentalMode))
         .SetAppNameFromEntryAssembly()
         .SetRemainingArgsPropertyOnModel()
         .SetSubcommandPropertyOnModel()
