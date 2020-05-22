@@ -118,6 +118,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
         .AddSingleton(_shellAppContext)
         .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton<IFileSystem, FileSystem>()
+        .AddSingleton<IEnvironment, EnvironmentWrapper>()
         .AddSingleton<IClock, Clock>()
         .AddSingleton<IPathArgumentResolver, PathArgumentResolver>()
         .AddTransient<ITaskExecutionContext, TaskExecutionContext>();

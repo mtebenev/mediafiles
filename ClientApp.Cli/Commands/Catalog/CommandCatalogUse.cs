@@ -1,5 +1,7 @@
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
+using System;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands.Catalog
@@ -13,13 +15,29 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Catalog
     [Argument(0, "catalogName", Description = @"The name of the catalog.")]
     public string CatalogName { get; set; }
 
-    public async Task<int> OnExecute(AppSettings appSettings, IConsole console, ShellAppContext shellAppContext)
+    [Option(ShortName = "c", LongName = "create", Description = "Forces the new catalog creation.")]
+    public bool Create { get; set; }
+
+    public async Task<int> OnExecute(
+      AppSettings appSettings,
+      IConsole console,
+      ShellAppContext shellAppContext,
+      IEnvironment environment,
+      IFileSystem fileSystem)
     {
-      if(appSettings.Catalogs.ContainsKey(this.CatalogName))
+      if(!appSettings.Catalogs.ContainsKey(this.CatalogName))
       {
-        appSettings.StartupCatalog = this.CatalogName;
-        shellAppContext.UpdateSettings();
+        if(!this.Create)
+        {
+          throw new InvalidOperationException($"Unknown catalog: {this.CatalogName}");
+        }
+        console.WriteLine($"Creating catalog: {this.CatalogName}");
+        var catalogSettings = DefaultSettings.CreateCatalogSettings(this.CatalogName, environment, fileSystem);
+        appSettings.Catalogs.Add(this.CatalogName, catalogSettings);
       }
+
+      appSettings.StartupCatalog = this.CatalogName;
+      shellAppContext.UpdateSettings();
 
       return Program.CommandExitResult;
     }

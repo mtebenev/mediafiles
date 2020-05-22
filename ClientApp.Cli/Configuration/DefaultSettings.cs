@@ -19,13 +19,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
       var settings = new AppSettings(appSettings);
       if(settings.Catalogs == null || settings.Catalogs.Count == 0)
       {
-        var defaultCatalogSettings = new CatalogSettings
-        {
-          CatalogName = "default",
-          ConnectionString = DefaultSettings.CreateDefaultConnectionString("default", environment, fileSystem),
-          MediaRoots = new Dictionary<string, string>()
-        };
-
+        var defaultCatalogSettings = CreateCatalogSettings("default", environment, fileSystem);
         settings.Catalogs = new Dictionary<string, CatalogSettings>
         {
           { "default", defaultCatalogSettings }
@@ -50,6 +44,21 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
       var mmDataPath = GetDefaultDataPath(environment, fileSystem);
       var appEngineSettings = new AppEngineSettings(mmDataPath);
       return appEngineSettings;
+    }
+
+    /// <summary>
+    /// Creates default catalog settings.
+    /// </summary>
+    public static CatalogSettings CreateCatalogSettings(string catalogName, IEnvironment environment, IFileSystem fileSystem)
+    {
+      var result = new CatalogSettings
+      {
+        CatalogName = catalogName,
+        ConnectionString = DefaultSettings.CreateDefaultConnectionString(catalogName, environment, fileSystem),
+        MediaRoots = new Dictionary<string, string>()
+      };
+
+      return result;
     }
 
     private static string CreateDefaultConnectionString(string catalogName, IEnvironment environment, IFileSystem fileSystem)
