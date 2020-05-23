@@ -1,0 +1,32 @@
+# The pipeline for develop builds
+name: mediafiles-release
+trigger: none
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- template: steps-setup.yml
+- template: steps-build.yml
+- task: PowerShell@2
+  displayName: Build Chocolatey package
+  inputs:
+    targetType: 'inline'
+    script: 'Invoke-Build Build-Package -PackageVersion $(MediaFilesVersion)-$(Build.BuildId)'
+- task: ArchiveFiles@2
+  displayName: Create archive package
+  inputs:
+    rootFolderOrFile: '$(Agent.BuildDirectory)/ClientApp.Cli/bin/Release/netcoreapp3.1/win-x64/publish'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true    
+- task: PublishPipelineArtifact@1
+  displayName: Publish pipeline package
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    artifact: 'mediafiles-dist'
+    publishLocation: 'pipeline'
