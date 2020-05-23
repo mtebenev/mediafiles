@@ -81,7 +81,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
 
       var mockEnvironment = Substitute.For<IEnvironment>();
       mockEnvironment.GetDataPath().Returns(@"x:\data_path");
-      mockEnvironment.GetEnvironmentVariable("MM_ENVIRONMENT").Returns("dev");
+      mockEnvironment.GetBaseDirectory().Returns(@"x:\app_path");
+      mockEnvironment.GetEnvironmentVariable("MF_ENVIRONMENT").Returns("dev");
 
       var mockFs = Substitute.For<IFileSystem>();
       mockFs.Path.Combine(default, default).ReturnsForAnyArgs(x => Path.Combine((string)x[0], (string)x[1]));
@@ -98,8 +99,53 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Configuration
 
       // Verify
       Assert.Equal("dev", manager.AppSettings.StartupCatalog);
-      Assert.Single(manager.AppSettings.Catalogs);
+      Assert.Equal(2, manager.AppSettings.Catalogs.Count);
       Assert.Equal("dev", manager.AppSettings.Catalogs["dev"].CatalogName);
+      mockFs.File.DidNotReceiveWithAnyArgs().WriteAllText(Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [Fact]
+    public void Should_Use_Exe_Local_Config()
+    {
+      var configJsonDefault = @"{
+  'startupCatalog': 'local',
+  'catalogs': {
+    'local': {
+      'catalogName': 'local'
+    }
+  }
+}";
+      var configJsonExe = @"{
+  'startupCatalog': 'exe',
+  'catalogs': {
+    'exe': {
+      'catalogName': 'exe'
+    }
+  }
+}";
+
+      var mockEnvironment = Substitute.For<IEnvironment>();
+      mockEnvironment.GetDataPath().Returns(@"x:\data_path");
+      mockEnvironment.GetBaseDirectory().Returns(@"x:\app_path");
+      mockEnvironment.GetEnvironmentVariable("MF_ENVIRONMENT").Returns("dev");
+
+      var mockFs = Substitute.For<IFileSystem>();
+      mockFs.Path.Combine(default, default).ReturnsForAnyArgs(x => Path.Combine((string)x[0], (string)x[1]));
+
+      mockFs.File.Exists(@"x:\data_path\.mediafiles\appsettings.json").Returns(true);
+      mockFs.File.Exists(@"x:\app_path\appsettings.json").Returns(true);
+
+      mockFs.File.OpenRead(@"x:\data_path\.mediafiles\appsettings.json")
+        .Returns(new MemoryStream(Encoding.UTF8.GetBytes(configJsonDefault.Replace('\'', '\"'))));
+      mockFs.File.OpenRead(@"x:\app_path\appsettings.json")
+        .Returns(new MemoryStream(Encoding.UTF8.GetBytes(configJsonExe.Replace('\'', '\"'))));
+
+      var manager = AppSettingsManager.Create(mockEnvironment, mockFs);
+
+      // Verify
+      Assert.Equal("exe", manager.AppSettings.StartupCatalog);
+      Assert.Single(manager.AppSettings.Catalogs);
+      Assert.Equal("exe", manager.AppSettings.Catalogs["exe"].CatalogName);
       mockFs.File.DidNotReceiveWithAnyArgs().WriteAllText(Arg.Any<string>(), Arg.Any<string>());
     }
   }

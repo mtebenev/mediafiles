@@ -22,5 +22,13 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
     {
       return Environment.GetEnvironmentVariable(name);
     }
+
+    /// <summary>
+    /// IEnvironment.
+    /// </summary>
+    public string GetBaseDirectory()
+    {
+      return AppContext.BaseDirectory;
+    }
   }
 }

@@ -1,6 +1,9 @@
 using Microsoft.Extensions.Configuration;
 using Mt.MediaFiles.AppEngine;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Text.Json;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Configuration
@@ -40,44 +43,26 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
     public static AppSettingsManager Create(IEnvironment environment, IFileSystem fileSystem)
     {
       var appEngineSettings = DefaultSettings.FillDefaultAppEngineSettings(environment, fileSystem);
-      var environmentName = environment.GetEnvironmentVariable("MM_ENVIRONMENT");
 
       var configurationBuilder = new ConfigurationBuilder().AddEnvironmentVariables();
-
-      string settingsPath = null;
-      var testPath = fileSystem.Path.Combine(appEngineSettings.DataDirectory, $"appsettings.{environmentName}.json");
-      if (fileSystem.File.Exists(testPath))
+      var configStreams = GetConfigStreams(environment, fileSystem, appEngineSettings);
+      foreach(var cs in configStreams)
       {
-        settingsPath = testPath;
+        configurationBuilder.AddJsonStream(cs.stream);
       }
 
-      if (string.IsNullOrEmpty(settingsPath))
-      {
-        testPath = fileSystem.Path.Combine(appEngineSettings.DataDirectory, "appsettings.json");
-        if(fileSystem.File.Exists(testPath))
-        {
-          settingsPath = testPath;
-        }
-      }
-
-      var isNewConfig = true;
-      if (!string.IsNullOrEmpty(settingsPath))
-      {
-        isNewConfig = false;
-        var configStream = fileSystem.File.OpenRead(settingsPath);
-        configurationBuilder.AddJsonStream(configStream);
-      }
-      else
-      {
-        settingsPath = fileSystem.Path.Combine(appEngineSettings.DataDirectory, "appsettings.json");
-      }
+      var settingsPath = configStreams.Length > 0
+        ? configStreams.Last().path
+        : fileSystem.Path.Combine(appEngineSettings.DataDirectory, "appsettings.json");
 
       var configuration = configurationBuilder.Build();
       var appSettings = configuration.Get<AppSettings>();
       appSettings = DefaultSettings.FillDefaultAppSettings(appSettings, environment, fileSystem);
 
       var result = new AppSettingsManager(fileSystem, appSettings, appEngineSettings, settingsPath);
-      if(isNewConfig)
+
+      // Initially update the settings if there is no settings file yet.
+      if(configStreams.Length == 0)
       {
         result.Update();
       }
@@ -99,6 +84,51 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
         }
       );
       this._fileSystem.File.WriteAllText(this._settingsFilePath, serialized);
+    }
+
+    /// <summary>
+    /// Looks for app configuration files:
+    /// 1. Local to the executable
+    /// 2. Data directory
+    /// </summary>
+    private static (string path, Stream stream)[] GetConfigStreams(IEnvironment environment, IFileSystem fileSystem, AppEngineSettings appEngineSettings)
+    {
+      var configFiles = new List<string> { "appsettings.json" };
+      var mfEnvironmentName = environment.GetEnvironmentVariable("MF_ENVIRONMENT");
+      if(!string.IsNullOrEmpty(mfEnvironmentName))
+      {
+        configFiles.Add($"appsettings.{mfEnvironmentName}.json");
+      }
+
+      var lookupDirectories = new[]
+      {
+        environment.GetBaseDirectory(),
+        appEngineSettings.DataDirectory
+      };
+
+      List<string> foundConfigFiles = new List<string>();
+      foreach(var d in lookupDirectories)
+      {
+        foreach(var fn in configFiles)
+        {
+          var configPath = fileSystem.Path.Combine(d, fn);
+          if(fileSystem.File.Exists(configPath))
+          {
+            foundConfigFiles.Add(configPath);
+          }
+        }
+
+        if(foundConfigFiles.Count > 0)
+        {
+          break;
+        }
+      }
+
+      var result = foundConfigFiles
+        .Select(path => (path: path, stream: fileSystem.File.OpenRead(path)))
+        .ToArray();
+
+      return result;
     }
   }
 }
