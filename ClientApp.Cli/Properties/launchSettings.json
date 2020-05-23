@@ -3,7 +3,7 @@
     "ClientApp.Cli": {
       "commandName": "Project",
       "environmentVariables": {
-        "MM_ENVIRONMENT": "dev"
+        "MF_ENVIRONMENT": "dev"
       }
     }
   }

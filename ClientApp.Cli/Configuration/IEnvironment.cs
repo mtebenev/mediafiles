@@ -14,5 +14,10 @@ namespace Mt.MediaFiles.ClientApp.Cli.Configuration
     /// Returns an environment variable value.
     /// </summary>
     string GetEnvironmentVariable(string name);
+
+    /// <summary>
+    /// Returns location of the executable.
+    /// </summary>
+    string GetBaseDirectory();
   }
 }
