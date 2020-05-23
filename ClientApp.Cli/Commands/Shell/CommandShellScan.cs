@@ -8,13 +8,13 @@ using Mt.MediaFiles.ClientApp.Cli.Configuration;
 using Mt.MediaFiles.ClientApp.Cli.Ui;
 using StackExchange.Profiling;
 
-namespace Mt.MediaFiles.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 {
   /// <summary>
   /// Scans new files to catalog
   /// </summary>
   [Command("scan", Description = "Scan files into the catalog.")]
-  internal class ShellCommandScan : ShellCommandBase
+  internal class CommandShellScan : CommandShellBase
   {
     [Argument(0, "pathAlias")]
     public string PathAlias { get; set; }

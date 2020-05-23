@@ -18,12 +18,14 @@ namespace Mt.MediaFiles.ClientApp.Cli
   {
     private readonly IAppSettingsManager _appSettingsManager;
     private ICatalog _catalog;
+    private IReporter _reporter;
 
     public ShellAppContext(IAppSettingsManager appSettingsManager)
     {
       this._appSettingsManager = appSettingsManager;
       this._catalog = null;
       this.CurrentItem = null;
+      this._reporter = new ConsoleReporter(this.Console);
     }
 
     /// <summary>
@@ -35,6 +37,11 @@ namespace Mt.MediaFiles.ClientApp.Cli
     /// IShellAppContext.
     /// </summary>
     public IConsole Console => PhysicalConsole.Singleton;
+
+    /// <summary>
+    /// IShellAppContext.
+    /// </summary>
+    public IReporter Reporter => this._reporter;
 
     /// <summary>
     /// IShellAppContext.
@@ -69,7 +76,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
       this._catalog = catalog;
       this.CurrentItem = this._catalog.RootItem;
 
-      this.Console.WriteLine($"Opened catalog: {this.Catalog.CatalogName}");
+      this.Console.WriteLine($"Using catalog: {this.Catalog.CatalogName}");
     }
 
     /// <summary>

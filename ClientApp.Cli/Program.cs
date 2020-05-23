@@ -11,7 +11,6 @@ using Mt.MediaFiles.AppEngine.Video;
 using Mt.MediaFiles.AppEngine.Common;
 using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
-using Mt.MediaFiles.ClientApp.Cli.Commands;
 using Mt.MediaFiles.AppEngine;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using Mt.MediaFiles.ClientApp.Cli.Ui;
@@ -21,12 +20,17 @@ using McMaster.Extensions.CommandLineUtils.Conventions;
 using System.Data;
 using Microsoft.Data.Sqlite;
 using Mt.MediaFiles.AppEngine.Video.Thumbnail;
+using System.Reflection;
+using Mt.MediaFiles.ClientApp.Cli.Commands.Shell;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
-  [Command("mediafiles")]
+  [Command(
+    "mf",
+    FullName = "mediafiles",
+    Description = "Media files cataloging software.")]
   [Subcommand(
-    typeof(Shell),
+    typeof(CommandShell),
     typeof(Commands.CommandCheckStatus),
     typeof(Commands.CommandResetCatalog),
     typeof(Commands.CommandScan),
@@ -34,6 +38,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
     typeof(Commands.CommandSearchVideoDuplicates),
     typeof(Commands.CommandUpdate),
     typeof(Commands.Catalog.CommandCatalog))]
+  [VersionOptionFromMember("--version", MemberName = nameof(GetVersion))]
   internal class Program
   {
     public const int CommandExitResult = -1;
@@ -46,6 +51,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
     {
       var result = 0;
       var isCatalogOpen = false;
+      ILogger logger = null;
       try
       {
         NLog.LogManager.LoadConfiguration("nlog.config");
@@ -64,6 +70,8 @@ namespace Mt.MediaFiles.ClientApp.Cli
         var dbConnection = OpenDbConnection(catalogSettings);
 
         _services = ConfigureServices(appSettingsManager, catalogSettings, dbConnection);
+        logger = _services.GetRequiredService<ILoggerFactory>().CreateLogger<Program>();
+
         await _shellAppContext.OpenCatalog(_services);
         isCatalogOpen = true;
 
@@ -72,8 +80,11 @@ namespace Mt.MediaFiles.ClientApp.Cli
       }
       catch(Exception e)
       {
-        Console.WriteLine("An error occurred.");
-        Console.WriteLine(e.ToString());
+        _shellAppContext.Reporter.Error(e.Message);
+        if(logger != null)
+        {
+          logger.LogError(e, "An error occurred during the command execution.");
+        }
       }
       finally
       {
@@ -183,5 +194,11 @@ namespace Mt.MediaFiles.ClientApp.Cli
 
       return result;
     }
+
+    /// <summary>
+    /// The version retriever.
+    /// </summary>
+    private static string GetVersion()
+        => typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
   }
 }

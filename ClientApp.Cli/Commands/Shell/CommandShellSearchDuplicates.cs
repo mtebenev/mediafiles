@@ -1,30 +1,41 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
+using Mt.MediaFiles.AppEngine.Common;
+using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.Tools;
-using Mt.MediaFiles.AppEngine.Video.Tasks;
 
-namespace Mt.MediaFiles.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 {
-  [Command("search-vdups", Description = "Search for duplicated videos in the catalog.")]
-  internal class ShellCommandSearchVideoDuplicates
+  /// <summary>
+  /// Finds duplicate items in catalog
+  /// </summary>
+  [Command("search-duplicates", Description = "Search for duplicate items in the catalog.")]
+  internal class CommandShellSearchDuplicates : CommandShellBase
   {
-    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, ICatalogTaskSearchVideoDuplicatesFactory taskFactory)
+    /// <summary>
+    /// ShellCommandBase.
+    /// </summary>
+    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext)
     {
-      var task = taskFactory.Create();
+      var task = new CatalogTaskSearchDuplicates();
       var result = await shellAppContext.Catalog.ExecuteTaskAsync(task);
 
+      long totalWastedSize = 0;
       shellAppContext.Console.WriteLine($"{result.Count} duplicates found:");
       foreach(var duplicates in result)
       {
-        await this.ProcessDuplicates(shellAppContext, duplicates);
+        var wastedSize = await this.ProcessDuplicates(shellAppContext, duplicates);
+        totalWastedSize += wastedSize;
       }
+
+      shellAppContext.Console.WriteLine($"Total wasted size: {StringUtils.BytesToString(totalWastedSize)}");
 
       return Program.CommandResultContinue;
     }
 
     /// <summary>
-    /// Prints duplicate info
+    /// Prints duplicate info and returns wasted file size in bytes
     /// </summary>
     private async Task<long> ProcessDuplicates(IShellAppContext shellAppContext, DuplicateFindResult duplicateResult)
     {

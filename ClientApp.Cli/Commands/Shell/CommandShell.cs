@@ -5,34 +5,34 @@ using Microsoft.Extensions.Logging;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.ClientApp.Cli.Core;
 
-namespace Mt.MediaFiles.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 {
   [Command("shell", Description = "Launches the app shell (the default command")]
   [Subcommand(
-    typeof(ShellCommandCd),
-    typeof(ShellCommandCls),
-    typeof(ShellCommandExit),
-    typeof(ShellCommandSearchDuplicates),
-    typeof(ShellCommandGetInfo),
-    typeof(ShellCommandLs),
-    typeof(ShellCommandResetCatalog),
-    typeof(ShellCommandScan),
-    typeof(ShellCommandSearch),
-    typeof(ShellCommandSearchFiles),
-    typeof(ShellCommandSearchVideoDuplicates),
-    typeof(ShellCommandUpdate)
+    typeof(CommandShellCd),
+    typeof(CommandShellCls),
+    typeof(CommandShellExit),
+    typeof(CommandShellSearchDuplicates),
+    typeof(CommandShellGetInfo),
+    typeof(CommandShellLs),
+    typeof(CommandShellResetCatalog),
+    typeof(CommandShellScan),
+    typeof(CommandShellSearch),
+    typeof(CommandShellSearchFiles),
+    typeof(CommandShellSearchVideoDuplicates),
+    typeof(CommandShellUpdate)
     )]
   [ExperimentalCommand]
-  internal class Shell
+  internal class CommandShell
   {
     private readonly IShellAppContext _shellAppContext;
 
-    public Shell(IShellAppContext shellAppContext)
+    public CommandShell(IShellAppContext shellAppContext)
     {
       _shellAppContext = shellAppContext;
     }
 
-    public async Task<int> OnExecuteAsync(IServiceProvider serviceProvider, ILogger<Shell> logger)
+    public async Task<int> OnExecuteAsync(IServiceProvider serviceProvider, ILogger<CommandShell> logger)
     {
       var commandResult = 0;
 
@@ -42,12 +42,12 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
         var prompt = CreatePrompt(_shellAppContext.CurrentItem);
         var commandInput = Prompt.GetString(prompt, promptColor: ConsoleColor.DarkGray);
 
-        if(!string.IsNullOrEmpty(commandInput))
+        if (!string.IsNullOrEmpty(commandInput))
         {
           var commandArgs = commandInput.Split(' ');
           commandResult = await ExecuteShellCommandAsync(serviceProvider, commandArgs, logger);
         }
-      } while(commandResult != Program.CommandExitResult);
+      } while (commandResult != Program.CommandExitResult);
 
       return commandResult;
     }
@@ -62,7 +62,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
       return result;
     }
 
-    private async Task<int> ExecuteShellCommandAsync(IServiceProvider serviceProvider, string[] commandArgs, ILogger<Shell> logger)
+    private async Task<int> ExecuteShellCommandAsync(IServiceProvider serviceProvider, string[] commandArgs, ILogger<CommandShell> logger)
     {
       var commandResult = Program.CommandResultContinue;
 
@@ -70,7 +70,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
       {
         // Note: avoid reusing shell application because this is not a scenario the fully supported by CommandLineUtils
         // Specifically the command options (profile option in scan) are not cleared between the calls.
-        var shellApp = new CommandLineApplication<Shell>();
+        var shellApp = new CommandLineApplication<CommandShell>();
         shellApp.Conventions
           .UseDefaultConventions()
           .UseConstructorInjection(serviceProvider);

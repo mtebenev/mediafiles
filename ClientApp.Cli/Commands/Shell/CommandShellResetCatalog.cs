@@ -2,13 +2,13 @@ using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 
-namespace Mt.MediaFiles.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 {
   /// <summary>
   /// Deletes all the data in the existing catalog.
   /// </summary>
   [Command("reset-catalog", Description = "Reset the catalog storage.")]
-  internal class ShellCommandResetCatalog : ShellCommandBase
+  internal class CommandShellResetCatalog : CommandShellBase
   {
     public async Task<int> OnExecuteAsync(ShellAppContext shellAppContext, IServiceProvider serviceProvider)
     {

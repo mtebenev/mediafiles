@@ -2,13 +2,13 @@ using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 
-namespace Mt.MediaFiles.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 {
   /// <summary>
   /// Scans new files to catalog
   /// </summary>
   [Command("cd", Description = "Change the current directory in the catalog.")]
-  internal class ShellCommandCd : ShellCommandBase
+  internal class CommandShellCd : CommandShellBase
   {
     [Argument(0, "itemNameOrId")]
     public string ItemNameOrId { get; set; }

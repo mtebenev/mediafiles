@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Mt.MediaFiles.AppEngine.Scanning;
-using Mt.MediaFiles.ClientApp.Cli.Commands;
+using Mt.MediaFiles.ClientApp.Cli.Commands.Shell;
 using Mt.MediaFiles.TestUtils;
 using NSubstitute;
 using Xunit;
@@ -30,7 +30,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
       mockShellAppContext.Console.Returns(console);
       mockShellAppContext.Catalog.GetItemByIdAsync(2).Returns(mockCi);
 
-      var command = new ShellCommandGetInfo(mockShellAppContext);
+      var command = new CommandShellGetInfo(mockShellAppContext);
       command.ItemNameOrId = ":2";
 
       var result = await command.OnExecuteAsync();

@@ -22,5 +22,10 @@ namespace Mt.MediaFiles.ClientApp.Cli
     /// The console instance.
     /// </summary>
     public IConsole Console { get; }
+
+    /// <summary>
+    /// The reporter instance.
+    /// </summary>
+    public IReporter Reporter { get; }
   }
 }

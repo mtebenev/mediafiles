@@ -4,18 +4,20 @@ using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.Tasks;
 
-namespace Mt.MediaFiles.ClientApp.Cli.Commands
+namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 {
   /// <summary>
-  /// Searches for files in catalog
+  /// Scans new files to catalog
   /// </summary>
-  [Command("search", Description = "Search for files in the catalog.")]
-  internal class ShellCommandSearch : ShellCommandBase
+  [Command("search-files", Description = "Search for files in the catalog.")]
+  internal class CommandShellSearchFiles : CommandShellBase
   {
-    private readonly IShellAppContext _shellAppContext;
+    private readonly ITaskExecutionContext _executionContext;
+    private readonly ShellAppContext _shellAppContext;
 
-    public ShellCommandSearch(IShellAppContext shellAppContext)
+    public CommandShellSearchFiles(ITaskExecutionContext executionContext, ShellAppContext shellAppContext)
     {
+      _executionContext = executionContext;
       _shellAppContext = shellAppContext;
     }
 
@@ -24,7 +26,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
 
     public async Task<int> OnExecuteAsync()
     {
-      var task = new CatalogTaskSearch(this.Query);
+      var task = new CatalogTaskSearchFiles(this.Query);
       var itemIds = await task.ExecuteAsync(this._shellAppContext.Catalog);
 
       var items = new List<ICatalogItem>();
