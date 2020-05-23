@@ -51,6 +51,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
     {
       var result = 0;
       var isCatalogOpen = false;
+      ILogger logger = null;
       try
       {
         NLog.LogManager.LoadConfiguration("nlog.config");
@@ -69,6 +70,8 @@ namespace Mt.MediaFiles.ClientApp.Cli
         var dbConnection = OpenDbConnection(catalogSettings);
 
         _services = ConfigureServices(appSettingsManager, catalogSettings, dbConnection);
+        logger = _services.GetRequiredService<ILoggerFactory>().CreateLogger<Program>();
+
         await _shellAppContext.OpenCatalog(_services);
         isCatalogOpen = true;
 
@@ -77,8 +80,11 @@ namespace Mt.MediaFiles.ClientApp.Cli
       }
       catch(Exception e)
       {
-        Console.WriteLine("An error occurred.");
-        Console.WriteLine(e.ToString());
+        _shellAppContext.Reporter.Error(e.Message);
+        if(logger != null)
+        {
+          logger.LogError(e, "An error occurred during the command execution.");
+        }
       }
       finally
       {

@@ -36,6 +36,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Catalog
 
       appSettings.StartupCatalog = this.CatalogName;
       shellAppContext.UpdateSettings();
+      shellAppContext.Console.WriteLine($"Startup catalog changed to: {this.CatalogName}");
 
       return Program.CommandExitResult;
     }
