@@ -1,7 +1,7 @@
 # The pipeline for develop builds
 name: mediafiles-develop
 trigger:
-- develop
+- master
 
 pool:
   vmImage: 'windows-latest'
@@ -17,12 +17,6 @@ steps:
   inputs:
     targetType: 'inline'
     script: 'Invoke-Build Build-Package -PackageVersion $(MediaFilesVersion)-$(Build.BuildId)'
-- task: PublishPipelineArtifact@1
-  displayName: Publish pipeline package
-  inputs:
-    targetPath: 'artifacts/mediafiles.$(MediaFilesVersion)-$(Build.BuildId).nupkg'
-    artifact: 'mediafiles'
-    publishLocation: 'pipeline'
 - task: NuGetCommand@2
   displayName: Publish to the NuGet feed
   inputs:
