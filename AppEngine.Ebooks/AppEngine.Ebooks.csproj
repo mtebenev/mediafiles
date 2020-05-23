@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(NetStandardTargetFramework)</TargetFramework>
+    <RootNamespace>Mt.MediaFiles.AppEngine.Ebooks</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppEngine\AppEngine.csproj" />
+  </ItemGroup>
+
+</Project>

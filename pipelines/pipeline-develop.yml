@@ -1,0 +1,33 @@
+# The pipeline for develop builds
+name: mediafiles-develop
+trigger:
+- develop
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- template: steps-setup.yml
+- template: steps-build.yml
+- task: PowerShell@2
+  displayName: Build Chocolatey package
+  inputs:
+    targetType: 'inline'
+    script: 'Invoke-Build Build-Package -PackageVersion $(MediaFilesVersion)-$(Build.BuildId)'
+- task: PublishPipelineArtifact@1
+  displayName: Publish pipeline package
+  inputs:
+    targetPath: 'artifacts/mediafiles.$(MediaFilesVersion)-$(Build.BuildId).nupkg'
+    artifact: 'mediafiles'
+    publishLocation: 'pipeline'
+- task: NuGetCommand@2
+  displayName: Publish to the NuGet feed
+  inputs:
+    command: 'push'
+    packagesToPush: 'artifacts/*.nupkg;'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: 'f16e3e3f-c420-4b68-a707-00a361027c73/d1d61a83-9400-4f73-b8c0-8740b808b4ee'
+    verbosityPush: 'Normal'

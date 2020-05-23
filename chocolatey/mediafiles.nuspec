@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <!-- == PACKAGE SPECIFIC SECTION == -->
+    <id>mediafiles</id>
+    <version>0.0.0.0</version>
+    <packageSourceUrl>https://github.com/mtebenev/mediafiles</packageSourceUrl>
+    <owners>Maxim Tebenev</owners>
+    <!-- ============================== -->
+
+    <!-- == SOFTWARE SPECIFIC SECTION == -->
+    <title>mediafiles (Install)</title>
+    <authors>Maxim Tebenev</authors>
+    <!-- projectUrl is required for the community feed -->
+    <projectUrl>https://github.com/mtebenev/mediafiles</projectUrl>
+    <copyright>(C) Maxim Tebenev, 2020</copyright>
+    <licenseUrl>https://github.com/mtebenev/mediafiles/blob/develop/LICENSE.md</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/mtebenev/mediafiles</projectSourceUrl>
+    <tags>mediafiles, media, video, audio, converter, ffmpeg, flv, mp4, flash, h264</tags>
+    <summary>The tool for cataloging and searching media files.</summary>
+    <description>The mediafiles can catalog mediafiles and then search for duplicates.</description>
+    <dependencies>
+      <dependency id="ffmpeg" version="4.2.2" />
+    </dependencies>
+  </metadata>
+  <files>
+    <!-- this section controls what actually gets packaged into the Chocolatey package -->
+    <file src="tools\**" target="tools" />
+    <file src="..\ClientApp.Cli\bin\Release\netcoreapp3.1\win-x64\publish\**" target="tools" />
+    <!--Building from Linux? You may need this instead: <file src="tools/**" target="tools" />-->
+  </files>
+</package>

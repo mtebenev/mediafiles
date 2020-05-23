@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>$(NetCoreTargetFramework)</TargetFramework>
+    <RootNamespace>Mt.MediaFiles.ClientApp.Cli</RootNamespace>
+    <AssemblyName>mf</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.1.1" />
+    <PackageReference Include="MiniProfiler.AspNetCore" Version="4.1.0" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.2.0" />
+    <PackageReference Include="ShellProgressBar" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppEngine.Ebooks\AppEngine.Ebooks.csproj" />
+    <ProjectReference Include="..\AppEngine.Video\AppEngine.Video.csproj" />
+    <ProjectReference Include="..\AppEngine\AppEngine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.dev.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

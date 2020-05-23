@@ -1,0 +1,10 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Directory.Build.props" />
+  <PropertyGroup>
+    <MediaFilesVersion>$(VersionPrefix)-$(VersionSuffix)</MediaFilesVersion>
+    <MediaFilesVersion Condition="'$(VersionSuffix)'==''">$(VersionPrefix)</MediaFilesVersion>
+  </PropertyGroup>
+  <Target Name="SetupVersion">
+    <Message Text="##vso[task.setvariable variable=MediaFilesVersion]$(MediaFilesVersion)" Importance="high" />
+  </Target>
+</Project>
