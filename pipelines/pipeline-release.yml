@@ -17,11 +17,11 @@ steps:
     rootFolderOrFile: 'ClientApp.Cli/bin/Release/netcoreapp3.1/win-x64/publish'
     includeRootFolder: false
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/mediafiles-$(MediaFilesVersion)-win-x64.zip'
     replaceExistingArchive: true    
 - task: PublishPipelineArtifact@1
   displayName: Publish pipeline package
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    targetPath: '$(Build.ArtifactStagingDirectory)/mediafiles-$(MediaFilesVersion)-win-x64.zip'
     artifact: 'mediafiles-dist'
     publishLocation: 'pipeline'
