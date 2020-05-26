@@ -52,7 +52,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
     protected override async Task<IList<DuplicateFindResult>> ExecuteAsync(ICatalogContext catalogContext)
     {
       var imprintRecords = await this._imprintStorage.GetAllRecordsAsync();
-      var duplicateGroups = new List<IList<int>>();
+      var matchGroups = new List<IList<int>>();
       var fsImprints = await this.CreateFsImprintsAsync();
       var comparer = this._comparerFactory.Create();
 
@@ -62,27 +62,27 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
         for(var i = 0; i < imprintRecords.Count; i++)
         {
           taskProgress.UpdateStatus(i.ToString());
-          var duplicatedIds = new List<int>();
+          var matchedIds = new List<int>();
           for(var j = 0; j < fsImprints.Count; j++)
           {
             var isEqual = comparer.Compare(imprintRecords[i].ImprintData, fsImprints[j].Item2.ImprintData);
             if(isEqual)
             {
-              duplicatedIds.Add(imprintRecords[i].CatalogItemId);
-              duplicateGroups.Add(duplicatedIds);
+              matchedIds.Add(imprintRecords[i].CatalogItemId);
+              matchGroups.Add(matchedIds);
             }
           }
         }
       }
 
-      var result = await this.CreateResultAsync(catalogContext, duplicateGroups);
+      var result = await this.CreateResultAsync(catalogContext, matchGroups);
       return result;
     }
 
-    private async Task<IList<DuplicateFindResult>> CreateResultAsync(ICatalogContext catalogContext, IList<IList<int>> duplicateGroups)
+    private async Task<IList<DuplicateFindResult>> CreateResultAsync(ICatalogContext catalogContext, IList<IList<int>> matchGroups)
     {
       var result = new List<DuplicateFindResult>();
-      foreach(var group in duplicateGroups)
+      foreach(var group in matchGroups)
       {
         var r = await DuplicateFindResult.CreateAsync(catalogContext.Catalog, group);
         result.Add(r);
