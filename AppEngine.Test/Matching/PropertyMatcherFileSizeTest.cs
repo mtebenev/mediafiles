@@ -1,40 +1,39 @@
 using FluentAssertions;
 using Mt.MediaFiles.AppEngine.Matching;
-using Mt.MediaFiles.AppEngine.Scanning;
 using NSubstitute;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Mt.MediaFiles.AppEngine.Test.Matching
 {
-  public class OutputPropertyMatcherFrameSizeTest
+  public class PropertyMatcherFileSizeTest
   {
     [Fact]
-    public async Task Compare_Frame_Size()
+    public async Task Compare_File_Size()
     {
       var mockAccessBase = Substitute.For<IInfoPartAccess>();
-      mockAccessBase.GetInfoPartAsync<InfoPartVideo>(0)
-        .Returns(new InfoPartVideo
+      mockAccessBase.GetFilePropertiesAsync(0)
+        .Returns(new FileProperties
         {
-          VideoWidth = 320,
-          VideoHeight = 240
+          Path = "path-1",
+          Size = 1000
         });
       var mockAccessOther = Substitute.For<IInfoPartAccess>();
-      mockAccessOther.GetInfoPartAsync<InfoPartVideo>(0)
-        .Returns(new InfoPartVideo
+      mockAccessOther.GetFilePropertiesAsync(0)
+        .Returns(new FileProperties
         {
-          VideoWidth = 1024,
-          VideoHeight = 768
+          Path = "path-2",
+          Size = 100
         });
 
-      var matcher = new OutputPropertyMatcherFrameSize(mockAccessBase, mockAccessOther);
+      var matcher = new PropertyMatcherFileSize(mockAccessBase, mockAccessOther);
       var result = await matcher.MatchAsync(0, 0);
 
       result.Should().BeEquivalentTo(
         new MatchOutputProperty
         {
-          Name = "resolution",
-          Value = "1024x768",
+          Name = "file size",
+          Value = "100",
           Qualification = ComparisonQualification.Better
         });
     }

@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Mt.MediaFiles.AppEngine.Test.Matching
 {
-  public class OutputPropertyMatcherVideoLengthTest
+  public class PropertyMatcherVideoLengthTest
   {
     [Fact]
     public async Task Compare_Video_Length()
@@ -26,7 +26,7 @@ namespace Mt.MediaFiles.AppEngine.Test.Matching
           Duration = (int)TimeSpan.FromHours(1).TotalMilliseconds
         });
 
-      var matcher = new OutputPropertyMatcherVideoLength(mockAccessBase, mockAccessOther);
+      var matcher = new PropertyMatcherVideoLength(mockAccessBase, mockAccessOther);
       var result = await matcher.MatchAsync(0, 0);
 
       result.Should().BeEquivalentTo(

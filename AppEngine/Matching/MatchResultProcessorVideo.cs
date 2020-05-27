@@ -22,10 +22,11 @@ namespace Mt.MediaFiles.AppEngine.Matching
 
     public async IAsyncEnumerable<MatchOutputGroup> ProcessAsync(MatchResult matchResult)
     {
-      var propertyMatchers = new List<IOutputPropertyMatcher>
+      var propertyMatchers = new List<IPropertyMatcher>
       {
-        new OutputPropertyMatcherVideoLength(this._baseItemAccess, this._otherItemAccess),
-        new OutputPropertyMatcherFrameSize(this._baseItemAccess, this._otherItemAccess)
+        new PropertyMatcherVideoLength(this._baseItemAccess, this._otherItemAccess),
+        new PropertyMatcherFrameSize(this._baseItemAccess, this._otherItemAccess),
+        new PropertyMatcherFileSize(this._baseItemAccess, this._otherItemAccess)
       };
 
       foreach(var mg in matchResult.MatchGroups)
@@ -35,7 +36,7 @@ namespace Mt.MediaFiles.AppEngine.Matching
       }
     }
 
-    private async Task<MatchOutputGroup> CreateOutputGroupAsync(List<IOutputPropertyMatcher> propertyMatchers, MatchResultGroup resultGroup)
+    private async Task<MatchOutputGroup> CreateOutputGroupAsync(List<IPropertyMatcher> propertyMatchers, MatchResultGroup resultGroup)
     {
       var baseItemFileProps = await this._baseItemAccess.GetFilePropertiesAsync(resultGroup.BaseItemId);
       var result = new MatchOutputGroup(baseItemFileProps.Path);

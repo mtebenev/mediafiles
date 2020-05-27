@@ -7,7 +7,7 @@ namespace Mt.MediaFiles.AppEngine.Matching
   /// <summary>
   /// Matches lengths of two video items.
   /// </summary>
-  public class OutputPropertyMatcherVideoLength : IOutputPropertyMatcher
+  public class PropertyMatcherVideoLength : IPropertyMatcher
   {
     private readonly IInfoPartAccess _baseItemAcess;
     private readonly IInfoPartAccess _otherItemAccess;
@@ -15,14 +15,14 @@ namespace Mt.MediaFiles.AppEngine.Matching
     /// <summary>
     /// Ctor.
     /// </summary>
-    public OutputPropertyMatcherVideoLength(IInfoPartAccess baseItemAcess, IInfoPartAccess otherItemAccess)
+    public PropertyMatcherVideoLength(IInfoPartAccess baseItemAcess, IInfoPartAccess otherItemAccess)
     {
       this._baseItemAcess = baseItemAcess;
       this._otherItemAccess = otherItemAccess;
     }
 
     /// <summary>
-    /// IOutputPropertyMatcher.
+    /// IPropertyMatcher.
     /// </summary>
     public async Task<MatchOutputProperty> MatchAsync(int baseItemId, int otherItemId)
     {

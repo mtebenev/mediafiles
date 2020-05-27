@@ -5,7 +5,7 @@ namespace Mt.MediaFiles.AppEngine.Matching
   /// <summary>
   /// Matches a single property of two items for match output.
   /// </summary>
-  public interface IOutputPropertyMatcher
+  public interface IPropertyMatcher
   {
     /// <summary>
     /// Matches a property of two items.

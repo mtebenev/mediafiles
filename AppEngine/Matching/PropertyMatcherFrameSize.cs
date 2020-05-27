@@ -6,7 +6,7 @@ namespace Mt.MediaFiles.AppEngine.Matching
   /// <summary>
   /// Matches resolutions of two videos.
   /// </summary>
-  public class OutputPropertyMatcherFrameSize : IOutputPropertyMatcher
+  public class PropertyMatcherFrameSize : IPropertyMatcher
   {
     private readonly IInfoPartAccess _baseItemAcess;
     private readonly IInfoPartAccess _otherItemAccess;
@@ -14,14 +14,14 @@ namespace Mt.MediaFiles.AppEngine.Matching
     /// <summary>
     /// Ctor.
     /// </summary>
-    public OutputPropertyMatcherFrameSize(IInfoPartAccess baseItemAcess, IInfoPartAccess otherItemAccess)
+    public PropertyMatcherFrameSize(IInfoPartAccess baseItemAcess, IInfoPartAccess otherItemAccess)
     {
       this._baseItemAcess = baseItemAcess;
       this._otherItemAccess = otherItemAccess;
     }
 
     /// <summary>
-    /// IOutputPropertyMatcher.
+    /// IPropertyMatcher.
     /// </summary>
     public async Task<MatchOutputProperty> MatchAsync(int baseItemId, int otherItemId)
     {
