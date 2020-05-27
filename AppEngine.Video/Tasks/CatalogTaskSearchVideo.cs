@@ -62,7 +62,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
         for(var i = 0; i < fsImprints.Count; i++)
         {
           taskProgress.UpdateStatus(i.ToString());
-          var mg = new MatchResultGroup(imprintRecords[i].CatalogItemId);
+          var mg = new MatchResultGroup(i);
           for(var j = 0; j < imprintRecords.Count; j++)
           {
             var isEqual = comparer.Compare(fsImprints[i].Item2.ImprintData, imprintRecords[j].ImprintData);
@@ -70,6 +70,10 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
             {
               mg.AddItemId(imprintRecords[j].CatalogItemId);
             }
+          }
+          if(mg.ItemIds.Count > 0)
+          {
+            matchGroups.Add(mg);
           }
         }
       }

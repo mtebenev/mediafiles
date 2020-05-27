@@ -69,6 +69,7 @@ namespace Mt.MediaFiles.AppEngine.Test.Matching
                 {
                   new { Name = "length", Value = "00:01:00", Qualification = ComparisonQualification.Neutral },
                   new { Name = "resolution", Value = "640x480", Qualification = ComparisonQualification.Better },
+                  new { Name = "file size", Value = "200", Qualification = ComparisonQualification.Worse },
                 }
               }
             }
