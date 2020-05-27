@@ -40,10 +40,5 @@ namespace Mt.MediaFiles.AppEngine.Tools
     }
 
     public IList<BriefFileInfo> FileInfos { get; }
-
-    /// <summary>
-    /// Detailed property differences
-    /// </summary>
-    public IList<PropertyDifference> PropertyDifferences { get; private set; }
   }
 }

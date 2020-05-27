@@ -1,22 +1,33 @@
-using System.Linq;
-using System.Threading.Tasks;
 using AppEngine.Video.Comparison;
 using AppEngine.Video.VideoImprint;
 using FluentAssertions;
+using MediaToolkit.Model;
+using MediaToolkit.Services;
+using MediaToolkit.Tasks;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
+using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using Mt.MediaFiles.TestUtils;
 using NSubstitute;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
 {
-  public class CatalogTaskSearchVideoDuplicatesTest
+  public class CatalogTaskSearchVideoTest
   {
     [Fact]
-    public async Task Should_Execute_Comparison_Tasks()
+    public async Task Execute_Task()
     {
+      var paths = new[]
+      {
+        @"x:\other-folder\another1.mp4",
+        @"x:\other-folder\another2.mp4"
+      };
+
       var catalogDef = @"
 {
   path: 'Root',
@@ -37,6 +48,10 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
 
       var mockCatalog = CatalogMockBuilder.Create(catalogDef).Build();
 
+      var mockCatalogContext = Substitute.For<ICatalogContext>();
+      mockCatalogContext.Catalog.Returns(mockCatalog);
+
+      var mockExecutionContext = Substitute.For<ITaskExecutionContext>();
       var mockStorage = Substitute.For<IVideoImprintStorage>();
       mockStorage.GetAllRecordsAsync().Returns(
         new[]
@@ -47,42 +62,38 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
           new VideoImprintRecord { CatalogItemId = 14, ImprintData = new byte[] { 4, 4, 4 } },
         });
 
-      var mockCatalogContext = Substitute.For<ICatalogContext>();
-      mockCatalogContext.Catalog.Returns(mockCatalog);
-
       var mockComparer = Substitute.For<IVideoImprintComparer>();
-      mockComparer.Compare(default, default).Returns(false);
-
-      mockComparer.Compare(
-        Arg.Is<byte[]>(a => a.SequenceEqual(new byte[]{ 1, 1, 1 })),
-        Arg.Is<byte[]>(a => a.SequenceEqual(new byte[] { 3, 3, 3 })))
-        .Returns(true);
-
-      mockComparer.Compare(
-        Arg.Is<byte[]>(a => a.SequenceEqual(new byte[] { 2, 2, 2 })),
-        Arg.Is<byte[]>(a => a.SequenceEqual(new byte[] { 4, 4, 4 })))
-        .Returns(true);
+      mockComparer.Compare(default, default).ReturnsForAnyArgs(x =>
+      {
+        var x0 = (byte[])x[0];
+        return x0.SequenceEqual((byte[])x[1]);
+      });
 
       var mockFactory = Substitute.For<IVideoImprintComparerFactory>();
       mockFactory.Create().Returns(mockComparer);
-      var mockExecutionContext = Substitute.For<ITaskExecutionContext>();
 
-      var task = new CatalogTaskSearchVideoDuplicates(mockExecutionContext, mockStorage, mockFactory);
+      var mockService = Substitute.For<IMediaToolkitService>();
+      mockService.ExecuteAsync<GetMetadataResult>(Arg.Any<FfTaskGetMetadata>())
+        .Returns(new GetMetadataResult(new FfProbeOutput { Format = new Format { Duration = TimeSpan.FromMinutes(5) } }));
+
+      var mockBuilder = Substitute.For<IVideoImprintBuilder>();
+      mockBuilder.CreateRecordAsync(Arg.Any<int>(), @"x:\other-folder\another1.mp4", Arg.Any<double>())
+        .Returns(new VideoImprintRecord { ImprintData =  new byte[] { 100, 100, 100 } });
+      mockBuilder.CreateRecordAsync(Arg.Any<int>(), @"x:\other-folder\another2.mp4", Arg.Any<double>())
+        .Returns(new VideoImprintRecord { ImprintData = new byte[] { 3, 3, 3} });
+
+      var task = new CatalogTaskSearchVideo(mockExecutionContext, mockStorage, mockFactory, mockBuilder, mockService, paths);
       var result = await task.ExecuteTaskAsync(mockCatalogContext);
 
+      // Verify
       var expectedResult = new
       {
         MatchGroups = new[]
         {
           new
           {
-            BaseItemId = 11,
+            BaseItemId = 1,
             ItemIds = new[] { 13 }
-          },
-          new
-          {
-            BaseItemId = 12,
-            ItemIds = new[] { 14 }
           },
         }
       };
@@ -91,3 +102,4 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
     }
   }
 }
+

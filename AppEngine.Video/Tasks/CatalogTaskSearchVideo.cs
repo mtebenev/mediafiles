@@ -6,21 +6,21 @@ using AppEngine.Video.VideoImprint;
 using MediaToolkit.Services;
 using MediaToolkit.Tasks;
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Matching;
 using Mt.MediaFiles.AppEngine.Tasks;
-using Mt.MediaFiles.AppEngine.Tools;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 
 namespace Mt.MediaFiles.AppEngine.Video.Tasks
 {
   public interface ICatalogTaskSearchVideoFactory
   {
-    CatalogTaskBase<IList<DuplicateFindResult>> Create(IEnumerable<string> paths);
+    CatalogTaskBase<MatchResult> Create(IEnumerable<string> paths);
   }
 
   /// <summary>
   /// Searches a video in the catalog.
   /// </summary>
-  public sealed class CatalogTaskSearchVideo : CatalogTaskBase<IList<DuplicateFindResult>>
+  public sealed class CatalogTaskSearchVideo : CatalogTaskBase<MatchResult>
   {
     private readonly ITaskExecutionContext _executionContext;
     private readonly IVideoImprintStorage _imprintStorage;
@@ -49,45 +49,36 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
     /// <summary>
     /// CatalogTaskBase.
     /// </summary>
-    protected override async Task<IList<DuplicateFindResult>> ExecuteAsync(ICatalogContext catalogContext)
+    protected override async Task<MatchResult> ExecuteAsync(ICatalogContext catalogContext)
     {
       var imprintRecords = await this._imprintStorage.GetAllRecordsAsync();
-      var duplicateGroups = new List<IList<int>>();
+      var matchGroups = new List<MatchResultGroup>();
       var fsImprints = await this.CreateFsImprintsAsync();
       var comparer = this._comparerFactory.Create();
 
       using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation("Searching for videos..."))
       using(var taskProgress = progressOperation.CreateChildOperation(imprintRecords.Count))
       {
-        for(var i = 0; i < imprintRecords.Count; i++)
+        for(var i = 0; i < fsImprints.Count; i++)
         {
           taskProgress.UpdateStatus(i.ToString());
-          var duplicatedIds = new List<int>();
-          for(var j = 0; j < fsImprints.Count; j++)
+          var mg = new MatchResultGroup(i);
+          for(var j = 0; j < imprintRecords.Count; j++)
           {
-            var isEqual = comparer.Compare(imprintRecords[i].ImprintData, fsImprints[j].Item2.ImprintData);
+            var isEqual = comparer.Compare(fsImprints[i].Item2.ImprintData, imprintRecords[j].ImprintData);
             if(isEqual)
             {
-              duplicatedIds.Add(imprintRecords[i].CatalogItemId);
-              duplicateGroups.Add(duplicatedIds);
+              mg.AddItemId(imprintRecords[j].CatalogItemId);
             }
+          }
+          if(mg.ItemIds.Count > 0)
+          {
+            matchGroups.Add(mg);
           }
         }
       }
 
-      var result = await this.CreateResultAsync(catalogContext, duplicateGroups);
-      return result;
-    }
-
-    private async Task<IList<DuplicateFindResult>> CreateResultAsync(ICatalogContext catalogContext, IList<IList<int>> duplicateGroups)
-    {
-      var result = new List<DuplicateFindResult>();
-      foreach(var group in duplicateGroups)
-      {
-        var r = await DuplicateFindResult.CreateAsync(catalogContext.Catalog, group);
-        result.Add(r);
-      }
-
+      var result = new MatchResult(matchGroups);
       return result;
     }
 
