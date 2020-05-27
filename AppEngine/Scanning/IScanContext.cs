@@ -17,6 +17,15 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     IScanConfiguration ScanConfiguration { get; }
     IItemStorage ItemStorage { get; }
     ILogger Logger { get; }
-    IProgressOperation ProgressOperation { get; }
+
+    /// <summary>
+    /// Prints informational message during the task execution.
+    /// </summary>
+    void UpdateStatus(string message);
+
+    /// <summary>
+    /// Creates new progress bar during scanning.
+    /// </summary>
+    IProgressOperation StartProgressOperation(int count);
   }
 }

@@ -5,41 +5,63 @@ using Mt.MediaFiles.AppEngine.Tasks;
 
 namespace Mt.MediaFiles.AppEngine.Scanning
 {
+  /// <summary>
+  /// The scan context implementation.
+  /// </summary>
   internal class ScanContext : IScanContext
   {
+    private readonly ITaskExecutionContext _taskExecutionContext;
 
-    public ScanContext(IScanConfiguration scanConfiguration, IItemStorage itemStorage, LuceneIndexManager indexManager, ILoggerFactory loggerFactory, IProgressOperation progressOperation)
+    /// <summary>
+    /// Ctor.
+    /// </summary>
+    public ScanContext(
+      ITaskExecutionContext taskExecutionContext,
+      IScanConfiguration scanConfiguration,
+      IItemStorage itemStorage,
+      LuceneIndexManager indexManager)
     {
-      ScanConfiguration = scanConfiguration;
-      ItemStorage = itemStorage;
-      IndexManager = indexManager;
-      ProgressOperation = progressOperation;
-      Logger = loggerFactory.CreateLogger("Scanning");
+      this._taskExecutionContext = taskExecutionContext;
+      this.ScanConfiguration = scanConfiguration;
+      this.ItemStorage = itemStorage;
+      this.IndexManager = indexManager;
+      this.Logger = taskExecutionContext.LoggerFactory.CreateLogger("Scanning");
     }
 
     /// <summary>
-    /// IScanContext
+    /// IScanContext.
     /// </summary>
     public IScanConfiguration ScanConfiguration { get; }
 
     /// <summary>
-    /// IScanContext
+    /// IScanContext.
     /// </summary>
     public IItemStorage ItemStorage { get; }
 
     /// <summary>
-    /// IScanContext
+    /// IScanContext.
     /// </summary>
     public ILogger Logger { get; }
 
     /// <summary>
-    /// IScanContext
+    /// IScanContext.
     /// </summary>
     public LuceneIndexManager IndexManager { get; }
 
     /// <summary>
-    /// IScanContext
+    /// IScanContext.
     /// </summary>
-    public IProgressOperation ProgressOperation { get; }
+    public void UpdateStatus(string message)
+    {
+      this._taskExecutionContext.UpdateStatus(message);
+    }
+
+    /// <summary>
+    /// IScanContext.
+    /// </summary>
+    public IProgressOperation StartProgressOperation(int maxTicks)
+    {
+      return this._taskExecutionContext.StartProgressOperation(maxTicks);
+    }
   }
 }

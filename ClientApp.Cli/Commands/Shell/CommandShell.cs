@@ -79,6 +79,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
       }
       catch(Exception e)
       {
+        _shellAppContext.Reporter.Error(e.Message);
         logger.LogError(e, "Error occurred during shell command execution:");
       }
 

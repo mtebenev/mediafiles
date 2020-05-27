@@ -41,28 +41,26 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
       var matchGroups = new List<MatchResultGroup>();
       var comparisonTask = this._comparerFactory.Create();
 
-      using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation("Searching for videos..."))
-      {
-        var imprintRecords = await this._imprintStorage.GetAllRecordsAsync();
+      this._executionContext.UpdateStatus("Searching for videos...");
+      var imprintRecords = await this._imprintStorage.GetAllRecordsAsync();
 
-        using(var subOperation = progressOperation.CreateChildOperation(imprintRecords.Count))
+      using(var progressOperation = this._executionContext.StartProgressOperation(imprintRecords.Count))
+      {
+        for(var i = 0; i < imprintRecords.Count; i++)
         {
-          for(var i = 0; i < imprintRecords.Count; i++)
+          progressOperation.Tick();
+          var mg = new MatchResultGroup(imprintRecords[i].CatalogItemId);
+          for(var j = i + 1; j < imprintRecords.Count; j++)
           {
-            subOperation.UpdateStatus(i.ToString());
-            var mg = new MatchResultGroup(imprintRecords[i].CatalogItemId);
-            for(var j = i + 1; j < imprintRecords.Count; j++)
+            var isEqual = comparisonTask.Compare(imprintRecords[i].ImprintData, imprintRecords[j].ImprintData);
+            if(isEqual)
             {
-              var isEqual = comparisonTask.Compare(imprintRecords[i].ImprintData, imprintRecords[j].ImprintData);
-              if(isEqual)
-              {
-                mg.AddItemId(imprintRecords[j].CatalogItemId);
-              }
+              mg.AddItemId(imprintRecords[j].CatalogItemId);
             }
-            if(mg.ItemIds.Count > 0)
-            {
-              matchGroups.Add(mg);
-            }
+          }
+          if(mg.ItemIds.Count > 0)
+          {
+            matchGroups.Add(mg);
           }
         }
       }

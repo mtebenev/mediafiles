@@ -1,6 +1,6 @@
-using System;
+using Luna.ConsoleProgressBar;
+using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Tasks;
-using ShellProgressBar;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Ui
 {
@@ -9,38 +9,33 @@ namespace Mt.MediaFiles.ClientApp.Cli.Ui
   /// </summary>
   internal class ProgressOperationConsole : IProgressOperation
   {
-    private readonly IProgressBar _progressBar;
-    private readonly bool _clearOnDispose;
+    private readonly ConsoleProgressBar _progressBar;
+    private readonly IReporter _reporter;
+    private readonly double _maxTicks;
+    private int _currentTick;
 
     /// <summary>
     /// Ctor for root operations.
     /// </summary>
-    public ProgressOperationConsole(int maxTicks)
+    public ProgressOperationConsole(IReporter reporter, int maxTicks)
     {
-      var options = this.CreateDefaultOptions();
-      this._progressBar = new ProgressBar(maxTicks, "", options);
-      this._clearOnDispose = true;
-    }
-
-    /// <summary>
-    /// Ctor for child operations.
-    /// </summary>
-    public ProgressOperationConsole(ChildProgressBar childProgressBar)
-    {
-      this._progressBar = childProgressBar;
-      this._clearOnDispose = false;
+      this._progressBar =
+        new ConsoleProgressBar
+        {
+          NumberOfBlocks = 100
+        };
+      this._maxTicks = maxTicks;
+      this._currentTick = 0;
+      this._reporter = reporter;
     }
 
     /// <summary>
     /// IProgressOperation.
     /// </summary>
-    public IProgressOperation CreateChildOperation(int maxTicks)
+    public void Tick()
     {
-      var options = this.CreateDefaultOptions();
-      var childBar = this._progressBar.Spawn(maxTicks, "", options);
-      var childProgress = new ProgressOperationConsole(childBar);
-
-      return childProgress;
+      this._currentTick++;
+      this._progressBar.Report(this._currentTick / this._maxTicks);
     }
 
     /// <summary>
@@ -48,15 +43,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Ui
     /// </summary>
     public void UpdateStatus(string text)
     {
-      this._progressBar.Tick(text);
-    }
-
-    /// <summary>
-    /// IProgressOperation.
-    /// </summary>
-    public void SetMaxTicks(int maxTicks)
-    {
-      this._progressBar.MaxTicks = maxTicks;
+      this._reporter.Output(text);
     }
 
     /// <summary>
@@ -64,28 +51,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Ui
     /// </summary>
     public void Dispose()
     {
-      // This is workaround for ShellProgressBar - it keeps the root progress on the screen.
-      if(this._clearOnDispose)
-      {
-        this._progressBar.ForegroundColor = Console.BackgroundColor;
-        this._progressBar.WriteLine(" ");
-      }
-
       this._progressBar.Dispose();
-    }
-
-    private ProgressBarOptions CreateDefaultOptions()
-    {
-      var result = new ProgressBarOptions
-      {
-        ProgressCharacter = '─',
-        CollapseWhenFinished = true,
-        BackgroundColor = ConsoleColor.DarkGray,
-        ForegroundColorDone = ConsoleColor.DarkGray,
-        ForegroundColor = ConsoleColor.White,
-      };
-
-      return result;
+      this._reporter.Output("");
     }
   }
 }
