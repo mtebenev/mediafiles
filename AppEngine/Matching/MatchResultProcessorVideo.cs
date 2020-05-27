@@ -24,9 +24,10 @@ namespace Mt.MediaFiles.AppEngine.Matching
     {
       var propertyMatchers = new List<IPropertyMatcher>
       {
+        new PropertyMatcherFileName(this._baseItemAccess, this._otherItemAccess),
+        new PropertyMatcherFileSize(this._baseItemAccess, this._otherItemAccess),
         new PropertyMatcherVideoLength(this._baseItemAccess, this._otherItemAccess),
         new PropertyMatcherFrameSize(this._baseItemAccess, this._otherItemAccess),
-        new PropertyMatcherFileSize(this._baseItemAccess, this._otherItemAccess)
       };
 
       foreach(var mg in matchResult.MatchGroups)

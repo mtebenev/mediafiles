@@ -13,13 +13,13 @@ namespace Mt.MediaFiles.AppEngine.Test.Matching
   public class MatchResultProcessorVideoTest
   {
     [Fact]
-    public async Task Product_Output()
+    public async Task Produce_Output()
     {
       var mockBaseItemAccess = Substitute.For<IInfoPartAccess>();
       mockBaseItemAccess.GetFilePropertiesAsync(1).Returns(
         new FileProperties
         {
-          Path = @"x:\folder\file1.mp4",
+          Path = @"x:\folder1\file1.mp4",
           Size = 10
         });
       mockBaseItemAccess.GetInfoPartAsync<InfoPartVideo>(1).Returns(
@@ -34,7 +34,7 @@ namespace Mt.MediaFiles.AppEngine.Test.Matching
       mockOtherItemAccess.GetFilePropertiesAsync(2).Returns(
         new FileProperties
         {
-          Path = @"x:\folder\file2.mp4",
+          Path = @"x:\folder2\file1.mp4",
           Size = 200
         });
       mockOtherItemAccess.GetInfoPartAsync<InfoPartVideo>(2).Returns(
@@ -59,17 +59,18 @@ namespace Mt.MediaFiles.AppEngine.Test.Matching
       result[0].Should().BeEquivalentTo(
           new
           {
-            BaseItem = @"x:\folder\file1.mp4",
+            BaseItem = @"x:\folder1\file1.mp4",
             Items = new[]
             {
               new
               {
-                Item = @"x:\folder\file2.mp4",
+                Item = @"x:\folder2\file1.mp4",
                 Properties = new[]
                 {
-                  new { Name = "length", Value = "00:01:00", Qualification = ComparisonQualification.Neutral },
-                  new { Name = "resolution", Value = "640x480", Qualification = ComparisonQualification.Better },
-                  new { Name = "file size", Value = "200", Qualification = ComparisonQualification.Worse },
+                  new { Name = "file name", Value = "file1.mp4", RelativeValue = (string)null, Qualification = ComparisonQualification.Equal },
+                  new { Name = "file size", Value = "200 B", RelativeValue = "+190 B", Qualification = ComparisonQualification.Worse },
+                  new { Name = "length", Value = "00:01:00", RelativeValue = (string)null, Qualification = ComparisonQualification.Equal },
+                  new { Name = "resolution", Value = "640x480", RelativeValue = (string)null, Qualification = ComparisonQualification.Better },
                 }
               }
             }

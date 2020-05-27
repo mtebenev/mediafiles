@@ -16,6 +16,11 @@ namespace Mt.MediaFiles.AppEngine.Matching
     public string Value { get; set; }
 
     /// <summary>
+    /// Optional relative value.
+    /// </summary>
+    public string RelativeValue { get; set; }
+
+    /// <summary>
     /// Better/worse.
     /// </summary>
     public ComparisonQualification Qualification { get; set; }

@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCoreInjection.TypedFactories" Version="1.2.0" />
+    <PackageReference Include="ByteSize" Version="2.0.0" />
     <PackageReference Include="Dapper" Version="1.50.4" />
     <PackageReference Include="Dapper.Contrib" Version="1.50.4" />
     <PackageReference Include="Lucene.Net" Version="4.8.0-beta00005" />
