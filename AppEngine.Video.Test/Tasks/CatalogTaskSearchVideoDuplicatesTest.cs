@@ -70,23 +70,20 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
       var task = new CatalogTaskSearchVideoDuplicates(mockExecutionContext, mockStorage, mockFactory);
       var result = await task.ExecuteTaskAsync(mockCatalogContext);
 
-      var expectedResult = new[]
+      var expectedResult = new
       {
-        new
+        MatchGroups = new[]
         {
-          FileInfos = new[]
+          new
           {
-            new { CatalogItemId = 11, FilePath = @"x:\root_folder\file1.mp4", FileSize = 10},
-            new { CatalogItemId = 13, FilePath = @"x:\root_folder\file3.mp4", FileSize = 30},
-          }
-        },
-        new
-        {
-          FileInfos = new[]
+            BaseItemId = 11,
+            ItemIds = new[] { 13 }
+          },
+          new
           {
-            new { CatalogItemId = 12, FilePath = @"x:\root_folder\file2.mp4", FileSize = 20},
-            new { CatalogItemId = 14, FilePath = @"x:\root_folder\file4.mp4", FileSize = 40},
-          }
+            BaseItemId = 12,
+            ItemIds = new[] { 14 }
+          },
         }
       };
 

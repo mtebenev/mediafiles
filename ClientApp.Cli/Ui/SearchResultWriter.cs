@@ -1,6 +1,7 @@
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Matching;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Ui
@@ -13,15 +14,15 @@ namespace Mt.MediaFiles.ClientApp.Cli.Ui
     /// <summary>
     /// Performs result processing and prints the output.
     /// </summary>
-    public static async Task PrintMatchResult(MatchResultProcessorVideo resultProcessor, MatchResult matchResult, IConsole console)
+    public static async Task PrintMatchResult(IConsole console, MatchResultProcessorVideo resultProcessor, MatchResult matchResult)
     {
       await foreach(var mg in resultProcessor.ProcessAsync(matchResult))
       {
-        ProcessDuplicates(mg, console);
+        PrintGroups(console, mg);
       }
     }
 
-    private static void ProcessDuplicates(MatchOutputGroup matchOutputGroup, IConsole console)
+    private static void PrintGroups(IConsole console, MatchOutputGroup matchOutputGroup)
     {
       console.ForegroundColor = ConsoleColor.Yellow;
       console.WriteLine(matchOutputGroup.BaseItem);
@@ -30,6 +31,30 @@ namespace Mt.MediaFiles.ClientApp.Cli.Ui
       for(int i = 0; i < matchOutputGroup.Items.Count; i++)
       {
         console.WriteLine($"> {matchOutputGroup.Items[i].Item}");
+        PrintDifferences(console, matchOutputGroup.Items[i]);
+        console.WriteLine();
+      }
+    }
+
+    private static void PrintDifferences(IConsole console, MatchOutputItem matchedItem)
+    {
+      var diffProps = matchedItem
+        .Properties
+        .Where(p => p.Qualification != ComparisonQualification.Neutral)
+        .ToList();
+      if(diffProps.Count > 0)
+      {
+        for(int i = 0; i < diffProps.Count; i++)
+        {
+          console.Write(i > 0 ? ", " : "  [");
+          console.Write($"{diffProps[i].Name}: ");
+          console.ForegroundColor = diffProps[i].Qualification == ComparisonQualification.Better
+            ? ConsoleColor.Green
+            : ConsoleColor.Red;
+          console.Write(diffProps[i].Value);
+          console.ResetColor();
+        }
+        console.WriteLine("]");
       }
     }
   }

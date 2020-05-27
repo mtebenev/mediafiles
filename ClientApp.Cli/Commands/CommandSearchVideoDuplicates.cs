@@ -23,7 +23,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
           infoPartAccess
         );
 
-      await SearchResultWriter.PrintMatchResult(resultProcessor, matchResult, shellAppContext.Console);
+      await SearchResultWriter.PrintMatchResult(shellAppContext.Console, resultProcessor, matchResult);
       return Program.CommandExitResult;
     }
   }
