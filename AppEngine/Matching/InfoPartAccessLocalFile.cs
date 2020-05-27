@@ -2,6 +2,7 @@ using MediaToolkit.Services;
 using MediaToolkit.Tasks;
 using Mt.MediaFiles.AppEngine.Scanning;
 using System;
+using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,11 +22,11 @@ namespace Mt.MediaFiles.AppEngine.Matching
     /// <summary>
     /// Ctor.
     /// </summary>
-    public InfoPartAccessLocalFile(IFileSystem fileSystem, IMediaToolkitService mediaToolkitService, string[] paths)
+    public InfoPartAccessLocalFile(IFileSystem fileSystem, IMediaToolkitService mediaToolkitService, IEnumerable<string> paths)
     {
       this._fileSystem = fileSystem;
       this._mediaToolkitService = mediaToolkitService;
-      this._paths = paths;
+      this._paths = paths.ToArray();
     }
 
     /// <summary>

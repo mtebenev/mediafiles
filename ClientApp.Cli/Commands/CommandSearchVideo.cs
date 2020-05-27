@@ -1,7 +1,8 @@
-using System;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaFiles.AppEngine.Tools;
+using MediaToolkit.Services;
+using Mt.MediaFiles.AppEngine.Matching;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
 using Mt.MediaFiles.ClientApp.Cli.Core;
 using Mt.MediaFiles.ClientApp.Cli.Ui;
@@ -19,6 +20,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
 
     public async Task<int> OnExecuteAsync(
       IShellAppContext shellAppContext,
+      IFileSystem fileSystem,
+      IMediaToolkitService mediaToolkitService,
       IPathArgumentResolver pathResolver,
       ICatalogTaskSearchVideoFactory taskFactory
     )
@@ -26,44 +29,26 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
       var paths = pathResolver.ResolveMany(this.ThePath);
       var task = taskFactory.Create(paths);
       var profiler = MiniProfiler.StartNew("CommandSearchVideo");
-      var result = await shellAppContext.Catalog.ExecuteTaskAsync(task);
+      var matchResult = await shellAppContext.Catalog.ExecuteTaskAsync(task);
 
-      shellAppContext.Console.WriteLine($"{result.Count} duplicates found:");
-      foreach(var duplicates in result)
-      {
-        await this.ProcessDuplicates(shellAppContext, duplicates);
-      }
-
+      shellAppContext.Console.WriteLine($"{matchResult.MatchGroups.Count} duplicates found:");
       await profiler.StopAsync();
+
+      var infoPartAccessCatalog = new InfoPartAccessCatalogItem(shellAppContext.Catalog);
+      var infoPartAccessFs = new InfoPartAccessLocalFile(fileSystem, mediaToolkitService, paths);
+
+      var resultProcessor =
+        new MatchResultProcessorVideo(
+          infoPartAccessFs,
+          infoPartAccessCatalog
+        );
+
+      await SearchResultWriter.PrintMatchResult(shellAppContext.Console, resultProcessor, matchResult);
+
       var profileResult = profiler.RenderPlainTextMf();
       shellAppContext.Console.Write(profileResult);
 
       return Program.CommandExitResult;
-    }
-
-    /// <summary>
-    /// Prints duplicate info
-    /// </summary>
-    private async Task<long> ProcessDuplicates(IShellAppContext shellAppContext, DuplicateFindResult duplicateResult)
-    {
-      var console = shellAppContext.Console;
-      var firstItem = await shellAppContext.Catalog.GetItemByIdAsync(duplicateResult.FileInfos[0].CatalogItemId);
-
-      long wastedSize = 0; // Total wasted size in bytes
-
-      console.ForegroundColor = ConsoleColor.Yellow;
-      console.WriteLine($"{firstItem.Path}");
-      console.ResetColor();
-
-      for(var i = 0; i < duplicateResult.FileInfos.Count; i++)
-      {
-        if(i > 0)
-          wastedSize += duplicateResult.FileInfos[i].FileSize;
-
-        console.WriteLine($"{i + 1}: {duplicateResult.FileInfos[i].FilePath}");
-      }
-
-      return wastedSize;
     }
   }
 }

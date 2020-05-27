@@ -39,6 +39,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
     protected override async Task<MatchResult> ExecuteAsync(ICatalogContext catalogContext)
     {
       var matchGroups = new List<MatchResultGroup>();
+      var comparisonTask = this._comparerFactory.Create();
 
       using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation("Searching for videos..."))
       {
@@ -52,7 +53,6 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
             var mg = new MatchResultGroup(imprintRecords[i].CatalogItemId);
             for(var j = i + 1; j < imprintRecords.Count; j++)
             {
-              var comparisonTask = this._comparerFactory.Create();
               var isEqual = comparisonTask.Compare(imprintRecords[i].ImprintData, imprintRecords[j].ImprintData);
               if(isEqual)
               {
