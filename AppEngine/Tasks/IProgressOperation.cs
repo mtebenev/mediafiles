@@ -8,18 +8,8 @@ namespace Mt.MediaFiles.AppEngine.Tasks
   public interface IProgressOperation : IDisposable
   {
     /// <summary>
-    /// Update max tick count.
+    /// Update progress.
     /// </summary>
-    void SetMaxTicks(int maxTicks);
-
-    /// <summary>
-    /// Update status.
-    /// </summary>
-    void UpdateStatus(string text);
-
-    /// <summary>
-    /// Create child scope.
-    /// </summary>
-    IProgressOperation CreateChildOperation(int maxTicks);
+    void Tick();
   }
 }

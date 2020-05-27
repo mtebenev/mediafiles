@@ -13,7 +13,6 @@ using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.AppEngine;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
-using Mt.MediaFiles.ClientApp.Cli.Ui;
 using MediaToolkit.Options;
 using Mt.MediaFiles.ClientApp.Cli.Core;
 using McMaster.Extensions.CommandLineUtils.Conventions;
@@ -124,10 +123,10 @@ namespace Mt.MediaFiles.ClientApp.Cli
         .AddSingleton<AppSettings>(appSettingsManager.AppSettings)
         .AddSingleton<AppEngineSettings>(appSettingsManager.AppEngineSettings)
         .AddSingleton<ICatalogSettings>(catalogSettings)
-        .AddSingleton<IProgressIndicator, ProgressIndicatorConsole>()
         .AddSingleton<IShellAppContext>(_shellAppContext)
         .AddSingleton(_shellAppContext)
         .AddSingleton(PhysicalConsole.Singleton)
+        .AddSingleton<IReporter, ConsoleReporter>()
         .AddSingleton<IFileSystem, FileSystem>()
         .AddSingleton<IEnvironment, EnvironmentWrapper>()
         .AddSingleton<IClock, Clock>()

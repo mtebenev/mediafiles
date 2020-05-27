@@ -56,12 +56,12 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
       var fsImprints = await this.CreateFsImprintsAsync();
       var comparer = this._comparerFactory.Create();
 
-      using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation("Searching for videos..."))
-      using(var taskProgress = progressOperation.CreateChildOperation(imprintRecords.Count))
+      this._executionContext.UpdateStatus("Searching for videos...");
+      using(var progressOperation = this._executionContext.StartProgressOperation(imprintRecords.Count))
       {
         for(var i = 0; i < fsImprints.Count; i++)
         {
-          taskProgress.UpdateStatus(i.ToString());
+          progressOperation.Tick();
           var mg = new MatchResultGroup(i);
           for(var j = 0; j < imprintRecords.Count; j++)
           {
@@ -85,18 +85,17 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
     private async Task<IList<(string, VideoImprintRecord)>> CreateFsImprintsAsync()
     {
       IList<(string, VideoImprintRecord)> result;
-      using(this._executionContext.ProgressIndicator.StartOperation("Scanning videos..."))
-      {
-        result = await this._paths
-          .ToAsyncEnumerable()
-          .SelectAwait(async p =>
-          {
-            var videoDuration = await this.GetVideoDurationAsync(p);
-            var r = await this._imprintBuilder.CreateRecordAsync(0, p, videoDuration);
-            return (p, r);
-          })
-          .ToListAsync();
-      }
+      this._executionContext.UpdateStatus("Scanning videos...");
+
+      result = await this._paths
+        .ToAsyncEnumerable()
+        .SelectAwait(async p =>
+        {
+          var videoDuration = await this.GetVideoDurationAsync(p);
+          var r = await this._imprintBuilder.CreateRecordAsync(0, p, videoDuration);
+          return (p, r);
+        })
+        .ToListAsync();
 
       return result;
     }

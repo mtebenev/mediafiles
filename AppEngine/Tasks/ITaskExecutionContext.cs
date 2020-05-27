@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Extensions.Logging;
 
 namespace Mt.MediaFiles.AppEngine.Tasks
@@ -8,8 +7,16 @@ namespace Mt.MediaFiles.AppEngine.Tasks
   /// </summary>
   public interface ITaskExecutionContext
   {
-    IServiceProvider ServiceProvider { get; }
-    IProgressIndicator ProgressIndicator { get; }
     ILoggerFactory LoggerFactory { get; }
+
+    /// <summary>
+    /// Starts a new progress bar during the operation.
+    /// </summary>
+    IProgressOperation StartProgressOperation(int maxTicks);
+
+    /// <summary>
+    /// Prints informational message during the task execution.
+    /// </summary>
+    void UpdateStatus(string message);
   }
 }

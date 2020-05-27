@@ -23,7 +23,6 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     public ScanServiceContext(IScanContext scanContext)
     {
       this.Logger = scanContext.Logger;
-      this.ProgressOperation = scanContext.ProgressOperation;
     }
 
     /// <summary>

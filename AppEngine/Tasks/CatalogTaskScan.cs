@@ -53,27 +53,22 @@ namespace Mt.MediaFiles.AppEngine.Tasks
     /// </summary>
     async Task IInternalCatalogTask.ExecuteAsync(Catalog catalog)
     {
-      using(var progressOperation = this._executionContext
-        .ProgressIndicator
-        .StartOperation($"Scanning files: {this._scanParameters.ScanPath}"))
-      {
-        var itemExplorer = new ItemExplorerFileSystem(this._fileSystem);
-        var rootItem = catalog.RootItem;
-        var mmConfig = MmConfigFactory.LoadConfig(this._scanParameters.ScanPath);
-        var scanConfiguration = await this._configurationBuilder.BuildAsync(this._scanParameters, mmConfig);
+      this._executionContext.UpdateStatus($"Scanning files: {this._scanParameters.ScanPath}");
+      var itemExplorer = new ItemExplorerFileSystem(this._fileSystem);
+      var rootItem = catalog.RootItem;
+      var mmConfig = MmConfigFactory.LoadConfig(this._scanParameters.ScanPath);
+      var scanConfiguration = await this._configurationBuilder.BuildAsync(this._scanParameters, mmConfig);
 
-        var scanner = this._scannerFactory.Create(itemExplorer, rootItem.CatalogItemId, this._scanParameters.ScanPath);
+      var scanner = this._scannerFactory.Create(itemExplorer, rootItem.CatalogItemId, this._scanParameters.ScanPath);
 
-        // Create scan context and execute
-        var scanContext = new ScanContext(
-          scanConfiguration,
-          catalog.ItemStorage,
-          catalog.IndexManager,
-          this._executionContext.LoggerFactory,
-          progressOperation);
+      // Create scan context and execute
+      var scanContext = new ScanContext(
+        this._executionContext,
+        scanConfiguration,
+        catalog.ItemStorage,
+        catalog.IndexManager);
 
-        await scanner.Scan(scanContext);
-      }
+      await scanner.Scan(scanContext);
     }
   }
 }

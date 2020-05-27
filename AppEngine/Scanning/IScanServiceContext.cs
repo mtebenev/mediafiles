@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
-using Mt.MediaFiles.AppEngine.Tasks;
 
 namespace Mt.MediaFiles.AppEngine.Scanning
 {
@@ -11,7 +10,6 @@ namespace Mt.MediaFiles.AppEngine.Scanning
   public interface IScanServiceContext
   {
     ILogger Logger { get; }
-    IProgressOperation ProgressOperation { get; }
 
     /// <summary>
     /// Returns the item data.

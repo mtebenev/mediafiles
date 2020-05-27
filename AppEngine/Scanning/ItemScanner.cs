@@ -47,11 +47,11 @@ namespace Mt.MediaFiles.AppEngine.Scanning
       // Explore and save the items (file infos)
       using(var timing = MiniProfiler.Current.Step("Exploring and saving items"))
       {
-        scanContext.ProgressOperation.UpdateStatus("Exploring files...");
+        scanContext.UpdateStatus("Exploring files...");
         var records = await this._itemExplorer.Explore(this._scanPath, scanRootItemId)
           .ToListAsync();
 
-        scanContext.ProgressOperation.UpdateStatus("Saving file records...");
+        scanContext.UpdateStatus("Saving file records...");
 
         const int pageSize = 1000;
         var chunks = records.Batch(pageSize);
@@ -66,12 +66,12 @@ namespace Mt.MediaFiles.AppEngine.Scanning
       {
         if(scanContext.ScanConfiguration.ScanServices.Any())
         {
-          scanContext.ProgressOperation.UpdateStatus("Scanning files...");
+          scanContext.UpdateStatus("Scanning files...");
           await this.RunScanServicesAsync(scanContext, location);
         }
       }
 
-      scanContext.ProgressOperation.UpdateStatus("Done.");
+      scanContext.UpdateStatus("Done.");
       _logger.LogInformation("Scanning finished");
     }
 
@@ -112,12 +112,12 @@ namespace Mt.MediaFiles.AppEngine.Scanning
       var scanServiceContext = new ScanServiceContext(scanContext);
       var records = await scanContext.ItemStorage.QuerySubtree(location);
 
-      using(var progressOperation = scanContext.ProgressOperation.CreateChildOperation(records.Count))
+      using(var progressOperation = scanContext.StartProgressOperation(records.Count))
       {
         foreach(var r in records)
         {
           scanServiceContext.SetCurrentRecord(r);
-          progressOperation.UpdateStatus(r.Path);
+          progressOperation.Tick();
           foreach(var ss in scanContext.ScanConfiguration.ScanServices)
           {
               await this.RunSingleServiceScan(ss, scanServiceContext, r);

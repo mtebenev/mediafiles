@@ -38,28 +38,26 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
     /// </summary>
     protected override async Task ExecuteAsync(ICatalogContext catalogContext)
     {
-      using(var progressOperation = this._executionContext.ProgressIndicator.StartOperation($"Updating files at: {this._catalogItem.Path}"))
+      this._executionContext.UpdateStatus($"Updating files at: {this._catalogItem.Path}");
+      var walker = CatalogTreeWalker.CreateDefaultWalker(catalogContext.Catalog, this._catalogItem.CatalogItemId);
+      await walker.ForEachAwaitAsync(async ci =>
       {
-        var walker = CatalogTreeWalker.CreateDefaultWalker(catalogContext.Catalog, this._catalogItem.CatalogItemId);
-        await walker.ForEachAwaitAsync(async ci =>
-        {
-          await this.UpdateItem(progressOperation, ci);
-        });
+        await this.UpdateItem(ci);
+      });
 
-        progressOperation.UpdateStatus("Done.");
-      }
+      this._executionContext.UpdateStatus("Done.");
     }
 
     /// <summary>
     /// Updates a single item.
     /// </summary>
-    private async Task UpdateItem(IProgressOperation progressOperation, ICatalogItem catalogItem)
+    private async Task UpdateItem(ICatalogItem catalogItem)
     {
       var extension = _fileSystem.Path.GetExtension(catalogItem.Path);
       var supportedExtensions = new[] { ".flv", ".mp4", ".wmv", ".avi", ".mkv" };
       if(supportedExtensions.Any(e => e.Equals(extension)))
       {
-        progressOperation.UpdateStatus($"Updating file: {catalogItem.Path}");
+        this._executionContext.UpdateStatus($"Updating file: {catalogItem.Path}");
         var updater = this._updaterFactory.Create();
         await updater.UpdateAsync(catalogItem.CatalogItemId, catalogItem.Path);
       }
