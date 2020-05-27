@@ -67,9 +67,9 @@ namespace Mt.MediaFiles.AppEngine.Test.Matching
                 Item = @"x:\folder\file2.mp4",
                 Properties = new[]
                 {
-                  new { Name = "length", Value = "00:01:00", Qualification = ComparisonQualification.Neutral },
-                  new { Name = "resolution", Value = "640x480", Qualification = ComparisonQualification.Better },
-                  new { Name = "file size", Value = "200", Qualification = ComparisonQualification.Worse },
+                  new { Name = "length", Value = "00:01:00", RelativeValue = (string)null, Qualification = ComparisonQualification.Neutral },
+                  new { Name = "resolution", Value = "640x480", RelativeValue = (string)null, Qualification = ComparisonQualification.Better },
+                  new { Name = "file size", Value = "200 B", RelativeValue = "+190 B", Qualification = ComparisonQualification.Worse },
                 }
               }
             }

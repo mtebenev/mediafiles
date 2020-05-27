@@ -52,6 +52,10 @@ namespace Mt.MediaFiles.ClientApp.Cli.Ui
             ? ConsoleColor.Green
             : ConsoleColor.Red;
           console.Write(diffProps[i].Value);
+          if(!string.IsNullOrEmpty(diffProps[i].RelativeValue))
+          {
+            console.Write($" ({diffProps[i].RelativeValue})");
+          }
           console.ResetColor();
         }
         console.WriteLine("]");

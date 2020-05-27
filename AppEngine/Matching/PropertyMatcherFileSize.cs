@@ -1,3 +1,4 @@
+using ByteSizeLib;
 using System.Threading.Tasks;
 
 namespace Mt.MediaFiles.AppEngine.Matching
@@ -31,10 +32,12 @@ namespace Mt.MediaFiles.AppEngine.Matching
         ? ComparisonQualification.Better
         : otherFileProps.Size == baseFileProps.Size ? ComparisonQualification.Neutral : ComparisonQualification.Worse;
 
+      var relativeSize = ByteSize.FromBytes(otherFileProps.Size - baseFileProps.Size);
       var result = new MatchOutputProperty
       {
         Name = "file size",
-        Value = $"{otherFileProps.Size}",
+        Value = $"{ByteSize.FromBytes(otherFileProps.Size):#.##}",
+        RelativeValue = relativeSize.ToString(relativeSize.Bytes > 0 ? "+#.##" : "#.##"),
         Qualification = qualification
       };
       return result;
