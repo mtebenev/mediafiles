@@ -30,7 +30,7 @@ namespace Mt.MediaFiles.AppEngine.Matching
 
       var qualification = otherInfoPart.VideoHeight > baseInfoPart.VideoHeight
         ? ComparisonQualification.Better
-        : otherInfoPart.VideoHeight == baseInfoPart.VideoHeight ? ComparisonQualification.Neutral : ComparisonQualification.Worse;
+        : otherInfoPart.VideoHeight == baseInfoPart.VideoHeight ? ComparisonQualification.Equal : ComparisonQualification.Worse;
 
       var result = new MatchOutputProperty
       {

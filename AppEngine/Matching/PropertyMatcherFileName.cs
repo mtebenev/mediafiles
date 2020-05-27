@@ -1,12 +1,13 @@
-using ByteSizeLib;
+using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Mt.MediaFiles.AppEngine.Matching
 {
   /// <summary>
-  /// Matches size of two files.
+  /// Matches file names of two items.
   /// </summary>
-  public class PropertyMatcherFileSize : IPropertyMatcher
+  public class PropertyMatcherFileName : IPropertyMatcher
   {
     private readonly IInfoPartAccess _baseItemAcess;
     private readonly IInfoPartAccess _otherItemAccess;
@@ -14,7 +15,7 @@ namespace Mt.MediaFiles.AppEngine.Matching
     /// <summary>
     /// Ctor.
     /// </summary>
-    public PropertyMatcherFileSize(IInfoPartAccess baseItemAcess, IInfoPartAccess otherItemAccess)
+    public PropertyMatcherFileName(IInfoPartAccess baseItemAcess, IInfoPartAccess otherItemAccess)
     {
       this._baseItemAcess = baseItemAcess;
       this._otherItemAccess = otherItemAccess;
@@ -28,16 +29,17 @@ namespace Mt.MediaFiles.AppEngine.Matching
       var baseFileProps = await this._baseItemAcess.GetFilePropertiesAsync(baseItemId);
       var otherFileProps = await this._otherItemAccess.GetFilePropertiesAsync(otherItemId);
 
-      var qualification = otherFileProps.Size < baseFileProps.Size
-        ? ComparisonQualification.Better
-        : otherFileProps.Size == baseFileProps.Size ? ComparisonQualification.Equal : ComparisonQualification.Worse;
+      var baseFileName = Path.GetFileName(baseFileProps.Path);
+      var otherFileName = Path.GetFileName(otherFileProps.Path);
 
-      var relativeSize = ByteSize.FromBytes(otherFileProps.Size - baseFileProps.Size);
+      var qualification = baseFileName.Equals(otherFileName, StringComparison.OrdinalIgnoreCase)
+        ? ComparisonQualification.Equal
+        : ComparisonQualification.Neutral;
+
       var result = new MatchOutputProperty
       {
-        Name = "file size",
-        Value = $"{ByteSize.FromBytes(otherFileProps.Size):#.##}",
-        RelativeValue = relativeSize.ToString(relativeSize.Bytes > 0 ? "+#.##" : "#.##"),
+        Name = "file name",
+        Value = $"{otherFileName}",
         Qualification = qualification
       };
       return result;

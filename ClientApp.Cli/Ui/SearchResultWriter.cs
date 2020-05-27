@@ -40,7 +40,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Ui
     {
       var diffProps = matchedItem
         .Properties
-        .Where(p => p.Qualification != ComparisonQualification.Neutral)
+        .Where(p => p.Qualification != ComparisonQualification.Equal)
         .ToList();
       if(diffProps.Count > 0)
       {
@@ -48,9 +48,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Ui
         {
           console.Write(i > 0 ? ", " : "  [");
           console.Write($"{diffProps[i].Name}: ");
-          console.ForegroundColor = diffProps[i].Qualification == ComparisonQualification.Better
-            ? ConsoleColor.Green
-            : ConsoleColor.Red;
+          console.ForegroundColor = GetQualificationColor(diffProps[i].Qualification);
           console.Write(diffProps[i].Value);
           if(!string.IsNullOrEmpty(diffProps[i].RelativeValue))
           {
@@ -60,6 +58,17 @@ namespace Mt.MediaFiles.ClientApp.Cli.Ui
         }
         console.WriteLine("]");
       }
+    }
+
+    private static ConsoleColor GetQualificationColor(ComparisonQualification qualification)
+    {
+      var result = qualification == ComparisonQualification.Better
+                  ? ConsoleColor.Green
+                  : qualification == ComparisonQualification.Worse
+                    ? ConsoleColor.Red
+                    : ConsoleColor.Yellow;
+
+      return result;
     }
   }
 }
