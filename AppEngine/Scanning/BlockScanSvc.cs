@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Common;
 using Mt.MediaFiles.AppEngine.Tasks;
 using StackExchange.Profiling;
 using System;
@@ -34,15 +35,28 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// </summary>
     public static ITargetBlock<CatalogItemRecord> Create(IScanContext scanContext, IProgressOperation progressOperation, ILoggerFactory loggerFactory)
     {
+      var parallelism = 4;
       var logger = loggerFactory.CreateLogger<BlockScanSvc>();
-      var block = new BlockScanSvc(scanContext, progressOperation, logger);
-      var result = new ActionBlock<CatalogItemRecord>(record =>
+      var blockPool = new ObjectPool<BlockScanSvc>(
+        () => new BlockScanSvc(scanContext, progressOperation, logger));
+
+      var result = new ActionBlock<CatalogItemRecord>(async record =>
       {
-        return block.ExecuteAsync(record);
+        BlockScanSvc block = null;
+        try
+        {
+          block = blockPool.Get();
+          await block.ExecuteAsync(record);
+        }
+        finally
+        {
+          blockPool.Return(block);
+        }
       },
       new ExecutionDataflowBlockOptions
       {
-        MaxDegreeOfParallelism = 2
+        MaxDegreeOfParallelism = parallelism,
+        BoundedCapacity = parallelism * 2
       });
 
       return result;

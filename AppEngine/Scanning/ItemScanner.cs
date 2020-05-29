@@ -127,6 +127,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
         }
         startBlock.Complete();
         await endBlock.Completion;
+        await Task.Delay(1000 / 8); // Maker sure the progress bar updated (it updated by timer 8 times per second).
 
         // Finalize (flush data).
         foreach(var ss in scanContext.ScanConfiguration.ScanServices)
