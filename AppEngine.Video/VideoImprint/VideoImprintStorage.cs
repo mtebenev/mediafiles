@@ -4,19 +4,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Mt.MediaFiles.AppEngine.Common;
 
 namespace AppEngine.Video.VideoImprint
 {
   /// <summary>
   /// The video imprint storage.
+  /// Design note: singleton.
   /// </summary>
   internal class VideoImprintStorage : IVideoImprintStorage
   {
     private readonly IDbConnection _dbConnection;
+    private readonly AsyncSemaphoreLock _semaphore;
 
     public VideoImprintStorage(IDbConnection dbConnection)
     {
       this._dbConnection = dbConnection;
+      this._semaphore = new AsyncSemaphoreLock();
     }
 
     /// <summary>
@@ -33,18 +37,19 @@ namespace AppEngine.Video.VideoImprint
     /// <summary>
     /// IVideoImprintStorage.
     /// </summary>
-    public Task SaveRecordsAsync(IEnumerable<VideoImprintRecord> records)
+    public async Task SaveRecordsAsync(IEnumerable<VideoImprintRecord> records)
     {
-      using(var transaction = this._dbConnection.BeginTransaction())
+      using(await this._semaphore.Lock())
       {
-        foreach(var r in records)
+        using(var transaction = this._dbConnection.BeginTransaction())
         {
-          this._dbConnection.Insert(r, transaction);
+          foreach(var r in records)
+          {
+            this._dbConnection.Insert(r, transaction);
+          }
+          transaction.Commit();
         }
-        transaction.Commit();
       }
-
-      return Task.CompletedTask;
     }
 
     /// <summary>

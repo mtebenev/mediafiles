@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
@@ -21,11 +22,12 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
       mockBuilder.CreateRecordAsync(1, "file1.avi", Arg.Any<double>()).Returns(new VideoImprintRecord { CatalogItemId = 1 });
       mockBuilder.CreateRecordAsync(2, "file2.avi", Arg.Any<double>()).Returns(new VideoImprintRecord { CatalogItemId = 2 });
 
+      var mockFs = Substitute.For<IFileSystem>();
       var mockStorage = Substitute.For<IVideoImprintStorage>();
       var mockContext = Substitute.For<IScanServiceContext>();
       mockContext.GetItemData().Returns(CatalogItemDataMockBuilder.CreateVideoPart(1000));
 
-      var service = new ScanServiceVideoImprint(mockBuilder, mockStorage, 4);
+      var service = new ScanServiceVideoImprint(mockFs, mockBuilder, mockStorage, 4);
       await service.ScanAsync(mockContext, new CatalogItemRecord { CatalogItemId = 1, Path = "file1.avi" });
       await service.ScanAsync(mockContext, new CatalogItemRecord { CatalogItemId = 2, Path = "file2.avi" });
 
@@ -51,11 +53,12 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
       mockBuilder.CreateRecordAsync(3, "file3.avi", Arg.Any<double>()).Returns(new VideoImprintRecord { CatalogItemId = 3 });
       mockBuilder.CreateRecordAsync(4, "file4.avi", Arg.Any<double>()).Returns(new VideoImprintRecord { CatalogItemId = 4 });
 
+      var mockFs = Substitute.For<IFileSystem>();
       var mockStorage = Substitute.For<IVideoImprintStorage>();
       var mockContext = Substitute.For<IScanServiceContext>();
       mockContext.GetItemData().Returns(CatalogItemDataMockBuilder.CreateVideoPart(1000));
 
-      var service = new ScanServiceVideoImprint(mockBuilder, mockStorage, 2);
+      var service = new ScanServiceVideoImprint(mockFs, mockBuilder, mockStorage, 2);
 
       await service.ScanAsync(mockContext, new CatalogItemRecord { CatalogItemId = 1, Path = "file1.avi" });
       await service.ScanAsync(mockContext, new CatalogItemRecord { CatalogItemId = 2, Path = "file2.avi" });

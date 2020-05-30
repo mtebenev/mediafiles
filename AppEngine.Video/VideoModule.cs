@@ -6,6 +6,7 @@ using Mt.MediaFiles.AppEngine.Scanning;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
 using Mt.MediaFiles.AppEngine.Video.Thumbnail;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
+using System.IO.Abstractions;
 
 namespace Mt.MediaFiles.AppEngine.Video
 {
@@ -29,6 +30,7 @@ namespace Mt.MediaFiles.AppEngine.Video
       // Scan services
       services.AddTransient<IScanService>(
         c => new ScanServiceVideoImprint(
+          c.GetRequiredService<IFileSystem>(),
           c.GetRequiredService<IVideoImprintBuilder>(),
           c.GetRequiredService<IVideoImprintStorage>(),
           ImprintBufferSize
