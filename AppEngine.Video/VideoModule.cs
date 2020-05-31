@@ -24,8 +24,8 @@ namespace Mt.MediaFiles.AppEngine.Video
         .RegisterTypedFactory<ICatalogTaskSearchVideoFactory>().ForConcreteType<CatalogTaskSearchVideo>();
 
       // Scan services
-      services.AddTransient<IScanService, ScanServiceVideoImprint>();
-      services.AddTransient<IScanService, ScanServiceThumbnail>();
+      services.AddTransient<IScanServiceFactory, ScanServiceFactoryVideoImprint>();
+      services.AddTransient<IScanServiceFactory, ScanServiceFactoryThumbnail>();
 
       // Internals
       services

@@ -19,7 +19,7 @@ namespace Mt.MediaFiles.AppEngine.Test.Scanning
       config.Ignore = new[] { "Item1", "Item2" };
 
 
-      var sut = new ScanConfiguration(paramters, config);
+      var sut = new ScanConfiguration(paramters, config, new List<IScanServiceFactory>());
 
       Assert.True(sut.IsIgnoredEntry("Item2"));
       Assert.False(sut.IsIgnoredEntry("Item3"));

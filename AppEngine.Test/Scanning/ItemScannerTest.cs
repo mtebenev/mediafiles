@@ -52,7 +52,7 @@ namespace Mt.MediaFiles.AppEngine.Test.Scanning
       var mockItemExplorer = Substitute.For<IItemExplorer>();
 
       var mockScanContext = Substitute.For<IScanContext>();
-      mockScanContext.ScanConfiguration.ScanServices.Returns(mockServices);
+      mockScanContext.ScanConfiguration.CreateScanServices().Returns(mockServices);
 
       var records = new List<CatalogItemRecord>
       {

@@ -7,9 +7,9 @@ namespace Mt.MediaFiles.AppEngine.Scanning
   /// </summary>
   public class ScanParameters
   {
-    public ScanParameters(string scanPath, string rootItemName, List<string> scanTaskIds, List<string> fileHandlerIds)
+    public ScanParameters(string scanPath, string rootItemName, List<string> scanSvcIds, List<string> fileHandlerIds)
     {
-      this.ScanTaskIds = scanTaskIds;
+      this.ScanSvcIds = scanSvcIds;
       this.FileHandlerIds = fileHandlerIds;
       this.ScanPath = scanPath;
       this.RootItemName = rootItemName;
@@ -26,9 +26,9 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     public string ScanPath { get; private set; }
 
     /// <summary>
-    /// The sub-tasks to be performed.
+    /// Ids of the scan services to use.
     /// </summary>
-    public IReadOnlyList<string> ScanTaskIds { get; private set; }
+    public IReadOnlyList<string> ScanSvcIds { get; private set; }
 
     /// <summary>
     /// File handlers to be used.

@@ -70,11 +70,8 @@ namespace Mt.MediaFiles.AppEngine.Scanning
       // Do scan sub-tasks
       using(var timing = MiniProfiler.Current.Step("Running sub-tasks"))
       {
-        if(scanContext.ScanConfiguration.ScanServices.Any())
-        {
-          scanContext.UpdateStatus("Scanning files...");
-          await this.RunScanServicesAsync(scanContext, location);
-        }
+        scanContext.UpdateStatus("Scanning files...");
+        await this.RunScanServicesAsync(scanContext, location);
 
         // Finalize (flush data).
         foreach(var bs in this._bufferedStorages)

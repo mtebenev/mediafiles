@@ -4,6 +4,7 @@ using Mt.MediaFiles.AppEngine.Common;
 using Mt.MediaFiles.AppEngine.Tasks;
 using StackExchange.Profiling;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -15,6 +16,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
   internal class BlockScanSvc
   {
     private readonly ScanServiceContext _scanServiceContext;
+    private readonly IList<IScanService> _scanServices;
     private readonly IScanContext _scanContext;
     private readonly IProgressOperation _progressOperation;
     private readonly ILogger _logger;
@@ -25,6 +27,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     private BlockScanSvc(IScanContext scanContext, IProgressOperation progressOperation, ILogger logger)
     {
       this._scanServiceContext = new ScanServiceContext(scanContext);
+      this._scanServices = scanContext.ScanConfiguration.CreateScanServices();
       this._scanContext = scanContext;
       this._progressOperation = progressOperation;
       this._logger = logger;
@@ -65,7 +68,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     public async Task ExecuteAsync(CatalogItemRecord record)
     {
       this._scanServiceContext.SetCurrentRecord(record);
-      foreach(var ss in this._scanContext.ScanConfiguration.ScanServices)
+      foreach(var ss in this._scanServices)
       {
         await this.RunSingleServiceScan(ss, this._scanServiceContext, record);
       }

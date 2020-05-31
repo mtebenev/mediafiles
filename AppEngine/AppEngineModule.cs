@@ -32,7 +32,7 @@ namespace Mt.MediaFiles.AppEngine
       services.AddTransient<IScanConfigurationBuilder, ScanConfigurationBuilder>();
 
       // Scan services
-      services.AddTransient<IScanService, ScanServiceScanInfo>();
+      services.AddTransient<IScanServiceFactory, ScanServiceFactoryScanInfo>();
 
       // File handlers
       services.AddTransient<IFileHandler, FileHandlerVideo>();

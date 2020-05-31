@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
@@ -8,6 +9,20 @@ using Mt.MediaFiles.AppEngine.Video.Common;
 
 namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
 {
+  /// <summary>
+  /// The service factory.
+  /// </summary>
+  internal class ScanServiceFactoryVideoImprint : ScanServiceFactoryBase<ScanServiceVideoImprint>
+  {
+    public ScanServiceFactoryVideoImprint(IServiceProvider serviceProvider
+      ) : base(
+        serviceProvider,
+        AppEngine.Video.HandlerIds.ScanSvcVideoImprints,
+        new List<string> { AppEngine.HandlerIds.ScanSvcScanInfo })
+    {
+    }
+  }
+
   /// <summary>
   /// The video imprints scan service.
   /// Responsible for coordinating imprint storage and builder.
@@ -33,11 +48,6 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
     /// IScanService.
     /// </summary>
     public string Id => AppEngine.Video.HandlerIds.ScanSvcVideoImprints;
-
-    /// <summary>
-    /// IScanService.
-    /// </summary>
-    public IReadOnlyList<string> Dependencies => new[] { AppEngine.HandlerIds.ScanSvcScanInfo };
 
     /// <summary>
     /// IScanService.

@@ -10,7 +10,21 @@ using Mt.MediaFiles.AppEngine.FileHandlers;
 namespace Mt.MediaFiles.AppEngine.Scanning
 {
   /// <summary>
-  /// Scanning sub-task for retrieving file properties with scan drivers.
+  /// The service factory.
+  /// </summary>
+  internal class ScanServiceFactoryScanInfo : ScanServiceFactoryBase<ScanServiceScanInfo>
+  {
+    public ScanServiceFactoryScanInfo(IServiceProvider serviceProvider
+      ) : base(
+        serviceProvider,
+        HandlerIds.ScanSvcScanInfo,
+        new List<string>())
+    {
+    }
+  }
+
+  /// <summary>
+  /// Scan service for retrieving file properties with scan drivers.
   /// </summary>
   internal class ScanServiceScanInfo : IScanService
   {
@@ -20,11 +34,6 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// IScanService.
     /// </summary>
     public string Id => HandlerIds.ScanSvcScanInfo;
-
-    /// <summary>
-    /// IScanService.
-    /// </summary>
-    public IReadOnlyList<string> Dependencies => new string[0];
 
     public ScanServiceScanInfo(IEnumerable<IFileHandler> fileHandlers)
     {
@@ -47,7 +56,6 @@ namespace Mt.MediaFiles.AppEngine.Scanning
 
     /// <summary>
     /// Determines all supported drivers for the scan entry
-    /// TODO: make in parallel
     /// </summary>
     private async Task<IList<IFileHandler>> GetSupportedFileHandlersAsync(CatalogItemRecord record, FileStoreEntryContext fsContext)
     {
@@ -65,8 +73,6 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     private async Task RunScanDriversAsync(IScanServiceContext context, CatalogItemRecord record, FileStoreEntryContext fsContext, IList<IFileHandler> fileHandlers)
     {
       var catalogItemData = context.GetItemData();
-
-      // TODO: make in parallel
       foreach(var fileHandler in fileHandlers)
       {
         await RunSingleScanDriverAsync(context, record, fsContext, fileHandler, catalogItemData);

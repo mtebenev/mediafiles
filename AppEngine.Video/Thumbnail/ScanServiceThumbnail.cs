@@ -11,6 +11,20 @@ using System.Threading.Tasks;
 namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
 {
   /// <summary>
+  /// The service factory.
+  /// </summary>
+  internal class ScanServiceFactoryThumbnail : ScanServiceFactoryBase<ScanServiceThumbnail>
+  {
+    public ScanServiceFactoryThumbnail(IServiceProvider serviceProvider
+      ) : base(
+        serviceProvider,
+        AppEngine.Video.HandlerIds.ScanSvcThumbnail,
+        new List<string>())
+    {
+    }
+  }
+
+  /// <summary>
   /// Saves media thumbnails during the scanning.
   /// </summary>
   internal class ScanServiceThumbnail : IScanService
