@@ -43,7 +43,7 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
 
       await this._videoImprintStorage.DeleteRecordsAsync(catalogItemId);
       var imprintRecord = await this._videoImprintBuilder.CreateRecordAsync(catalogItemId, fsPath, totalDuration / 2);
-      await this._videoImprintStorage.SaveRecordsAsync(new[] { imprintRecord });
+      await this._videoImprintStorage.SaveRecordAsync(imprintRecord);
     }
   }
 }

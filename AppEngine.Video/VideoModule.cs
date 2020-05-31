@@ -1,5 +1,4 @@
 using AppEngine.Video.Comparison;
-using AppEngine.Video.VideoImprint;
 using AspNetCoreInjection.TypedFactories;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaFiles.AppEngine.Scanning;
@@ -16,8 +15,6 @@ namespace Mt.MediaFiles.AppEngine.Video
   {
     public static void ConfigureServices(IServiceCollection services)
     {
-      const int ImprintBufferSize = 1000;
-
       // Catalog tasks
       services
         .RegisterTypedFactory<ICatalogTaskUpdateVideoImprintsFactory>().ForConcreteType<CatalogTaskUpdateVideoImprints>();
@@ -27,14 +24,8 @@ namespace Mt.MediaFiles.AppEngine.Video
         .RegisterTypedFactory<ICatalogTaskSearchVideoFactory>().ForConcreteType<CatalogTaskSearchVideo>();
 
       // Scan services
-      services.AddTransient<IScanService>(
-        c => new ScanServiceVideoImprint(
-          c.GetRequiredService<IVideoImprintBuilder>(),
-          c.GetRequiredService<IVideoImprintStorage>(),
-          ImprintBufferSize
-      ));
-
-      services.AddTransient<IScanService, ScanServiceThumbnail>();
+      services.AddTransient<IScanServiceFactory, ScanServiceFactoryVideoImprint>();
+      services.AddTransient<IScanServiceFactory, ScanServiceFactoryThumbnail>();
 
       // Internals
       services

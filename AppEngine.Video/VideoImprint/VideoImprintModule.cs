@@ -1,6 +1,8 @@
 using AppEngine.Video.VideoImprint;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
+using System.Data;
 
 namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
 {
@@ -23,7 +25,14 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
     /// </summary>
     public static void ConfigureContainer(IServiceCollection services)
     {
-      services.AddSingleton<IVideoImprintStorage, VideoImprintStorage>();
+      const int ImprintBufferSize = 1000;
+      services.AddSingleton<VideoImprintStorage>(
+        c => new VideoImprintStorage(
+          c.GetRequiredService<IDbConnection>(),
+          ImprintBufferSize
+      ));
+      services.AddSingleton<IBufferedStorage>(c => c.GetRequiredService<VideoImprintStorage>());
+      services.AddSingleton<IVideoImprintStorage>(c => c.GetRequiredService<VideoImprintStorage>());
     }
   }
 }

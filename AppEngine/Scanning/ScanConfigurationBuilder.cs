@@ -9,11 +9,11 @@ namespace Mt.MediaFiles.AppEngine.Scanning
   /// </summary>
   internal class ScanConfigurationBuilder : IScanConfigurationBuilder
   {
-    private readonly List<IScanService> _scanServices;
+    private readonly List<IScanServiceFactory> _scanServiceFactories;
 
-    public ScanConfigurationBuilder(IEnumerable<IScanService> scanServices)
+    public ScanConfigurationBuilder(IEnumerable<IScanServiceFactory> scanServiceFactories)
     {
-      this._scanServices = scanServices.ToList();
+      this._scanServiceFactories = scanServiceFactories.ToList();
     }
 
     /// <summary>
@@ -21,18 +21,13 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// </summary>
     public Task<IScanConfiguration> BuildAsync(ScanParameters scanParameters, MmConfig mmConfig)
     {
-      var scanServices = scanParameters.ScanTaskIds
-        .Select(id => this._scanServices.First(st => st.Id == id))
+      var ssFactories = scanParameters.ScanSvcIds
+        .Select(id => this._scanServiceFactories.First(st => st.Id == id))
         .ToList();
 
-      scanServices.Sort(new SsDependencyComparer());
+      ssFactories.Sort(new SsDependencyComparer());
 
-      var configuration =
-        new ScanConfiguration(scanParameters, mmConfig)
-        {
-          ScanServices = scanServices
-        };
-
+      var configuration = new ScanConfiguration(scanParameters, mmConfig, ssFactories);
       return Task.FromResult<IScanConfiguration>(configuration);
     }
 
@@ -40,9 +35,9 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// Orders scan services by dependencies.
     /// Note: no cycle check yet.
     /// </summary>
-    private class SsDependencyComparer : IComparer<IScanService>
+    private class SsDependencyComparer : IComparer<IScanServiceFactory>
     {
-      public int Compare(IScanService x, IScanService y)
+      public int Compare(IScanServiceFactory x, IScanServiceFactory y)
       {
         return (y.Dependencies.Any(d => d == x.Id) && x.Dependencies.All(d => d != y.Id))
           ? -1

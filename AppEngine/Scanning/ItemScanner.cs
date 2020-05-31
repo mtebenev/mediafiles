@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using Microsoft.Extensions.Logging;
 using MoreLinq;
 using Mt.MediaFiles.AppEngine.Cataloging;
@@ -20,17 +22,21 @@ namespace Mt.MediaFiles.AppEngine.Scanning
   internal class ItemScanner : IItemScanner
   {
     private readonly int _parentItemId;
+    private readonly ILoggerFactory _loggerFactory;
     private readonly IItemExplorer _itemExplorer;
+    private readonly IBufferedStorage[] _bufferedStorages;
     private readonly string _scanPath;
     private readonly ILogger<ItemScanner> _logger;
 
     /// <summary>
     /// Ctor.
     /// </summary>
-    public ItemScanner(ILoggerFactory loggerFactory, IItemExplorer itemExplorer, int parentItemId, string scanPath)
+    public ItemScanner(ILoggerFactory loggerFactory, IItemExplorer itemExplorer, IEnumerable<IBufferedStorage> bufferedStorages, int parentItemId, string scanPath)
     {
       this._parentItemId = parentItemId;
+      this._loggerFactory = loggerFactory;
       this._itemExplorer = itemExplorer;
+      this._bufferedStorages = bufferedStorages.ToArray();
       this._scanPath = scanPath;
       this._logger = loggerFactory.CreateLogger<ItemScanner>();
     }
@@ -64,10 +70,13 @@ namespace Mt.MediaFiles.AppEngine.Scanning
       // Do scan sub-tasks
       using(var timing = MiniProfiler.Current.Step("Running sub-tasks"))
       {
-        if(scanContext.ScanConfiguration.ScanServices.Any())
+        scanContext.UpdateStatus("Scanning files...");
+        await this.RunScanServicesAsync(scanContext, location);
+
+        // Finalize (flush data).
+        foreach(var bs in this._bufferedStorages)
         {
-          scanContext.UpdateStatus("Scanning files...");
-          await this.RunScanServicesAsync(scanContext, location);
+          await bs.FlushAsync();
         }
       }
 
@@ -109,42 +118,22 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// </summary>
     private async Task RunScanServicesAsync(IScanContext scanContext, CatalogItemLocation location)
     {
-      var scanServiceContext = new ScanServiceContext(scanContext);
       var records = await scanContext.ItemStorage.QuerySubtree(location);
 
       using(var progressOperation = scanContext.StartProgressOperation(records.Count))
       {
+        var (startBlock, endBlock) = Pipeline.Create(scanContext, progressOperation, this._loggerFactory);
         foreach(var r in records)
         {
-          scanServiceContext.SetCurrentRecord(r);
-          progressOperation.Tick();
-          foreach(var ss in scanContext.ScanConfiguration.ScanServices)
+          var sendResult = await startBlock.SendAsync(r);
+          if(!sendResult)
           {
-              await this.RunSingleServiceScan(ss, scanServiceContext, r);
+            throw new InvalidOperationException();
           }
-          await scanServiceContext.SaveDataAsync(scanContext.ItemStorage);
         }
-
-        // Finalize (flush data).
-        foreach(var ss in scanContext.ScanConfiguration.ScanServices)
-        {
-          await ss.FlushAsync();
-        }
-      }
-    }
-
-    private async Task RunSingleServiceScan(IScanService scanService, ScanServiceContext scanServiceContext, CatalogItemRecord record)
-    {
-      try
-      {
-        using(var timing = MiniProfiler.Current.CustomTiming(scanService.Id, "", null, false))
-        {
-          await scanService.ScanAsync(scanServiceContext, record);
-        }
-      }
-      catch(Exception e)
-      {
-        this._logger.LogError(e, "Scan error.");
+        startBlock.Complete();
+        await endBlock.Completion;
+        await Task.Delay(1000 / 8); // Maker sure the progress bar updated (it updated by timer 8 times per second).
       }
     }
   }

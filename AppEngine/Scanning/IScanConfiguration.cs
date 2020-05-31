@@ -8,11 +8,6 @@ namespace Mt.MediaFiles.AppEngine.Scanning
   internal interface IScanConfiguration
   {
     /// <summary>
-    /// The subtasks to perform.
-    /// </summary>
-    IReadOnlyList<IScanService> ScanServices { get; }
-
-    /// <summary>
     /// Given scan root item name.
     /// </summary>
     string ScanRootItemName { get; }
@@ -21,5 +16,10 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// Checks if an entry with given name should be ignored during scanning.
     /// </summary>
     bool IsIgnoredEntry(string entryName);
+
+    /// <summary>
+    /// Creates set of scan services to use.
+    /// </summary>
+    IList<IScanService> CreateScanServices();
   }
 }

@@ -24,7 +24,12 @@ namespace Mt.MediaFiles.AppEngine.Test.Scanning
       var infoPartScanRoot = new InfoPartScanRoot { RootPath = "some_root_path" };
       mockItemExplorer.CreateScanRootPartAsync(@"x:\folder1\folder2").Returns(infoPartScanRoot);
 
-      var sut = new ItemScanner(mockLoggerFactory, mockItemExplorer, 1, @"x:\folder1\folder2");
+      var sut = new ItemScanner(
+        mockLoggerFactory,
+        mockItemExplorer,
+        new List<IBufferedStorage>(),
+        1,
+        @"x:\folder1\folder2");
       await sut.Scan(mockScanContext);
 
       // Verify
@@ -47,7 +52,7 @@ namespace Mt.MediaFiles.AppEngine.Test.Scanning
       var mockItemExplorer = Substitute.For<IItemExplorer>();
 
       var mockScanContext = Substitute.For<IScanContext>();
-      mockScanContext.ScanConfiguration.ScanServices.Returns(mockServices);
+      mockScanContext.ScanConfiguration.CreateScanServices().Returns(mockServices);
 
       var records = new List<CatalogItemRecord>
       {
@@ -61,7 +66,12 @@ namespace Mt.MediaFiles.AppEngine.Test.Scanning
       var infoPartScanRoot = new InfoPartScanRoot { RootPath = "some_root_path" };
       mockItemExplorer.CreateScanRootPartAsync(@"x:\folder1\folder2").Returns(infoPartScanRoot);
 
-      var sut = new ItemScanner(mockLoggerFactory, mockItemExplorer, 1, @"x:\folder1\folder2");
+      var sut = new ItemScanner(
+        mockLoggerFactory,
+        mockItemExplorer,
+        new List<IBufferedStorage>(),
+        1,
+        @"x:\folder1\folder2");
       await sut.Scan(mockScanContext);
 
       // Verify
@@ -71,6 +81,39 @@ namespace Mt.MediaFiles.AppEngine.Test.Scanning
         {
           await s.Received().ScanAsync(Arg.Any<IScanServiceContext>(), r);
         }
+      }
+    }
+
+    [Fact]
+    public async Task Should_Flush_Buffers()
+    {
+      var mockBufferedStorages = new List<IBufferedStorage>
+      {
+        Substitute.For<IBufferedStorage>(),
+        Substitute.For<IBufferedStorage>()
+      };
+
+      var mockLoggerFactory = Substitute.For<ILoggerFactory>();
+      var mockItemExplorer = Substitute.For<IItemExplorer>();
+
+      var mockScanContext = Substitute.For<IScanContext>();
+
+
+      var infoPartScanRoot = new InfoPartScanRoot { RootPath = "some_root_path" };
+      mockItemExplorer.CreateScanRootPartAsync(@"x:\folder1\folder2").Returns(infoPartScanRoot);
+
+      var sut = new ItemScanner(
+        mockLoggerFactory,
+        mockItemExplorer,
+        mockBufferedStorages,
+        1,
+        @"x:\folder1\folder2");
+      await sut.Scan(mockScanContext);
+
+      // Verify
+      foreach(var bs in mockBufferedStorages)
+      {
+        await bs.Received().FlushAsync();
       }
     }
   }

@@ -11,6 +11,20 @@ using System.Threading.Tasks;
 namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
 {
   /// <summary>
+  /// The service factory.
+  /// </summary>
+  internal class ScanServiceFactoryThumbnail : ScanServiceFactoryBase<ScanServiceThumbnail>
+  {
+    public ScanServiceFactoryThumbnail(IServiceProvider serviceProvider
+      ) : base(
+        serviceProvider,
+        AppEngine.Video.HandlerIds.ScanSvcThumbnail,
+        new List<string>())
+    {
+    }
+  }
+
+  /// <summary>
   /// Saves media thumbnails during the scanning.
   /// </summary>
   internal class ScanServiceThumbnail : IScanService
@@ -38,14 +52,6 @@ namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
     /// IScanService.
     /// </summary>
     public IReadOnlyList<string> Dependencies => new string[0];
-
-    /// <summary>
-    /// IScanService.
-    /// </summary>
-    public Task FlushAsync()
-    {
-      return Task.CompletedTask;
-    }
 
     /// <summary>
     /// IScanService.

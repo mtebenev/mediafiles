@@ -9,7 +9,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Common
   /// </summary>
   internal static class FileExtensionCheck
   {
-    private static readonly string[] SupportedExtensions = new[] { ".mp4", ".avi", ".mkv", ".flv", ".wmv", ".3gp" };
+    private static readonly string[] SupportedExtensions = new[] { ".mp4", ".avi", ".mkv", ".mpg", ".flv", ".wmv", ".3gp" };
 
     /// <summary>
     /// Checks if the given path has a supported video extension.
