@@ -35,6 +35,11 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
       var thumbnailTask = new FfTaskGetThumbnail(fsPath, options);
 
       var taskResult = await this._mediaToolkitService.ExecuteAsync(thumbnailTask);
+      if(taskResult.ThumbnailData.Length == 0)
+      {
+        throw new InvalidOperationException($"Cannot retrieve video thumbnail: {fsPath}. The file seems to be invalid.");
+      }
+
       var record = new VideoImprintRecord
       {
         CatalogItemId = catalogItemId,

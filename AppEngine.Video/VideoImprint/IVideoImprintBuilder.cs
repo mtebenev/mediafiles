@@ -9,7 +9,7 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
   public interface IVideoImprintBuilder
   {
     /// <summary>
-    /// Creates the video imprint record for given file
+    /// Creates the video imprint record for given file.
     /// </summary>
     Task<VideoImprintRecord> CreateRecordAsync(int catalogItemId, string fsPath, double videoDuration);
   }

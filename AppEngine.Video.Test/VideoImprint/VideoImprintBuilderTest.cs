@@ -35,5 +35,19 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
           VideoImprintId = 0
         });
     }
+
+    [Fact]
+    public async Task Should_Throw_When_No_Thumbnail_Data()
+    {
+      var mockService = Substitute.For<IMediaToolkitService>();
+      mockService.ExecuteAsync<GetThumbnailResult>(default).ReturnsForAnyArgs(
+        new GetThumbnailResult(new byte[0]));
+
+      var builder = new VideoImprintBuilder(mockService);
+      await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+      {
+        await builder.CreateRecordAsync(100, @"x:\folder\file.mp4", default);
+      });
+    }
   }
 }

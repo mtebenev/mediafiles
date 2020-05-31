@@ -23,10 +23,5 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// Executes the sub-task on the catalog item record.
     /// </summary>
     Task ScanAsync(IScanServiceContext context, CatalogItemRecord record);
-
-    /// <summary>
-    /// Flushes buffered data when scan is completed.
-    /// </summary>
-    Task FlushAsync();
   }
 }

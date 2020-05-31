@@ -42,14 +42,6 @@ namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
     /// <summary>
     /// IScanService.
     /// </summary>
-    public Task FlushAsync()
-    {
-      return Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// IScanService.
-    /// </summary>
     public async Task ScanAsync(IScanServiceContext context, CatalogItemRecord record)
     {
       if(FileExtensionCheck.IsVideo(this._fileSystem, record.Path))

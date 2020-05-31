@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
 using MediaToolkit.Model;
@@ -36,10 +34,9 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
       var task = new VideoImprintUpdater(mockStorage, mockBuilder, mockService);
       await task.UpdateAsync(10, @"x:\folder\file.mp4");
 
-      await mockStorage.Received().SaveRecordsAsync(Arg.Is<IEnumerable<VideoImprintRecord>>(x =>
-      x.First().CatalogItemId == 10
-      && x.First().ImprintData == thumbnailData
-      && x.Count() == 1));
+      await mockStorage.Received().SaveRecordAsync(Arg.Is<VideoImprintRecord>(x =>
+      x.CatalogItemId == 10
+      && x.ImprintData == thumbnailData));
     }
   }
 }

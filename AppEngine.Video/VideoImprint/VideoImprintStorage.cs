@@ -4,23 +4,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.AppEngine.Common;
 
 namespace AppEngine.Video.VideoImprint
 {
   /// <summary>
   /// The video imprint storage.
-  /// Design note: singleton.
+  /// Design note: singleton. With current architecture this is really a bottleneck.
+  /// Having one storage per service let us get rid of locking when saving records.
+  /// Need to seperate the buffer buffer and anctual storage (so we can have buffer per service).
   /// </summary>
-  internal class VideoImprintStorage : IVideoImprintStorage
+  internal class VideoImprintStorage : IVideoImprintStorage, IBufferedStorage
   {
     private readonly IDbConnection _dbConnection;
     private readonly AsyncSemaphoreLock _semaphore;
+    private readonly VideoImprintRecord[] _buffer;
+    private int _bufferPosition;
 
-    public VideoImprintStorage(IDbConnection dbConnection)
+    public VideoImprintStorage(IDbConnection dbConnection, int bufferSize)
     {
       this._dbConnection = dbConnection;
       this._semaphore = new AsyncSemaphoreLock();
+      this._buffer = new VideoImprintRecord[bufferSize];
+      this._bufferPosition = 0;
     }
 
     /// <summary>
@@ -37,18 +44,17 @@ namespace AppEngine.Video.VideoImprint
     /// <summary>
     /// IVideoImprintStorage.
     /// </summary>
-    public async Task SaveRecordsAsync(IEnumerable<VideoImprintRecord> records)
+    public async Task SaveRecordAsync(VideoImprintRecord record)
     {
       using(await this._semaphore.Lock())
       {
-        using(var transaction = this._dbConnection.BeginTransaction())
+        if(this._bufferPosition == this._buffer.Length)
         {
-          foreach(var r in records)
-          {
-            this._dbConnection.Insert(r, transaction);
-          }
-          transaction.Commit();
+          await this.FlushAsync();
         }
+
+        this._buffer[this._bufferPosition] = record;
+        this._bufferPosition++;
       }
     }
 
@@ -63,9 +69,24 @@ namespace AppEngine.Video.VideoImprint
 
     /// <summary>
     /// IVideoImprintStorage.
+    /// Note: assumes single-treahded access.
     /// </summary>
     public Task FlushAsync()
     {
+      if(this._bufferPosition > 0)
+      {
+        var toSave = this._buffer.Take(this._bufferPosition);
+        using(var transaction = this._dbConnection.BeginTransaction())
+        {
+          foreach(var r in toSave)
+          {
+            this._dbConnection.Insert(r, transaction);
+          }
+          transaction.Commit();
+        }
+        this._bufferPosition = 0;
+      }
+
       return Task.CompletedTask;
     }
   }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -23,17 +24,19 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     private readonly int _parentItemId;
     private readonly ILoggerFactory _loggerFactory;
     private readonly IItemExplorer _itemExplorer;
+    private readonly IBufferedStorage[] _bufferedStorages;
     private readonly string _scanPath;
     private readonly ILogger<ItemScanner> _logger;
 
     /// <summary>
     /// Ctor.
     /// </summary>
-    public ItemScanner(ILoggerFactory loggerFactory, IItemExplorer itemExplorer, int parentItemId, string scanPath)
+    public ItemScanner(ILoggerFactory loggerFactory, IItemExplorer itemExplorer, IEnumerable<IBufferedStorage> bufferedStorages, int parentItemId, string scanPath)
     {
       this._parentItemId = parentItemId;
       this._loggerFactory = loggerFactory;
       this._itemExplorer = itemExplorer;
+      this._bufferedStorages = bufferedStorages.ToArray();
       this._scanPath = scanPath;
       this._logger = loggerFactory.CreateLogger<ItemScanner>();
     }
@@ -71,6 +74,12 @@ namespace Mt.MediaFiles.AppEngine.Scanning
         {
           scanContext.UpdateStatus("Scanning files...");
           await this.RunScanServicesAsync(scanContext, location);
+        }
+
+        // Finalize (flush data).
+        foreach(var bs in this._bufferedStorages)
+        {
+          await bs.FlushAsync();
         }
       }
 
@@ -128,12 +137,6 @@ namespace Mt.MediaFiles.AppEngine.Scanning
         startBlock.Complete();
         await endBlock.Completion;
         await Task.Delay(1000 / 8); // Maker sure the progress bar updated (it updated by timer 8 times per second).
-
-        // Finalize (flush data).
-        foreach(var ss in scanContext.ScanConfiguration.ScanServices)
-        {
-          await ss.FlushAsync();
-        }
       }
     }
   }
