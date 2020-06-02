@@ -1,8 +1,9 @@
+using Mt.MediaFiles.AppEngine.Matching;
 using Mt.MediaFiles.AppEngine.Scanning;
 using System;
 using System.Threading.Tasks;
 
-namespace Mt.MediaFiles.AppEngine.Matching
+namespace Mt.MediaFiles.AppEngine.Video.Matching
 {
   /// <summary>
   /// Matches lengths of two video items.

@@ -1,5 +1,6 @@
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Matching;
+using Mt.MediaFiles.AppEngine.Video.Matching;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

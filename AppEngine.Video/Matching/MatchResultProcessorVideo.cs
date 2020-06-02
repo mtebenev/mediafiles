@@ -1,7 +1,8 @@
+using Mt.MediaFiles.AppEngine.Matching;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mt.MediaFiles.AppEngine.Matching
+namespace Mt.MediaFiles.AppEngine.Video.Matching
 {
   /// <summary>
   /// Match result processor for video files.

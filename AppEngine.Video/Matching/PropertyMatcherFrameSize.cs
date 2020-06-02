@@ -1,7 +1,8 @@
+using Mt.MediaFiles.AppEngine.Matching;
 using Mt.MediaFiles.AppEngine.Scanning;
 using System.Threading.Tasks;
 
-namespace Mt.MediaFiles.AppEngine.Matching
+namespace Mt.MediaFiles.AppEngine.Video.Matching
 {
   /// <summary>
   /// Matches resolutions of two videos.
