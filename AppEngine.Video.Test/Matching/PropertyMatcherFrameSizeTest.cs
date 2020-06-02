@@ -1,11 +1,12 @@
 using FluentAssertions;
 using Mt.MediaFiles.AppEngine.Matching;
 using Mt.MediaFiles.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Video.Matching;
 using NSubstitute;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Mt.MediaFiles.AppEngine.Test.Matching
+namespace Mt.MediaFiles.AppEngine.Video.Test.Matching
 {
   public class PropertyMatcherFrameSizeTest
   {

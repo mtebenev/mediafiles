@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Matching;
+using Mt.MediaFiles.AppEngine.Video.Matching;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
 using Mt.MediaFiles.ClientApp.Cli.Ui;
 

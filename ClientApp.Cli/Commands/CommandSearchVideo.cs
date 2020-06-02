@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using MediaToolkit.Services;
 using Mt.MediaFiles.AppEngine.Matching;
+using Mt.MediaFiles.AppEngine.Video.Matching;
 using Mt.MediaFiles.AppEngine.Video.Tasks;
 using Mt.MediaFiles.ClientApp.Cli.Core;
 using Mt.MediaFiles.ClientApp.Cli.Ui;

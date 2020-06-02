@@ -1,12 +1,13 @@
 using FluentAssertions;
 using Mt.MediaFiles.AppEngine.Matching;
 using Mt.MediaFiles.AppEngine.Scanning;
+using Mt.MediaFiles.AppEngine.Video.Matching;
 using NSubstitute;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Mt.MediaFiles.AppEngine.Test.Matching
+namespace Mt.MediaFiles.AppEngine.Video.Test.Matching
 {
   public class PropertyMatcherVideoLengthTest
   {
@@ -122,6 +123,35 @@ namespace Mt.MediaFiles.AppEngine.Test.Matching
         {
           Name = "length",
           Value = "00:01:00",
+          RelativeValue = null,
+          Qualification = ComparisonQualification.Equal
+        });
+    }
+
+    [Fact]
+    public async Task Should_Ignore_Margin_Diff()
+    {
+      var mockAccessBase = Substitute.For<IInfoPartAccess>();
+      mockAccessBase.GetInfoPartAsync<InfoPartVideo>(0)
+        .Returns(new InfoPartVideo
+        {
+          Duration = 500
+        });
+      var mockAccessOther = Substitute.For<IInfoPartAccess>();
+      mockAccessOther.GetInfoPartAsync<InfoPartVideo>(0)
+        .Returns(new InfoPartVideo
+        {
+          Duration = 600
+        });
+
+      var matcher = new PropertyMatcherVideoLength(mockAccessBase, mockAccessOther);
+      var result = await matcher.MatchAsync(0, 0);
+
+      result.Should().BeEquivalentTo(
+        new MatchOutputProperty
+        {
+          Name = "length",
+          Value = "00:00:00",
           RelativeValue = null,
           Qualification = ComparisonQualification.Equal
         });

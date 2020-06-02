@@ -1,8 +1,9 @@
+using Mt.MediaFiles.AppEngine.Matching;
 using Mt.MediaFiles.AppEngine.Scanning;
 using System;
 using System.Threading.Tasks;
 
-namespace Mt.MediaFiles.AppEngine.Matching
+namespace Mt.MediaFiles.AppEngine.Video.Matching
 {
   /// <summary>
   /// Matches lengths of two video items.
@@ -29,18 +30,22 @@ namespace Mt.MediaFiles.AppEngine.Matching
       var baseInfoPart = await this._baseItemAcess.GetInfoPartAsync<InfoPartVideo>(baseItemId);
       var otherInfoPart = await this._otherItemAccess.GetInfoPartAsync<InfoPartVideo>(otherItemId);
 
-      var lengthDiff = otherInfoPart.Duration - baseInfoPart.Duration;
-      var qualification = lengthDiff > 0
-        ? ComparisonQualification.Better
-        : lengthDiff == 0 ? ComparisonQualification.Equal : ComparisonQualification.Worse;
-      var diff = otherInfoPart.Duration - baseInfoPart.Duration;
-      var diffFormat = diff > 0 ? "\\+hh\\:mm\\:ss" : "\\-hh\\:mm\\:ss";
+      var marginSeconds = 1; // Ignore 1second (or less) difference.
+      var lengthDiff = TimeSpan.FromMilliseconds(otherInfoPart.Duration).TotalSeconds - TimeSpan.FromMilliseconds(baseInfoPart.Duration).TotalSeconds;
+      var qualification = ComparisonQualification.Equal;
+      if(Math.Abs(lengthDiff) > marginSeconds)
+      {
+        qualification = lengthDiff > 0
+          ? ComparisonQualification.Better
+          : ComparisonQualification.Worse;
+      }
+      var diffFormat = lengthDiff > 0 ? "\\+hh\\:mm\\:ss" : "\\-hh\\:mm\\:ss";
 
       var result = new MatchOutputProperty
       {
         Name = "length",
         Value = TimeSpan.FromMilliseconds(otherInfoPart.Duration).ToString("hh\\:mm\\:ss"),
-        RelativeValue = qualification == ComparisonQualification.Equal ? null : TimeSpan.FromMilliseconds(diff).ToString(diffFormat),
+        RelativeValue = qualification == ComparisonQualification.Equal ? null : TimeSpan.FromSeconds(lengthDiff).ToString(diffFormat),
         Qualification = qualification
       };
       return result;
