@@ -35,6 +35,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
     typeof(Commands.CommandScan),
     typeof(Commands.CommandSearchVideo),
     typeof(Commands.CommandSearchVideoDuplicates),
+    typeof(Commands.CommandServe),
     typeof(Commands.CommandUpdate),
     typeof(Commands.Catalog.CommandCatalog))]
   [VersionOptionFromMember("--version", MemberName = nameof(GetVersion))]
