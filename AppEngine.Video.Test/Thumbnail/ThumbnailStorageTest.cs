@@ -31,6 +31,45 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.Thumbnail
       }
     }
 
+    [Fact]
+    public async Task Load_Thumbnail_Ids()
+    {
+      var (connection, storage) = await this.CreateTestStorageAsync();
+      using(connection)
+      {
+        var records = new[]
+        {
+          new ThumbnailRecord {CatalogItemId = 10, Offset = 10, ThumbnailData = new byte[] { 1, 1, 1 } },
+          new ThumbnailRecord {CatalogItemId = 10, Offset = 20, ThumbnailData = new byte[] { 2, 2, 2 } },
+          new ThumbnailRecord {CatalogItemId = 11, Offset = 30, ThumbnailData = new byte[] { 3, 3, 3 } },
+        };
+        await storage.SaveRecordsAsync(records);
+
+        var result = await storage.GetThumbnailIds(10);
+        Assert.Equal(2, result.Count);
+      }
+    }
+
+    [Fact]
+    public async Task Load_Thumbnail_Data()
+    {
+      var (connection, storage) = await this.CreateTestStorageAsync();
+      using(connection)
+      {
+        var records = new[]
+        {
+          new ThumbnailRecord {CatalogItemId = 10, Offset = 10, ThumbnailData = new byte[] { 1, 1, 1 } },
+          new ThumbnailRecord {CatalogItemId = 10, Offset = 20, ThumbnailData = new byte[] { 2, 2, 2 } },
+          new ThumbnailRecord {CatalogItemId = 11, Offset = 30, ThumbnailData = new byte[] { 3, 3, 3 } },
+        };
+        await storage.SaveRecordsAsync(records);
+
+        var thumbnailIds = await storage.GetThumbnailIds(11);
+        var result = await storage.GetThumbnailDataAsync(thumbnailIds[0]);
+        Assert.Equal(new byte[] { 3, 3, 3 }, result);
+      }
+    }
+
     private async Task<(SqliteConnection, ThumbnailStorage)> CreateTestStorageAsync()
     {
       var connectionString = new SqliteConnectionStringBuilder

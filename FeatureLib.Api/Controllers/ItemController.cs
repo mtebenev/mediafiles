@@ -1,8 +1,10 @@
 using EmbedIO;
 using EmbedIO.Routing;
 using EmbedIO.WebApi;
+using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.FeatureLib.Api.Dto;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Mt.MediaFiles.FeatureLib.Api.Controllers
@@ -12,17 +14,35 @@ namespace Mt.MediaFiles.FeatureLib.Api.Controllers
   /// </summary>
   public sealed class ItemController : WebApiController
   {
-    [Route(HttpVerbs.Get, "/items")]
-    public Task<List<CatalogItemDto>> Get()
-    {
-      var result = new List<CatalogItemDto>
-      {
-        new CatalogItemDto {CatalogItemId = 1, Path = "Path 1"},
-        new CatalogItemDto {CatalogItemId = 2, Path = "Path 2"},
-        new CatalogItemDto {CatalogItemId = 3, Path = "Path 3"},
-      };
+    private readonly ICatalogContext _catalogContext;
 
-      return Task.FromResult(result);
+    /// <summary>
+    /// Ctor.
+    /// </summary>
+    public ItemController(ICatalogContext catalogContext)
+    {
+      this._catalogContext = catalogContext;
+    }
+
+    /// <summary>
+    /// Returns catalog items.
+    /// </summary>
+    [Route(HttpVerbs.Get, "/items")]
+    public async Task<List<CatalogItemDto>> Get()
+    {
+      var walker = CatalogTreeWalker.CreateDefaultWalker(
+        this._catalogContext.Catalog,
+        this._catalogContext.Catalog.RootItem.CatalogItemId);
+
+      var items = await walker.ToListAsync();
+      var result = items.Select(i =>
+      new CatalogItemDto
+      {
+        CatalogItemId = i.CatalogItemId,
+        Path = i.Path
+      }).ToList();
+
+      return result;
     }
   }
 }

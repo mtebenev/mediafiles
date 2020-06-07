@@ -1,6 +1,7 @@
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.ClientApp.Cli.Core;
 using Mt.MediaFiles.FeatureLib.Api.Tasks;
+using System;
 using System.Threading.Tasks;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
@@ -12,9 +13,9 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   [ExperimentalCommand]
   internal class CommandServe
   {
-    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext)
+    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, IServiceProvider serviceProvider)
     {
-      var task = new CatalogTaskServe();
+      var task = new CatalogTaskServe(serviceProvider);
       await shellAppContext.Catalog.ExecuteTaskAsync(task);
       return Program.CommandExitResult;
     }
