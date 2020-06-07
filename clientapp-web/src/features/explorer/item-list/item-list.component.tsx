@@ -1,5 +1,14 @@
 import React, { } from 'react';
-import { IRestCatalogItem } from './irest-catalog-item';
+import { List, ListItem } from '@material-ui/core'
+import { IRestCatalogItem } from '../irest-catalog-item';
+import { ItemComponent } from './item.component';
+
+interface IProps {
+  /**
+   * Callback invoked when a catalog item selected.
+   */
+  onItemSelected: (catalogItemId: number) => void;
+}
 
 interface IState {
   items: IRestCatalogItem[];
@@ -8,14 +17,14 @@ interface IState {
 /**
  * The item list component.
  */
-export class ItemListComponent extends React.Component<{}, IState> {
+export class ItemListComponent extends React.Component<IProps, IState> {
 
   /**
-   *
+   * Ctor.
    */
-  constructor(props: any) {
+  constructor(props: IProps) {
     super(props);
-    this.state = {items: []};
+    this.state = { items: [] };
   }
 
   /**
@@ -25,14 +34,16 @@ export class ItemListComponent extends React.Component<{}, IState> {
     return (
       <>
         <div>Items list:</div>
-        <div>
+        <List>
           {this.state.items.map(i => (
-            <div key={i.catalogItemId}>
-              <div>{i.catalogItemId}</div>
-              <div>{i.path}</div>
-            </div>
+            <ListItem
+              button
+              onClick={(event) => this.props.onItemSelected(i.catalogItemId)}
+            >
+              <ItemComponent item={i} />
+            </ListItem>
           ))}
-        </div>
+        </List>
         <div>
           <button onClick={() => {
             this.loadData();
