@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
@@ -6,13 +7,16 @@ using YesSql;
 
 namespace Mt.MediaFiles.AppEngine.CatalogStorage
 {
-  internal class StorageManager : IStorageManager
+  /// <summary>
+  /// Storage manager implementation.
+  /// </summary>
+  internal class StorageManager : IStorageManager, IDisposable
   {
     private readonly IDbConnection _dbConnection;
     private readonly Store _store;
 
     /// <summary>
-    /// Create with connection string
+    /// Ctor.
     /// </summary>
     public StorageManager(IDbConnection dbConnection, IConfiguration storeConfiguration)
     {
@@ -44,7 +48,14 @@ namespace Mt.MediaFiles.AppEngine.CatalogStorage
       }
     }
 
+    /// <summary>
+    /// IStorageManager.
+    /// </summary>
     public IDbConnection DbConnection => _dbConnection;
+
+    /// <summary>
+    /// IStorageManager.
+    /// </summary>
     public IStore Store => _store;
 
     /// <summary>
@@ -52,9 +63,7 @@ namespace Mt.MediaFiles.AppEngine.CatalogStorage
     /// </summary>
     public void Dispose()
     {
-      _dbConnection?.Dispose();
-      _store?.Dispose();
+      _store.Dispose();
     }
-
   }
 }

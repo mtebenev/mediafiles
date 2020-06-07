@@ -1,5 +1,6 @@
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Mt.MediaFiles.AppEngine.Common;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
   internal class ThumbnailStorage : IThumbnailStorage
   {
     private readonly IDbConnection _dbConnection;
+    private readonly AsyncSemaphoreLock _semaphore;
 
     /// <summary>
     /// Ctor.
@@ -20,14 +22,16 @@ namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
     public ThumbnailStorage(IDbConnection dbConnection)
     {
       this._dbConnection = dbConnection;
+      this._semaphore = new AsyncSemaphoreLock();
     }
 
     /// <summary>
     /// IThumbnailStorage.
     /// </summary>
-    public Task SaveRecordsAsync(IList<ThumbnailRecord> records)
+    public async Task SaveRecordsAsync(IList<ThumbnailRecord> records)
     {
-      using (var transaction = this._dbConnection.BeginTransaction())
+      using(await this._semaphore.Lock())
+      using(var transaction = this._dbConnection.BeginTransaction())
       {
         foreach (var r in records)
         {
@@ -35,8 +39,6 @@ namespace Mt.MediaFiles.AppEngine.Video.Thumbnail
         }
         transaction.Commit();
       }
-
-      return Task.CompletedTask;
     }
 
     /// <summary>
