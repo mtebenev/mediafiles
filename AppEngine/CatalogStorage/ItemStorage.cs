@@ -15,7 +15,14 @@ namespace Mt.MediaFiles.AppEngine.CatalogStorage
   {
     private readonly IStorageManager _storageManager;
 
+    /// <summary>
+    /// Owned by storage manager.
+    /// </summary>
     private IDbConnection DbConnection => _storageManager.DbConnection;
+
+    /// <summary>
+    /// Owned by storage manager.
+    /// </summary>
     private IStore Store => _storageManager.Store;
 
     public ItemStorage(IStorageManager storageManager)

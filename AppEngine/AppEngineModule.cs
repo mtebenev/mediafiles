@@ -1,5 +1,7 @@
+using System;
 using System.Data;
 using AspNetCoreInjection.TypedFactories;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.AppEngine.FileHandlers;
@@ -17,9 +19,8 @@ namespace Mt.MediaFiles.AppEngine
     /// <summary>
     /// Call to configure the container.
     /// </summary>
-    public static void ConfigureContainer(IServiceCollection services, ICatalogSettings catalogSettings, IDbConnection connection)
+    public static void ConfigureContainer(IServiceCollection services, ICatalogSettings catalogSettings)
     {
-      services.AddSingleton<IDbConnection>(connection);
       services.AddSingleton<YesSql.IConfiguration>(x =>
       {
         var storeConfiguration = new YesSql.Configuration();
@@ -27,6 +28,7 @@ namespace Mt.MediaFiles.AppEngine
 
         return storeConfiguration;
       });
+      services.AddTransient<IDbConnection>(c => OpenDbConnection(catalogSettings));
 
       services.AddTransient<IStorageManager, StorageManager>();
       services.AddTransient<IScanConfigurationBuilder, ScanConfigurationBuilder>();
@@ -44,6 +46,28 @@ namespace Mt.MediaFiles.AppEngine
         .RegisterTypedFactory<ICatalogTaskScanFactory>().ForConcreteType<CatalogTaskScan>();
       services
         .RegisterTypedFactory<IItemScannerFactory>().ForConcreteType<ItemScanner>();
+    }
+
+    /// <summary>
+    /// Initializes connection.
+    /// </summary>
+    private static IDbConnection OpenDbConnection(ICatalogSettings catalogSettings)
+    {
+      IDbConnection result = null;
+      try
+      {
+        result = new SqliteConnection(catalogSettings.ConnectionString);
+        result.Open();
+      }
+      catch(Exception e)
+      {
+        throw new InvalidOperationException(
+          $"Could not open the sqlite database \"{catalogSettings.ConnectionString}\". Please make sure that the specified directory exists",
+          e
+        );
+      }
+
+      return result;
     }
   }
 }
