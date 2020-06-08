@@ -17,6 +17,6 @@ namespace Mt.MediaFiles.AppEngine.Scanning
     /// <summary>
     /// Returns enumerable for the item records to be saved.
     /// </summary>
-    IAsyncEnumerable<CatalogItemRecord> Explore(string scanPath, int scanRootId);
+    IAsyncEnumerable<CatalogItemRecord> Explore(string scanPath, int scanRootId, IScanConfiguration scanConfiguration);
   }
 }

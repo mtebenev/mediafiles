@@ -54,7 +54,7 @@ namespace Mt.MediaFiles.AppEngine.Scanning
       using(var timing = MiniProfiler.Current.Step("Exploring and saving items"))
       {
         scanContext.UpdateStatus("Exploring files...");
-        var records = await this._itemExplorer.Explore(this._scanPath, scanRootItemId)
+        var records = await this._itemExplorer.Explore(this._scanPath, scanRootItemId, scanContext.ScanConfiguration)
           .ToListAsync();
 
         scanContext.UpdateStatus("Saving file records...");
