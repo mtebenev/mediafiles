@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(NetStandardTargetFramework)</TargetFramework>
+    <RootNamespace>Mt.MediaFiles.FeatureLib.Api</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EmbedIO" Version="3.4.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppEngine.Video\AppEngine.Video.csproj" />
+    <ProjectReference Include="..\AppEngine\AppEngine.csproj" />
+  </ItemGroup>
+
+</Project>

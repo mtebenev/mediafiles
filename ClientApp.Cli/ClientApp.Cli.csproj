@@ -22,6 +22,7 @@
     <ProjectReference Include="..\AppEngine.Ebooks\AppEngine.Ebooks.csproj" />
     <ProjectReference Include="..\AppEngine.Video\AppEngine.Video.csproj" />
     <ProjectReference Include="..\AppEngine\AppEngine.csproj" />
+    <ProjectReference Include="..\FeatureLib.Api\FeatureLib.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>
