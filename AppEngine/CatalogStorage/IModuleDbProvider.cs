@@ -9,7 +9,7 @@ namespace Mt.MediaFiles.AppEngine.CatalogStorage
   public interface IModuleDbProvider
   {
     /// <summary>
-    /// Invoked by engine when catalog db gets initialized first time
+    /// Invoked by engine when catalog db gets initialized first time.
     /// </summary>
     Task InitializeDbAsync(IDbConnection dbConnection);
   }

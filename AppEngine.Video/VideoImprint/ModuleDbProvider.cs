@@ -11,7 +11,7 @@ namespace Mt.MediaFiles.AppEngine.Video.VideoImprint
   internal class ModuleDbProvider : IModuleDbProvider
   {
     /// <summary>
-    /// IModuleDbProvider
+    /// IModuleDbProvider.
     /// </summary>
     public async Task InitializeDbAsync(IDbConnection dbConnection)
     {

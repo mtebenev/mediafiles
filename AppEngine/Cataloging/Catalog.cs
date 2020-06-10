@@ -55,14 +55,6 @@ namespace Mt.MediaFiles.AppEngine.Cataloging
     public bool IsOpen => _rootItem != null;
 
     /// <summary>
-    /// IDisposable
-    /// </summary>
-    public void Dispose()
-    {
-      _storageManager?.Dispose();
-    }
-
-    /// <summary>
     /// Loads initial data from catalog (root item etc)
     /// </summary>
     internal async Task OpenAsync(StorageConfiguration storageConfiguration)

@@ -15,7 +15,9 @@ namespace AppEngine.Video.VideoImprint
   /// Having one storage per service let us get rid of locking when saving records.
   /// Need to seperate the buffer buffer and anctual storage (so we can have buffer per service).
   /// </summary>
-  internal class VideoImprintStorage : IVideoImprintStorage, IBufferedStorage
+  internal class VideoImprintStorage :
+    IVideoImprintStorage,
+    IBufferedStorage
   {
     private readonly IDbConnection _dbConnection;
     private readonly AsyncSemaphoreLock _semaphore;

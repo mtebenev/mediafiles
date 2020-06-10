@@ -7,7 +7,7 @@ namespace Mt.MediaFiles.AppEngine.Cataloging
   /// <summary>
   /// Basic catalog interface
   /// </summary>
-  public interface ICatalog : IDisposable
+  public interface ICatalog
   {
     /// <summary>
     /// The catalog name.
