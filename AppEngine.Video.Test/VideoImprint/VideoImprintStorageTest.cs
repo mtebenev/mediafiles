@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using AppEngine.Video.VideoImprint;
 using FluentAssertions;
 using Microsoft.Data.Sqlite;
+using Mt.MediaFiles.AppEngine.Common;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
+using NSubstitute;
 using Xunit;
 
 namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
@@ -106,11 +108,13 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.VideoImprint
 
       var connection = new SqliteConnection(connectionString);
       connection.Open();
+      var dbConnectionProvider = Substitute.For<IDbConnectionProvider>();
+      dbConnectionProvider.GetConnection().Returns(connection);
 
       var moduleDbProvider = new ModuleDbProvider();
       await moduleDbProvider.InitializeDbAsync(connection);
 
-      var storage = new VideoImprintStorage(connection, bufferSize);
+      var storage = new VideoImprintStorage(dbConnectionProvider, bufferSize);
 
       return (connection, storage);
     }

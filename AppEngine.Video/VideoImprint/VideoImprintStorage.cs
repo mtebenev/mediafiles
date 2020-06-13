@@ -19,14 +19,15 @@ namespace AppEngine.Video.VideoImprint
     IVideoImprintStorage,
     IBufferedStorage
   {
-    private readonly IDbConnection _dbConnection;
+    private IDbConnection _dbConnection;
+    private readonly IDbConnectionProvider _dbConnectionProvider;
     private readonly AsyncSemaphoreLock _semaphore;
     private readonly VideoImprintRecord[] _buffer;
     private int _bufferPosition;
 
-    public VideoImprintStorage(IDbConnection dbConnection, int bufferSize)
+    public VideoImprintStorage(IDbConnectionProvider dbConnectionProvider, int bufferSize)
     {
-      this._dbConnection = dbConnection;
+      this._dbConnectionProvider = dbConnectionProvider;
       this._semaphore = new AsyncSemaphoreLock();
       this._buffer = new VideoImprintRecord[bufferSize];
       this._bufferPosition = 0;
@@ -37,6 +38,7 @@ namespace AppEngine.Video.VideoImprint
     /// </summary>
     public async Task<IList<VideoImprintRecord>> GetAllRecordsAsync()
     {
+      this.EnsureDbConnection();
       var query = @"SELECT * FROM VideoImprint";
       var records = await this._dbConnection.QueryAsync<VideoImprintRecord>(query);
 
@@ -65,6 +67,7 @@ namespace AppEngine.Video.VideoImprint
     /// </summary>
     public async Task DeleteRecordsAsync(int catalogItemId)
     {
+      this.EnsureDbConnection();
       var query = @"DELETE FROM VideoImprint WHERE CatalogItemId=@CatalogItemId";
       await this._dbConnection.ExecuteAsync(query, new { CatalogItemId = catalogItemId });
     }
@@ -75,6 +78,7 @@ namespace AppEngine.Video.VideoImprint
     /// </summary>
     public Task FlushAsync()
     {
+      this.EnsureDbConnection();
       if(this._bufferPosition > 0)
       {
         var toSave = this._buffer.Take(this._bufferPosition);
@@ -90,6 +94,14 @@ namespace AppEngine.Video.VideoImprint
       }
 
       return Task.CompletedTask;
+    }
+
+    private void EnsureDbConnection()
+    {
+      if(this._dbConnection == null)
+      {
+        this._dbConnection = this._dbConnectionProvider.GetConnection();
+      }
     }
   }
 }

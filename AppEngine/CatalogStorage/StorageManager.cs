@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.Sqlite;
+using Mt.MediaFiles.AppEngine.Common;
 using YesSql;
 
 namespace Mt.MediaFiles.AppEngine.CatalogStorage
@@ -18,9 +19,9 @@ namespace Mt.MediaFiles.AppEngine.CatalogStorage
     /// <summary>
     /// Ctor.
     /// </summary>
-    public StorageManager(IDbConnection dbConnection, IConfiguration storeConfiguration)
+    public StorageManager(IDbConnectionProvider dbConnectionProvider, IConfiguration storeConfiguration)
     {
-      this._dbConnection = dbConnection;
+      this._dbConnection = dbConnectionProvider.GetConnection();
       this._store = new Store(storeConfiguration);
       this._store.RegisterIndexes<CatalogItemIndexProvider>();
     }

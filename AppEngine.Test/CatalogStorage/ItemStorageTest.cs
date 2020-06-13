@@ -6,6 +6,8 @@ using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Common;
+using NSubstitute;
 using Xunit;
 using YesSql;
 using YesSql.Provider.Sqlite;
@@ -84,8 +86,10 @@ namespace Mt.MediaFiles.AppEngine.Test.CatalogStorage
       storeConfiguration.UseSqLite(connectionString, IsolationLevel.ReadUncommitted, true);
       var connection = storeConfiguration.ConnectionFactory.CreateConnection();
       connection.Open();
+      var dbConnectionProvider = Substitute.For<IDbConnectionProvider>();
+      dbConnectionProvider.GetConnection().Returns(connection);
 
-      var storageManager = new StorageManager(connection, storeConfiguration);
+      var storageManager = new StorageManager(dbConnectionProvider, storeConfiguration);
 
       var storageProviders = new List<IModuleStorageProvider>();
       var storage = new ItemStorage(storageManager);

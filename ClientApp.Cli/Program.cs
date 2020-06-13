@@ -19,6 +19,9 @@ using McMaster.Extensions.CommandLineUtils.Conventions;
 using Mt.MediaFiles.AppEngine.Video.Thumbnail;
 using System.Reflection;
 using Mt.MediaFiles.ClientApp.Cli.Commands.Shell;
+using Mt.MediaFiles.ClientApp.Cli.Commands;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.Ebooks;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
@@ -37,12 +40,18 @@ namespace Mt.MediaFiles.ClientApp.Cli
     typeof(Commands.CommandUpdate),
     typeof(Commands.Catalog.CommandCatalog))]
   [VersionOptionFromMember("--version", MemberName = nameof(GetVersion))]
-  internal class Program
+  internal class Program : IMediaFilesApp
   {
     public const int CommandExitResult = -1;
     public const int CommandResultContinue = 0;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly IConsole _console;
+    private readonly ICatalogFactory _catalogFactory;
+    private readonly IDbConnectionSource _dbConnectionSource;
+    private readonly AppSettings _appSettings;
 
-    private static ShellAppContext _shellAppContext;
+    [Option(LongName = "catalog", ShortName = "c", Description = "Catalog name.")]
+    public string CatalogName { get; set; }
 
     public static async Task<int> Main(string[] args)
     {
@@ -56,19 +65,13 @@ namespace Mt.MediaFiles.ClientApp.Cli
         var fileSystem = new FileSystem();
         var appSettingsManager = AppSettingsManager.Create(environmentWrapper, fileSystem);
 
-        _shellAppContext = new ShellAppContext(appSettingsManager);
-
         // Open startup or first catalog
         if(appSettingsManager.AppSettings.Catalogs.Count == 0)
           throw new InvalidOperationException("No catalogs defined. Please check and fix app configuration.");
 
-        var catalogSettings = appSettingsManager.AppSettings.Catalogs[appSettingsManager.AppSettings.StartupCatalog];
-
-        using(var services = ConfigureServices(appSettingsManager, catalogSettings))
+        using(var services = ConfigureServices(appSettingsManager))
         {
           logger = services.GetRequiredService<ILoggerFactory>().CreateLogger<Program>();
-
-          await _shellAppContext.OpenCatalog(services);
 
           var app = CreateCommandLineApplication(services, appSettingsManager.AppSettings.ExperimentalMode);
           result = await app.ExecuteAsync(args);
@@ -76,7 +79,8 @@ namespace Mt.MediaFiles.ClientApp.Cli
       }
       catch(Exception e)
       {
-        _shellAppContext.Reporter.Error(e.Message);
+        var reporter = new ConsoleReporter(PhysicalConsole.Singleton);
+        reporter.Error(e.Message);
         if(logger != null)
         {
           logger.LogError(e, "An error occurred during the command execution.");
@@ -86,9 +90,26 @@ namespace Mt.MediaFiles.ClientApp.Cli
     }
 
     /// <summary>
+    /// Ctor.
+    /// </summary>
+    public Program(
+      IServiceProvider serviceProvider,
+      IConsole console,
+      ICatalogFactory catalogFactory,
+      IDbConnectionSource dbConnectionSource,
+      AppSettings appSettings)
+    {
+      this._serviceProvider = serviceProvider;
+      this._console = console;
+      this._catalogFactory = catalogFactory;
+      this._dbConnectionSource = dbConnectionSource;
+      this._appSettings = appSettings;
+    }
+
+    /// <summary>
     /// Invoked only if none command could be found (the default command).
     /// </summary>
-    public Task<int> OnExecuteAsync(CommandLineApplication app, AppSettings appSettings, IConsole console)
+    public Task<int> OnExecuteAsync(CommandLineApplication app, AppSettings appSettings)
     {
       Task<int> result;
       if(appSettings.ExperimentalMode)
@@ -102,7 +123,36 @@ namespace Mt.MediaFiles.ClientApp.Cli
       return result;
     }
 
-    private static ServiceProvider ConfigureServices(AppSettingsManager appSettingsManager, ICatalogSettings catalogSettings)
+    /// <summary>
+    /// IMediaFilesApp.
+    /// </summary>
+    public async Task<ICatalog> OpenCatalogAsync()
+    {
+      // Storage configuration (init external storage modules)
+      var storageConfiguration = new StorageConfiguration();
+      EbooksModule.CreateStorageConfiguration(storageConfiguration);
+      VideoImprintModule.ConfigureStorage(storageConfiguration);
+      ThumbnailModule.ConfigureStorage(storageConfiguration);
+
+      if(!string.IsNullOrEmpty(this.CatalogName) && !this._appSettings.Catalogs.ContainsKey(this.CatalogName))
+      {
+        throw new InvalidOperationException($"The catalog with name '{this.CatalogName}' is unknown. Please check the command line and configuration file.");
+      }
+
+      // Open the catalog (default or contextual)
+      var catalogSettings = this._appSettings.Catalogs[
+        string.IsNullOrEmpty(this.CatalogName)
+        ? this._appSettings.StartupCatalog
+        : this.CatalogName];
+      this._dbConnectionSource.SetConnectionString(catalogSettings.ConnectionString);
+
+      var catalog = await this._catalogFactory.OpenCatalogAsync(catalogSettings, storageConfiguration);
+      this._console.WriteLine($"Using catalog: {catalog.CatalogName}");
+
+      return catalog;
+    }
+
+    private static ServiceProvider ConfigureServices(AppSettingsManager appSettingsManager/*, ICatalogSettings catalogSettings*/)
     {
       // Init service container
       var services = new ServiceCollection()
@@ -112,21 +162,22 @@ namespace Mt.MediaFiles.ClientApp.Cli
         .AddMediaToolkit(@"C:\ProgramData\chocolatey\bin\ffmpeg.exe", null, FfLogLevel.Fatal)
         .AddSingleton<AppSettings>(appSettingsManager.AppSettings)
         .AddSingleton<AppEngineSettings>(appSettingsManager.AppEngineSettings)
-        .AddSingleton<ICatalogSettings>(catalogSettings)
-        .AddSingleton<IShellAppContext>(_shellAppContext)
-        .AddSingleton(_shellAppContext)
+        .AddTransient<ICatalogFactory, CatalogFactory>()
         .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton<IReporter, ConsoleReporter>()
         .AddSingleton<IFileSystem, FileSystem>()
         .AddSingleton<IEnvironment, EnvironmentWrapper>()
         .AddSingleton<IClock, Clock>()
         .AddSingleton<IPathArgumentResolver, PathArgumentResolver>()
-        .AddTransient<ITaskExecutionContext, TaskExecutionContext>();
+        .AddTransient<ITaskExecutionContext, TaskExecutionContext>()
+        .AddSingleton<DbConnectionProvider>()
+        .AddSingleton<IDbConnectionProvider>(c => c.GetRequiredService<DbConnectionProvider>())
+        .AddSingleton<IDbConnectionSource>(c => c.GetRequiredService<DbConnectionProvider>());
 
       VideoModule.ConfigureServices(services);
 
       // Modules
-      AppEngineModule.ConfigureContainer(services, catalogSettings);
+      AppEngineModule.ConfigureContainer(services);
       VideoImprintModule.ConfigureContainer(services);
       ThumbnailModule.ConfigureContainer(services);
 
