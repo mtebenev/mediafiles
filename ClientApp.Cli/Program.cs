@@ -123,34 +123,42 @@ namespace Mt.MediaFiles.ClientApp.Cli
       return result;
     }
 
-    /// <summary>
-    /// IMediaFilesApp.
-    /// </summary>
     public async Task<ICatalog> OpenCatalogAsync()
     {
+      var catalogSettings = this.GetCatalogSettings();
+
       // Storage configuration (init external storage modules)
       var storageConfiguration = new StorageConfiguration();
       EbooksModule.CreateStorageConfiguration(storageConfiguration);
       VideoImprintModule.ConfigureStorage(storageConfiguration);
       ThumbnailModule.ConfigureStorage(storageConfiguration);
-
-      if(!string.IsNullOrEmpty(this.CatalogName) && !this._appSettings.Catalogs.ContainsKey(this.CatalogName))
-      {
-        throw new InvalidOperationException($"The catalog with name '{this.CatalogName}' is unknown. Please check the command line and configuration file.");
-      }
-
-      // Open the catalog (default or contextual)
-      var catalogSettings = this._appSettings.Catalogs[
-        string.IsNullOrEmpty(this.CatalogName)
-        ? this._appSettings.StartupCatalog
-        : this.CatalogName];
       this._dbConnectionSource.SetConnectionString(catalogSettings.ConnectionString);
 
+      // Open the catalog (default or contextual)
       var catalog = await this._catalogFactory.OpenCatalogAsync(catalogSettings, storageConfiguration);
       this._console.WriteLine($"Using catalog: {catalog.CatalogName}");
 
       return catalog;
     }
+
+    /// <summary>
+    /// IMediaFilesApp.
+    /// </summary>
+    public ICatalogSettings GetCatalogSettings()
+    {
+      if(!string.IsNullOrEmpty(this.CatalogName) && !this._appSettings.Catalogs.ContainsKey(this.CatalogName))
+      {
+        throw new InvalidOperationException($"The catalog with name '{this.CatalogName}' is unknown. Please check the command line and configuration file.");
+      }
+
+      var catalogSettings = this._appSettings.Catalogs[
+        string.IsNullOrEmpty(this.CatalogName)
+        ? this._appSettings.StartupCatalog
+        : this.CatalogName];
+
+      return catalogSettings;
+    }
+
 
     private static ServiceProvider ConfigureServices(AppSettingsManager appSettingsManager/*, ICatalogSettings catalogSettings*/)
     {
@@ -162,6 +170,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
         .AddMediaToolkit(@"C:\ProgramData\chocolatey\bin\ffmpeg.exe", null, FfLogLevel.Fatal)
         .AddSingleton<AppSettings>(appSettingsManager.AppSettings)
         .AddSingleton<AppEngineSettings>(appSettingsManager.AppEngineSettings)
+        .AddSingleton<IAppSettingsManager>(appSettingsManager)
         .AddTransient<ICatalogFactory, CatalogFactory>()
         .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton<IReporter, ConsoleReporter>()

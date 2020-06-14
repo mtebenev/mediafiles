@@ -28,8 +28,9 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     )
     {
       var catalog = await this.OpenCatalogAsync();
+      var catalogSettings = this.GetCatalogSetings();
 
-      var paths = pathResolver.ResolveMany(this.ThePath);
+      var paths = pathResolver.ResolveMany(this.ThePath, catalogSettings);
       var task = taskFactory.Create(paths);
       var profiler = MiniProfiler.StartNew("CommandSearchVideo");
       var matchResult = await catalog.ExecuteTaskAsync(task);

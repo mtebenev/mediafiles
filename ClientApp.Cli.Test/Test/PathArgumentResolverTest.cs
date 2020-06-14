@@ -22,8 +22,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Test
       );
       var mockCatalogSettings = Substitute.For<ICatalogSettings>();
 
-      var resolver = new PathArgumentResolver(mockFs, mockCatalogSettings);
-      var result = resolver.ResolveMany(null);
+      var resolver = new PathArgumentResolver(mockFs);
+      var result = resolver.ResolveMany(null, mockCatalogSettings);
 
       Assert.Equal(
         new[] {

@@ -1,4 +1,5 @@
 
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 using System.Collections.Generic;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Core
@@ -11,6 +12,6 @@ namespace Mt.MediaFiles.ClientApp.Cli.Core
     /// <summary>
     /// Resolves file paths from a command's pathalias argument.
     /// </summary>
-    IList<string> ResolveMany(string pathOrAlias);
+    IList<string> ResolveMany(string pathOrAlias, ICatalogSettings catalogSettings);
   }
 }

@@ -1,4 +1,5 @@
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 using System.Threading.Tasks;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
@@ -12,5 +13,10 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     /// Opens the catalog.
     /// </summary>
     Task<ICatalog> OpenCatalogAsync();
+
+    /// <summary>
+    /// Returns the catalog settings.
+    /// </summary>
+    ICatalogSettings GetCatalogSettings();
   }
 }

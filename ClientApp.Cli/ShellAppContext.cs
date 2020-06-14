@@ -2,10 +2,7 @@ using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Cataloging;
-using Mt.MediaFiles.AppEngine.Ebooks;
 using Mt.MediaFiles.AppEngine.Tasks;
-using Mt.MediaFiles.AppEngine.Video.Thumbnail;
-using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
 
 namespace Mt.MediaFiles.ClientApp.Cli
@@ -20,11 +17,11 @@ namespace Mt.MediaFiles.ClientApp.Cli
     private ICatalog _catalog;
     private IReporter _reporter;
 
-    public ShellAppContext(IAppSettingsManager appSettingsManager)
+    public ShellAppContext(IAppSettingsManager appSettingsManager, ICatalog catalog)
     {
       this._appSettingsManager = appSettingsManager;
-      this._catalog = null;
-      this.CurrentItem = null;
+      this._catalog = catalog;
+      this.CurrentItem = catalog.RootItem;
       this._reporter = new ConsoleReporter(this.Console);
     }
 
@@ -55,28 +52,6 @@ namespace Mt.MediaFiles.ClientApp.Cli
 
         return this._catalog;
       }
-    }
-
-    /// <summary>
-    /// Opens a catalog.
-    /// </summary>
-    public async Task OpenCatalog(IServiceProvider serviceProvider)
-    {
-      // Open the new catalog
-      var storageConfiguration = new StorageConfiguration();
-      EbooksModule.CreateStorageConfiguration(storageConfiguration);
-      VideoImprintModule.ConfigureStorage(storageConfiguration);
-      ThumbnailModule.ConfigureStorage(storageConfiguration);
-
-      var catalog = await CatalogFactory.OpenCatalogAsync(serviceProvider, storageConfiguration);
-
-      // Close current catalog
-      this._catalog?.Close();
-
-      this._catalog = catalog;
-      this.CurrentItem = this._catalog.RootItem;
-
-      this.Console.WriteLine($"Using catalog: {this.Catalog.CatalogName}");
     }
 
     /// <summary>
