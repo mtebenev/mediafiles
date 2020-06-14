@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.ClientApp.Cli.Commands;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
 using Mt.MediaFiles.ClientApp.Cli.Core;
 using Mt.MediaFiles.TestUtils;
@@ -11,7 +12,7 @@ using Xunit;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Test
 {
-  public class ProgramTest
+  public class CommandMediaFilesTest
   {
     [Fact]
     public async Task Should_Open_Default_Catalog()
@@ -33,8 +34,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test
         StartupCatalog = "default"
       };
 
-      var program = new Program(serviceProvder, mockConsole, mockCatalogFactory, dbConnProvider, appSettings);
-      var catalog = await program.OpenCatalogAsync();
+      var command = new CommandMediaFiles(serviceProvder, mockConsole, mockCatalogFactory, dbConnProvider, appSettings);
+      await command.OpenCatalogAsync();
 
       dbConnProvider.Received().SetConnectionString("connstr-default");
     }
@@ -59,9 +60,9 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test
         StartupCatalog = "default"
       };
 
-      var program = new Program(serviceProvder, mockConsole, mockCatalogFactory, dbConnProvider, appSettings);
-      program.CatalogName = "context";
-      var catalog = await program.OpenCatalogAsync();
+      var command = new CommandMediaFiles(serviceProvder, mockConsole, mockCatalogFactory, dbConnProvider, appSettings);
+      command.CatalogName = "context";
+      await command.OpenCatalogAsync();
 
       dbConnProvider.Received().SetConnectionString("connstr-context");
     }

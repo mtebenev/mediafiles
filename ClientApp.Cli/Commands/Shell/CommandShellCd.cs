@@ -13,16 +13,16 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
     [Argument(0, "itemNameOrId")]
     public string ItemNameOrId { get; set; }
 
-    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext)
+    public async Task<int> OnExecuteAsync()
     {
-      var item = await GetItemByNameOrIdAsync(
-        shellAppContext,
+      var item = await this.GetItemByNameOrIdAsync(
+        this.ShellAppContext,
         this.ItemNameOrId);
 
       if(item == null)
         throw new ArgumentException("Cannot load catalog item", nameof(ItemNameOrId));
 
-      shellAppContext.CurrentItem = item;
+      this.ShellAppContext.CurrentItem = item;
 
       return Program.CommandResultContinue;
     }
