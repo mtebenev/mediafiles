@@ -65,7 +65,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 
       var commandResult = 0;
       var catalog = await this.OpenCatalogAsync();
-      var shellAppContext = new ShellAppContext(this._appSettingsManager, catalog);
+      var catalogSettings = this.GetCatalogSetings();
+      var shellAppContext = new ShellAppContext(this._appSettingsManager, catalog, catalogSettings);
 
       // Do execution
       do

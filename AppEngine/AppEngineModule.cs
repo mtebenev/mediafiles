@@ -16,7 +16,7 @@ namespace Mt.MediaFiles.AppEngine
     /// <summary>
     /// Call to configure the container.
     /// </summary>
-    public static void ConfigureContainer(IServiceCollection services/*, ICatalogSettings catalogSettings*/)
+    public static void ConfigureContainer(IServiceCollection services)
     {
       services.AddSingleton<YesSql.IConfiguration>(c => c.GetRequiredService<IDbConnectionProvider>().GetYesSqlConfiguration());
 

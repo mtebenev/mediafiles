@@ -30,7 +30,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
       command.PathAlias = "some_media_root";
       command.Name = "given_root_name";
 
-      await command.OnExecuteAsync(mockShellAppContext, mockCatalogSettings, mockTaskFactory);
+      await command.OnExecuteAsync(mockTaskFactory);
 
       mockTaskFactory.Received().Create(Arg.Is(
         (ScanParameters p) =>
@@ -56,7 +56,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
       command.PathAlias = "some_fs_path";
       command.Name = "given_root_name";
 
-      await command.OnExecuteAsync(mockShellAppContext, mockCatalogSettings, mockTaskFactory);
+      await command.OnExecuteAsync(mockTaskFactory);
       mockTaskFactory.Received().Create(Arg.Is(
         (ScanParameters p) =>
         p.ScanPath == "some_fs_path"

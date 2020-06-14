@@ -15,7 +15,6 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     /// </summary>
     public ICommandShell Parent { get; set; }
 
-
     /// <summary>
     /// Use to obtain the shell command context.
     /// </summary>

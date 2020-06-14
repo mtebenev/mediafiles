@@ -17,6 +17,7 @@ using Mt.MediaFiles.ClientApp.Cli.Core;
 using McMaster.Extensions.CommandLineUtils.Conventions;
 using Mt.MediaFiles.AppEngine.Video.Thumbnail;
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.ClientApp.Cli.Commands;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
@@ -61,7 +62,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
       return result;
     }
 
-    private static ServiceProvider ConfigureServices(AppSettingsManager appSettingsManager/*, ICatalogSettings catalogSettings*/)
+    private static ServiceProvider ConfigureServices(AppSettingsManager appSettingsManager)
     {
       // Init service container
       var services = new ServiceCollection()
@@ -98,9 +99,9 @@ namespace Mt.MediaFiles.ClientApp.Cli
     /// <summary>
     /// Creates and configures the command-line application object.
     /// </summary>
-    private static CommandLineApplication<Program> CreateCommandLineApplication(IServiceProvider serviceProvider, bool isExperimentalMode)
+    private static CommandLineApplication<CommandMediaFiles> CreateCommandLineApplication(IServiceProvider serviceProvider, bool isExperimentalMode)
     {
-      var app = new CommandLineApplication<Program>();
+      var app = new CommandLineApplication<CommandMediaFiles>();
       app.Conventions
         .AddConvention(new AttributeConvention())
         .UseCommandAttribute()

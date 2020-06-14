@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
 
@@ -14,13 +15,15 @@ namespace Mt.MediaFiles.ClientApp.Cli
   internal class ShellAppContext : IShellAppContext
   {
     private readonly IAppSettingsManager _appSettingsManager;
-    private ICatalog _catalog;
+    private readonly ICatalog _catalog;
+    private readonly ICatalogSettings _catalogSettings;
     private IReporter _reporter;
 
-    public ShellAppContext(IAppSettingsManager appSettingsManager, ICatalog catalog)
+    public ShellAppContext(IAppSettingsManager appSettingsManager, ICatalog catalog, ICatalogSettings catalogSettings)
     {
       this._appSettingsManager = appSettingsManager;
       this._catalog = catalog;
+      this._catalogSettings = catalogSettings;
       this.CurrentItem = catalog.RootItem;
       this._reporter = new ConsoleReporter(this.Console);
     }
@@ -43,16 +46,12 @@ namespace Mt.MediaFiles.ClientApp.Cli
     /// <summary>
     /// IShellAppContext.
     /// </summary>
-    public ICatalog Catalog
-    {
-      get
-      {
-        if(this._catalog == null)
-          throw new InvalidOperationException("Catalog is not open");
+    public ICatalog Catalog => this._catalog;
 
-        return this._catalog;
-      }
-    }
+    /// <summary>
+    /// IShellAppContext.
+    /// </summary>
+    public ICatalogSettings CatalogSettings => this._catalogSettings;
 
     /// <summary>
     /// Resets catalog data

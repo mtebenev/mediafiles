@@ -1,4 +1,5 @@
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.ClientApp.Cli.Commands.Catalog;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
 using NSubstitute;
@@ -30,7 +31,10 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands.Catalog
       var mockEnvironment = Substitute.For<IEnvironment>();
       var mockFs = Substitute.For<IFileSystem>();
 
-      var shellAppContext = new ShellAppContext(mockAppSettingsManager, Substitute.For<ICatalog>());
+      var shellAppContext = new ShellAppContext(
+        mockAppSettingsManager,
+        Substitute.For<ICatalog>(),
+        Substitute.For<ICatalogSettings>());
       var command = new CommandCatalogUse();
       command.CatalogName = "catalog2";
 
@@ -59,7 +63,10 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands.Catalog
       var mockEnvironment = Substitute.For<IEnvironment>();
       var mockFs = Substitute.For<IFileSystem>();
 
-      var shellAppContext = new ShellAppContext(mockAppSettingsManager, Substitute.For<ICatalog>());
+      var shellAppContext = new ShellAppContext(
+        mockAppSettingsManager,
+        Substitute.For<ICatalog>(),
+        Substitute.For<ICatalogSettings>());
       var command = new CommandCatalogUse();
       command.CatalogName = "unknown-catalog";
 
@@ -87,7 +94,10 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands.Catalog
       var mockEnvironment = Substitute.For<IEnvironment>();
       var mockFs = Substitute.For<IFileSystem>();
 
-      var shellAppContext = new ShellAppContext(mockAppSettingsManager, Substitute.For<ICatalog>());
+      var shellAppContext = new ShellAppContext(
+        mockAppSettingsManager,
+        Substitute.For<ICatalog>(),
+        Substitute.For<ICatalogSettings>());
       var command = new CommandCatalogUse();
       command.CatalogName = "new-catalog";
       command.Create = true;

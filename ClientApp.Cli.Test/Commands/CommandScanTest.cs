@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.AppEngine.Scanning;
 using Mt.MediaFiles.AppEngine.Tasks;
-using Mt.MediaFiles.ClientApp.Cli;
 using Mt.MediaFiles.ClientApp.Cli.Commands;
 using Mt.MediaFiles.TestUtils;
 using NSubstitute;
@@ -17,17 +16,17 @@ namespace ClientApp.Cli.Test.Commands
     [Fact]
     public async Task Should_Use_Current_Directory_By_Default()
     {
-      var mockShellAppContext = Substitute.For<IShellAppContext>();
-      mockShellAppContext.Console.Returns(new StringConsole());
-
       var mockCatalogSettings = Substitute.For<ICatalogSettings>();
       mockCatalogSettings.MediaRoots.Returns(new Dictionary<string, string>());
 
       var mockFs = new MockFileSystem(null, @"x:\root_folder");
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
 
+      var mockMfApp = Substitute.For<IMediaFilesApp>();
+
       var command = new CommandScan();
-      await command.OnExecuteAsync(mockShellAppContext, mockFs, mockCatalogSettings, mockTaskFactory);
+      command.Parent = mockMfApp;
+      await command.OnExecuteAsync(new StringConsole(), mockFs, mockTaskFactory);
 
       // Verify
       mockTaskFactory.Received().Create(Arg.Is<ScanParameters>(x => x.ScanPath == @"x:\root_folder"));
@@ -36,9 +35,6 @@ namespace ClientApp.Cli.Test.Commands
     [Fact]
     public async Task Should_Resolve_Relative_Path()
     {
-      var mockShellAppContext = Substitute.For<IShellAppContext>();
-      mockShellAppContext.Console.Returns(new StringConsole());
-
       var mockCatalogSettings = Substitute.For<ICatalogSettings>();
       mockCatalogSettings.MediaRoots.Returns(new Dictionary<string, string>());
 
@@ -50,11 +46,13 @@ namespace ClientApp.Cli.Test.Commands
         @"x:\root_folder"
       );
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
+      var mockMfApp = Substitute.For<IMediaFilesApp>();
 
       var command = new CommandScan();
+      command.Parent = mockMfApp;
       command.PathAlias = "folder1";
 
-      await command.OnExecuteAsync(mockShellAppContext, mockFs, mockCatalogSettings, mockTaskFactory);
+      await command.OnExecuteAsync(new StringConsole(), mockFs, mockTaskFactory);
 
       // Verify
       mockTaskFactory.Received().Create(Arg.Is<ScanParameters>(x => x.ScanPath == @"x:\root_folder\folder1"));
@@ -63,9 +61,6 @@ namespace ClientApp.Cli.Test.Commands
     [Fact]
     public async Task Should_Resolve_Absolute_Path()
     {
-      var mockShellAppContext = Substitute.For<IShellAppContext>();
-      mockShellAppContext.Console.Returns(new StringConsole());
-
       var mockCatalogSettings = Substitute.For<ICatalogSettings>();
       mockCatalogSettings.MediaRoots.Returns(new Dictionary<string, string>());
 
@@ -77,11 +72,13 @@ namespace ClientApp.Cli.Test.Commands
         @"x:\some_other_folder"
       );
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
+      var mockMfApp = Substitute.For<IMediaFilesApp>();
 
       var command = new CommandScan();
+      command.Parent = mockMfApp;
       command.PathAlias = @"x:\root_folder\folder1";
 
-      await command.OnExecuteAsync(mockShellAppContext, mockFs, mockCatalogSettings, mockTaskFactory);
+      await command.OnExecuteAsync(new StringConsole(), mockFs, mockTaskFactory);
 
       // Verify
       mockTaskFactory.Received().Create(Arg.Is<ScanParameters>(x => x.ScanPath == @"x:\root_folder\folder1"));
@@ -90,8 +87,6 @@ namespace ClientApp.Cli.Test.Commands
     [Fact]
     public async Task Should_Resolve_Media_Roots()
     {
-      var mockShellAppContext = Substitute.For<IShellAppContext>();
-      mockShellAppContext.Console.Returns(new StringConsole());
       var mockCatalogSettings = Substitute.For<ICatalogSettings>();
       mockCatalogSettings.MediaRoots.Returns(new Dictionary<string, string>
       {
@@ -107,12 +102,14 @@ namespace ClientApp.Cli.Test.Commands
       );
 
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
+      var mockMfApp = Substitute.For<IMediaFilesApp>();
 
       var command = new CommandScan();
+      command.Parent = mockMfApp;
       command.PathAlias = "some_media_root";
       command.Name = "given_root_name";
 
-      await command.OnExecuteAsync(mockShellAppContext, mockFs, mockCatalogSettings, mockTaskFactory);
+      await command.OnExecuteAsync(new StringConsole(), mockFs, mockTaskFactory);
 
       mockTaskFactory.Received()
         .Create(Arg.Is<ScanParameters>(x => x.ScanPath == @"x:\root_folder\folder1"));
