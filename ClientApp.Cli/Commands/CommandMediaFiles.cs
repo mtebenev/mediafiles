@@ -23,7 +23,6 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   [Subcommand(
     typeof(CommandShell),
     typeof(Commands.CommandCheckStatus),
-    typeof(Commands.CommandResetCatalog),
     typeof(Commands.CommandScan),
     typeof(Commands.CommandSearchVideo),
     typeof(Commands.CommandSearchVideoDuplicates),

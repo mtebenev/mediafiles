@@ -24,7 +24,6 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
     typeof(CommandShellSearchDuplicates),
     typeof(CommandShellGetInfo),
     typeof(CommandShellLs),
-    typeof(CommandShellResetCatalog),
     typeof(CommandShellScan),
     typeof(CommandShellSearch),
     typeof(CommandShellSearchFiles),

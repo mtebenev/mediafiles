@@ -54,17 +54,6 @@ namespace Mt.MediaFiles.ClientApp.Cli
     public ICatalogSettings CatalogSettings => this._catalogSettings;
 
     /// <summary>
-    /// Resets catalog data
-    /// </summary>
-    public async Task ResetCatalogStorage(IServiceProvider serviceProvider)
-    {
-      var catalogName = _catalog.CatalogName;
-      var connectionString = _appSettingsManager.AppSettings.Catalogs[catalogName].ConnectionString;
-      var task = new CatalogTaskResetStorage(catalogName, connectionString);
-      await task.ExecuteAsync(this._catalog);
-    }
-
-    /// <summary>
     /// Updates the settings file.
     /// </summary>
     internal void UpdateSettings()
