@@ -47,6 +47,7 @@ namespace ClientApp.Cli.Test.Commands
       );
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
       var mockMfApp = Substitute.For<IMediaFilesApp>();
+      mockMfApp.GetCatalogSettings().Returns(mockCatalogSettings);
 
       var command = new CommandScan();
       command.Parent = mockMfApp;
@@ -73,6 +74,7 @@ namespace ClientApp.Cli.Test.Commands
       );
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
       var mockMfApp = Substitute.For<IMediaFilesApp>();
+      mockMfApp.GetCatalogSettings().Returns(mockCatalogSettings);
 
       var command = new CommandScan();
       command.Parent = mockMfApp;
@@ -103,6 +105,7 @@ namespace ClientApp.Cli.Test.Commands
 
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
       var mockMfApp = Substitute.For<IMediaFilesApp>();
+      mockMfApp.GetCatalogSettings().Returns(mockCatalogSettings);
 
       var command = new CommandScan();
       command.Parent = mockMfApp;
