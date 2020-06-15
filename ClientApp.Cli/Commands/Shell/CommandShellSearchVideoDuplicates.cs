@@ -8,22 +8,22 @@ using Mt.MediaFiles.ClientApp.Cli.Ui;
 namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 {
   [Command("search-vdups", Description = "Search for duplicated videos in the catalog.")]
-  internal class CommandShellSearchVideoDuplicates
+  internal class CommandShellSearchVideoDuplicates : CommandShellBase
   {
-    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, ICatalogTaskSearchVideoDuplicatesFactory taskFactory)
+    public async Task<int> OnExecuteAsync(ICatalogTaskSearchVideoDuplicatesFactory taskFactory)
     {
       var task = taskFactory.Create();
-      var matchResult = await shellAppContext.Catalog.ExecuteTaskAsync(task);
+      var matchResult = await this.ShellAppContext.Catalog.ExecuteTaskAsync(task);
 
-      shellAppContext.Console.WriteLine($"{matchResult.MatchGroups.Count} duplicates found:");
-      var infoPartAccess = new InfoPartAccessCatalogItem(shellAppContext.Catalog);
+      this.ShellAppContext.Console.WriteLine($"{matchResult.MatchGroups.Count} duplicates found:");
+      var infoPartAccess = new InfoPartAccessCatalogItem(this.ShellAppContext.Catalog);
       var resultProcessor =
         new MatchResultProcessorVideo(
           infoPartAccess,
           infoPartAccess
         );
 
-      await SearchResultWriter.PrintMatchResult(shellAppContext.Console, resultProcessor, matchResult);
+      await SearchResultWriter.PrintMatchResult(this.ShellAppContext.Console, resultProcessor, matchResult);
 
       return Program.CommandResultContinue;
     }

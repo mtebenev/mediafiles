@@ -3,12 +3,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.ClientApp.Cli.Commands.Shell;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   [HelpOption("--help")]
   internal abstract class CommandShellBase
   {
+    /// <summary>
+    /// Injected shell command instance instance.
+    /// </summary>
+    public ICommandShell Parent { get; set; }
+
+    /// <summary>
+    /// Use to obtain the shell command context.
+    /// </summary>
+    protected IShellAppContext ShellAppContext => this.Parent.ShellAppContext;
+
     /// <summary>
     /// Load a catalog item by name (among current children) or ID (if parameter starts with ':')
     /// </summary>

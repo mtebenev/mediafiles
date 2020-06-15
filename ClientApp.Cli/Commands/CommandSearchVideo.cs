@@ -12,7 +12,7 @@ using StackExchange.Profiling;
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   [Command("search-video", Description = "Compares videos in local file system with cataloged videos.")]
-  internal class CommandSearchVideo
+  internal class CommandSearchVideo : AppCommandBase
   {
     [Argument(0, "path", Description = @"The path to scan, can be one of the following:
 - omit to search for video files in the current directory
@@ -20,22 +20,25 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     public string ThePath { get; set; }
 
     public async Task<int> OnExecuteAsync(
-      IShellAppContext shellAppContext,
       IFileSystem fileSystem,
+      IConsole console,
       IMediaToolkitService mediaToolkitService,
       IPathArgumentResolver pathResolver,
       ICatalogTaskSearchVideoFactory taskFactory
     )
     {
-      var paths = pathResolver.ResolveMany(this.ThePath);
+      var catalog = await this.OpenCatalogAsync();
+      var catalogSettings = this.GetCatalogSetings();
+
+      var paths = pathResolver.ResolveMany(this.ThePath, catalogSettings);
       var task = taskFactory.Create(paths);
       var profiler = MiniProfiler.StartNew("CommandSearchVideo");
-      var matchResult = await shellAppContext.Catalog.ExecuteTaskAsync(task);
+      var matchResult = await catalog.ExecuteTaskAsync(task);
 
-      shellAppContext.Console.WriteLine($"{matchResult.MatchGroups.Count} duplicates found:");
+      console.WriteLine($"{matchResult.MatchGroups.Count} duplicates found:");
       await profiler.StopAsync();
 
-      var infoPartAccessCatalog = new InfoPartAccessCatalogItem(shellAppContext.Catalog);
+      var infoPartAccessCatalog = new InfoPartAccessCatalogItem(catalog);
       var infoPartAccessFs = new InfoPartAccessLocalFile(fileSystem, mediaToolkitService, paths);
 
       var resultProcessor =
@@ -44,10 +47,10 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
           infoPartAccessCatalog
         );
 
-      await SearchResultWriter.PrintMatchResult(shellAppContext.Console, resultProcessor, matchResult);
+      await SearchResultWriter.PrintMatchResult(console, resultProcessor, matchResult);
 
       var profileResult = profiler.RenderPlainTextMf();
-      shellAppContext.Console.Write(profileResult);
+      console.Write(profileResult);
 
       return Program.CommandExitResult;
     }

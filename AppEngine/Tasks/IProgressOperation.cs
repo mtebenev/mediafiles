@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Mt.MediaFiles.AppEngine.Tasks
 {
@@ -11,5 +12,10 @@ namespace Mt.MediaFiles.AppEngine.Tasks
     /// Update progress.
     /// </summary>
     void Tick();
+
+    /// <summary>
+    /// To be removed when switched to another progress bar.
+    /// </summary>
+    Task Finish();
   }
 }

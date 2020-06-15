@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
@@ -44,7 +45,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
 
       var mockTaskFactory = Substitute.For<ICatalogTaskCheckStatusFactory>();
 
-      mockCatalog.ExecuteTaskAsync<IList<CheckStatusResult>>(default).ReturnsForAnyArgs(new[]
+      mockCatalog.ExecuteTaskAsync(Arg.Any<CatalogTaskBase<IList<CheckStatusResult>>>()).ReturnsForAnyArgs(new[]
       {
         new CheckStatusResult {CatalogItemId = 10, Path = "path_1", Status = FsItemStatus.Ok },
         new CheckStatusResult {CatalogItemId = 20, Path = "path_2", Status = FsItemStatus.Ok },
@@ -54,7 +55,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
       var mockFs = new MockFileSystem(null, @"x:\root_folder");
 
       var command = new CommandCheckStatusTesing();
-      var result = await command.ExecuteAsync(mockShellAppContext, mockFs, mockTaskFactory);
+      var result = await command.OnExecuteAsync(mockShellAppContext, mockFs, mockTaskFactory);
 
       var output = console.GetText();
       output.Should().ContainEquivalentOf(

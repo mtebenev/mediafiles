@@ -10,39 +10,21 @@ using Mt.MediaFiles.ClientApp.Cli.Configuration;
 using Mt.MediaFiles.AppEngine.Video;
 using Mt.MediaFiles.AppEngine.Common;
 using Mt.MediaFiles.AppEngine.Tasks;
-using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.AppEngine;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using MediaToolkit.Options;
 using Mt.MediaFiles.ClientApp.Cli.Core;
 using McMaster.Extensions.CommandLineUtils.Conventions;
 using Mt.MediaFiles.AppEngine.Video.Thumbnail;
-using System.Reflection;
-using Mt.MediaFiles.ClientApp.Cli.Commands.Shell;
+using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.ClientApp.Cli.Commands;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
-  [Command(
-    "mf",
-    FullName = "mediafiles",
-    Description = "Media files cataloging software.")]
-  [Subcommand(
-    typeof(CommandShell),
-    typeof(Commands.CommandCheckStatus),
-    typeof(Commands.CommandResetCatalog),
-    typeof(Commands.CommandScan),
-    typeof(Commands.CommandSearchVideo),
-    typeof(Commands.CommandSearchVideoDuplicates),
-    typeof(Commands.CommandServe),
-    typeof(Commands.CommandUpdate),
-    typeof(Commands.Catalog.CommandCatalog))]
-  [VersionOptionFromMember("--version", MemberName = nameof(GetVersion))]
   internal class Program
   {
     public const int CommandExitResult = -1;
     public const int CommandResultContinue = 0;
-
-    private static ShellAppContext _shellAppContext;
 
     public static async Task<int> Main(string[] args)
     {
@@ -56,19 +38,13 @@ namespace Mt.MediaFiles.ClientApp.Cli
         var fileSystem = new FileSystem();
         var appSettingsManager = AppSettingsManager.Create(environmentWrapper, fileSystem);
 
-        _shellAppContext = new ShellAppContext(appSettingsManager);
-
         // Open startup or first catalog
         if(appSettingsManager.AppSettings.Catalogs.Count == 0)
           throw new InvalidOperationException("No catalogs defined. Please check and fix app configuration.");
 
-        var catalogSettings = appSettingsManager.AppSettings.Catalogs[appSettingsManager.AppSettings.StartupCatalog];
-
-        using(var services = ConfigureServices(appSettingsManager, catalogSettings))
+        using(var services = ConfigureServices(appSettingsManager))
         {
           logger = services.GetRequiredService<ILoggerFactory>().CreateLogger<Program>();
-
-          await _shellAppContext.OpenCatalog(services);
 
           var app = CreateCommandLineApplication(services, appSettingsManager.AppSettings.ExperimentalMode);
           result = await app.ExecuteAsync(args);
@@ -76,7 +52,8 @@ namespace Mt.MediaFiles.ClientApp.Cli
       }
       catch(Exception e)
       {
-        _shellAppContext.Reporter.Error(e.Message);
+        var reporter = new ConsoleReporter(PhysicalConsole.Singleton);
+        reporter.Error(e.Message);
         if(logger != null)
         {
           logger.LogError(e, "An error occurred during the command execution.");
@@ -85,24 +62,7 @@ namespace Mt.MediaFiles.ClientApp.Cli
       return result;
     }
 
-    /// <summary>
-    /// Invoked only if none command could be found (the default command).
-    /// </summary>
-    public Task<int> OnExecuteAsync(CommandLineApplication app, AppSettings appSettings, IConsole console)
-    {
-      Task<int> result;
-      if(appSettings.ExperimentalMode)
-        result = app.ExecuteAsync(new[] { "shell" });
-      else
-      {
-        app.ShowHelp();
-        return Task.FromResult(Program.CommandExitResult);
-      }
-
-      return result;
-    }
-
-    private static ServiceProvider ConfigureServices(AppSettingsManager appSettingsManager, ICatalogSettings catalogSettings)
+    private static ServiceProvider ConfigureServices(AppSettingsManager appSettingsManager)
     {
       // Init service container
       var services = new ServiceCollection()
@@ -112,21 +72,23 @@ namespace Mt.MediaFiles.ClientApp.Cli
         .AddMediaToolkit(@"C:\ProgramData\chocolatey\bin\ffmpeg.exe", null, FfLogLevel.Fatal)
         .AddSingleton<AppSettings>(appSettingsManager.AppSettings)
         .AddSingleton<AppEngineSettings>(appSettingsManager.AppEngineSettings)
-        .AddSingleton<ICatalogSettings>(catalogSettings)
-        .AddSingleton<IShellAppContext>(_shellAppContext)
-        .AddSingleton(_shellAppContext)
+        .AddSingleton<IAppSettingsManager>(appSettingsManager)
+        .AddTransient<ICatalogFactory, CatalogFactory>()
         .AddSingleton(PhysicalConsole.Singleton)
         .AddSingleton<IReporter, ConsoleReporter>()
         .AddSingleton<IFileSystem, FileSystem>()
         .AddSingleton<IEnvironment, EnvironmentWrapper>()
         .AddSingleton<IClock, Clock>()
         .AddSingleton<IPathArgumentResolver, PathArgumentResolver>()
-        .AddTransient<ITaskExecutionContext, TaskExecutionContext>();
+        .AddTransient<ITaskExecutionContext, TaskExecutionContext>()
+        .AddSingleton<DbConnectionProvider>()
+        .AddSingleton<IDbConnectionProvider>(c => c.GetRequiredService<DbConnectionProvider>())
+        .AddSingleton<IDbConnectionSource>(c => c.GetRequiredService<DbConnectionProvider>());
 
       VideoModule.ConfigureServices(services);
 
       // Modules
-      AppEngineModule.ConfigureContainer(services, catalogSettings);
+      AppEngineModule.ConfigureContainer(services);
       VideoImprintModule.ConfigureContainer(services);
       ThumbnailModule.ConfigureContainer(services);
 
@@ -137,9 +99,9 @@ namespace Mt.MediaFiles.ClientApp.Cli
     /// <summary>
     /// Creates and configures the command-line application object.
     /// </summary>
-    private static CommandLineApplication<Program> CreateCommandLineApplication(IServiceProvider serviceProvider, bool isExperimentalMode)
+    private static CommandLineApplication<CommandMediaFiles> CreateCommandLineApplication(IServiceProvider serviceProvider, bool isExperimentalMode)
     {
-      var app = new CommandLineApplication<Program>();
+      var app = new CommandLineApplication<CommandMediaFiles>();
       app.Conventions
         .AddConvention(new AttributeConvention())
         .UseCommandAttribute()
@@ -161,11 +123,5 @@ namespace Mt.MediaFiles.ClientApp.Cli
         .UseConstructorInjection(serviceProvider);
       return app;
     }
-
-    /// <summary>
-    /// The version retriever.
-    /// </summary>
-    private static string GetVersion()
-        => typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
   }
 }

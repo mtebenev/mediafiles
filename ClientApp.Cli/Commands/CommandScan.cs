@@ -3,7 +3,6 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.AppEngine.Tasks;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
 using Mt.MediaFiles.ClientApp.Cli.Ui;
@@ -12,7 +11,7 @@ using StackExchange.Profiling;
 namespace Mt.MediaFiles.ClientApp.Cli.Commands
 {
   [Command("scan", Description = "Scans files in the directory.")]
-  internal class CommandScan
+  internal class CommandScan : AppCommandBase
   {
     [Argument(0, "pathAlias", Description = @"Path to scan, can be one of the following:
 - omit to scan the current directory.
@@ -36,12 +35,14 @@ full: scan basic file information + video imprints + thumbnails.")]
     public (bool HasValue, ScanProfile ScanProfile) Profile { get; set; }
 
     public async Task<int> OnExecuteAsync(
-      IShellAppContext shellAppContext,
+      IConsole console,
       IFileSystem fileSystem,
-      ICatalogSettings catalogSettings,
       ICatalogTaskScanFactory taskFactory
     )
     {
+      var catalog = await this.OpenCatalogAsync();
+      var catalogSettings = this.GetCatalogSetings();
+
       string scanPath;
       if(string.IsNullOrEmpty(this.PathAlias))
       {
@@ -72,14 +73,13 @@ full: scan basic file information + video imprints + thumbnails.")]
 
       var task = taskFactory.Create(scanParameters);
       var profiler = MiniProfiler.StartNew("CommandScan");
-      await task.ExecuteAsync(shellAppContext.Catalog);
+      await task.ExecuteAsync(catalog);
 
       await profiler.StopAsync();
       var profileResult = profiler.RenderPlainTextMf();
-      shellAppContext.Console.Write(profileResult);
+      console.Write(profileResult);
 
       return Program.CommandExitResult;
     }
-
   }
 }

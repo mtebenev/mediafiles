@@ -20,7 +20,7 @@
     <projectSourceUrl>https://github.com/mtebenev/mediafiles</projectSourceUrl>
     <tags>mediafiles, media, video, audio, converter, ffmpeg, flv, mp4, flash, h264</tags>
     <summary>The tool for cataloging and searching media files.</summary>
-    <description>The mediafiles can catalog mediafiles and then search for duplicates.</description>
+    <description>The mediafiles searches for video duplicates.</description>
     <dependencies>
       <dependency id="ffmpeg" version="4.2.2" />
     </dependencies>

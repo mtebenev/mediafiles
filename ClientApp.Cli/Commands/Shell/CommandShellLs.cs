@@ -9,12 +9,12 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
   [Command("ls", Description = "Print the content of the current directory in the catalog.")]
   internal class CommandShellLs : CommandShellBase
   {
-    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext)
+    public async Task<int> OnExecuteAsync()
     {
-      var currentItem = shellAppContext.CurrentItem;
+      var currentItem = this.ShellAppContext.CurrentItem;
       var children = await currentItem.GetChildrenAsync();
 
-      ShellConsoleUtils.PrintItemsTable(shellAppContext.Console, children);
+      ShellConsoleUtils.PrintItemsTable(this.ShellAppContext.Console, children);
       return Program.CommandResultContinue;
     }
   }

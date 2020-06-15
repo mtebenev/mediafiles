@@ -15,8 +15,6 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
     [Fact]
     public async Task Should_Scan_Media_Root()
     {
-      var mockShellAppContext = Substitute.For<IShellAppContext>();
-      mockShellAppContext.Console.Returns(new StringConsole());
       var mockCatalogSettings = Substitute.For<ICatalogSettings>();
       mockCatalogSettings.MediaRoots.Returns(new Dictionary<string, string>
       {
@@ -24,13 +22,20 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
         {"some_media_root", "some_media_root_path" }
       });
 
+      var mockShellAppContext = Substitute.For<IShellAppContext>();
+      mockShellAppContext.Console.Returns(new StringConsole());
+      mockShellAppContext.CatalogSettings.Returns(mockCatalogSettings);
+      var mockCommandShell = Substitute.For<ICommandShell>();
+      mockCommandShell.ShellAppContext.Returns(mockShellAppContext);
+
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
 
       var command = new CommandShellScan();
       command.PathAlias = "some_media_root";
       command.Name = "given_root_name";
+      command.Parent = mockCommandShell;
 
-      await command.OnExecuteAsync(mockShellAppContext, mockCatalogSettings, mockTaskFactory);
+      await command.OnExecuteAsync(mockTaskFactory);
 
       mockTaskFactory.Received().Create(Arg.Is(
         (ScanParameters p) =>
@@ -43,20 +48,25 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
     [Fact]
     public async Task Should_Use_Fs_Path()
     {
-      var mockShellAppContext = Substitute.For<IShellAppContext>();
-      mockShellAppContext.Console.Returns(new StringConsole());
       var mockCatalogSettings = Substitute.For<ICatalogSettings>();
       mockCatalogSettings.MediaRoots.Returns(new Dictionary<string, string>
       {
       });
+
+      var mockShellAppContext = Substitute.For<IShellAppContext>();
+      mockShellAppContext.Console.Returns(new StringConsole());
+      mockShellAppContext.CatalogSettings.Returns(mockCatalogSettings);
+      var mockCommandShell = Substitute.For<ICommandShell>();
+      mockCommandShell.ShellAppContext.Returns(mockShellAppContext);
 
       var mockTaskFactory = Substitute.For<ICatalogTaskScanFactory>();
 
       var command = new CommandShellScan();
       command.PathAlias = "some_fs_path";
       command.Name = "given_root_name";
+      command.Parent = mockCommandShell;
 
-      await command.OnExecuteAsync(mockShellAppContext, mockCatalogSettings, mockTaskFactory);
+      await command.OnExecuteAsync(mockTaskFactory);
       mockTaskFactory.Received().Create(Arg.Is(
         (ScanParameters p) =>
         p.ScanPath == "some_fs_path"

@@ -1,5 +1,6 @@
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Cataloging;
+using Mt.MediaFiles.AppEngine.CatalogStorage;
 
 namespace Mt.MediaFiles.ClientApp.Cli
 {
@@ -12,6 +13,11 @@ namespace Mt.MediaFiles.ClientApp.Cli
     /// The catalog.
     /// </summary>
     ICatalog Catalog { get; }
+
+    /// <summary>
+    /// The catalog settings.
+    /// </summary>
+    ICatalogSettings CatalogSettings { get; }
 
     /// <summary>
     /// Get/set current item for navigation

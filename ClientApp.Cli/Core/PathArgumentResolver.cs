@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
@@ -9,21 +10,19 @@ namespace Mt.MediaFiles.ClientApp.Cli.Core
   internal class PathArgumentResolver : IPathArgumentResolver
   {
     private readonly IFileSystem _fileSystem;
-    private readonly ICatalogSettings _catalogSettings;
 
     /// <summary>
     /// Ctor.
     /// </summary>
-    public PathArgumentResolver(IFileSystem fileSystem, ICatalogSettings catalogSettings)
+    public PathArgumentResolver(IFileSystem fileSystem)
     {
       this._fileSystem = fileSystem;
-      this._catalogSettings = catalogSettings;
     }
 
     /// <summary>
     /// IPathArgumentResolver.
     /// </summary>
-    public IList<string> ResolveMany(string pathOrAlias)
+    public IList<string> ResolveMany(string pathOrAlias, ICatalogSettings catalogSettings)
     {
       string rootDir;
       if(string.IsNullOrEmpty(pathOrAlias))
@@ -32,7 +31,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Core
       }
       else
       {
-        var mediaRoot = this._catalogSettings.MediaRoots
+        var mediaRoot = catalogSettings.MediaRoots
           .FirstOrDefault(mr => mr.Key.Equals(pathOrAlias, StringComparison.InvariantCultureIgnoreCase));
         if(mediaRoot.Key != null)
           rootDir = mediaRoot.Value;
@@ -48,7 +47,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Core
         throw new InvalidOperationException($"Could not find directory or media root: \"{rootDir}\"");
 
       var result = this._fileSystem.Directory
-        .EnumerateFiles(rootDir)
+        .EnumerateFiles(rootDir, "*", SearchOption.AllDirectories)
         .ToList();
 
       return result;

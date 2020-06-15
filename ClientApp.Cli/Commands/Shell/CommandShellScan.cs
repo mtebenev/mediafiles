@@ -31,12 +31,12 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
     [Option(LongName = "profile", ShortName = "p")]
     public (bool HasValue, ScanProfile ScanProfile) Profile { get; set; }
 
-    public async Task<int> OnExecuteAsync(IShellAppContext shellAppContext, ICatalogSettings catalogSettings, ICatalogTaskScanFactory taskFactory)
+    public async Task<int> OnExecuteAsync(ICatalogTaskScanFactory taskFactory)
     {
       if(string.IsNullOrWhiteSpace(PathAlias))
         throw new InvalidOperationException("Please provide scan path alias");
 
-      var mediaRoot = catalogSettings.MediaRoots
+      var mediaRoot = this.ShellAppContext.CatalogSettings.MediaRoots
         .FirstOrDefault(mr => mr.Key.Equals(PathAlias, StringComparison.InvariantCultureIgnoreCase));
       var scanPath = mediaRoot.Key != null
         ? mediaRoot.Value
@@ -50,11 +50,11 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
 
       var task = taskFactory.Create(scanParameters);
       var profiler = MiniProfiler.StartNew("ShellCommandScan");
-      await task.ExecuteAsync(shellAppContext.Catalog);
+      await task.ExecuteAsync(this.ShellAppContext.Catalog);
 
       await profiler.StopAsync();
       var profileResult = profiler.RenderPlainTextMf();
-      shellAppContext.Console.Write(profileResult);
+      this.ShellAppContext.Console.Write(profileResult);
 
       return Program.CommandResultContinue;
     }
