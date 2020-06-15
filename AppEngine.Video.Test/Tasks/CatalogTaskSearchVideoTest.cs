@@ -11,6 +11,8 @@ using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 using Mt.MediaFiles.TestUtils;
 using NSubstitute;
 using System;
+using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -82,7 +84,10 @@ namespace Mt.MediaFiles.AppEngine.Video.Test.Tasks
       mockBuilder.CreateRecordAsync(Arg.Any<int>(), @"x:\other-folder\another2.mp4", Arg.Any<double>())
         .Returns(new VideoImprintRecord { ImprintData = new byte[] { 3, 3, 3} });
 
-      var task = new CatalogTaskSearchVideo(mockExecutionContext, mockStorage, mockFactory, mockBuilder, mockService, paths);
+      var mockFs = Substitute.For<IFileSystem>();
+      mockFs.Path.GetExtension(default).ReturnsForAnyArgs(x => Path.GetExtension((string)x[0]));
+
+      var task = new CatalogTaskSearchVideo(mockExecutionContext, mockFs, mockStorage, mockFactory, mockBuilder, mockService, paths);
       var result = await task.ExecuteTaskAsync(mockCatalogContext);
 
       // Verify

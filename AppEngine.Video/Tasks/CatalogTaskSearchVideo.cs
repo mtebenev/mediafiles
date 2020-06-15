@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using AppEngine.Video.Comparison;
@@ -8,6 +9,7 @@ using MediaToolkit.Tasks;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.Matching;
 using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Video.Common;
 using Mt.MediaFiles.AppEngine.Video.VideoImprint;
 
 namespace Mt.MediaFiles.AppEngine.Video.Tasks
@@ -23,6 +25,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
   public sealed class CatalogTaskSearchVideo : CatalogTaskBase<MatchResult>
   {
     private readonly ITaskExecutionContext _executionContext;
+    private readonly IFileSystem _fileSystem;
     private readonly IVideoImprintStorage _imprintStorage;
     private readonly IVideoImprintBuilder _imprintBuilder;
     private readonly IVideoImprintComparerFactory _comparerFactory;
@@ -31,6 +34,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
 
     public CatalogTaskSearchVideo(
       ITaskExecutionContext executionContext,
+      IFileSystem fileSystem,
       IVideoImprintStorage imprintStorage,
       IVideoImprintComparerFactory comparerFactory,
       IVideoImprintBuilder imprintBuilder,
@@ -39,6 +43,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
     )
     {
       this._executionContext = executionContext;
+      this._fileSystem = fileSystem;
       this._imprintStorage = imprintStorage;
       this._imprintBuilder = imprintBuilder;
       this._comparerFactory = comparerFactory;
@@ -57,7 +62,7 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
       var comparer = this._comparerFactory.Create();
 
       this._executionContext.UpdateStatus("Searching for videos...");
-      using(var progressOperation = this._executionContext.StartProgressOperation(imprintRecords.Count))
+      using(var progressOperation = this._executionContext.StartProgressOperation(fsImprints.Count))
       {
         for(var i = 0; i < fsImprints.Count; i++)
         {
@@ -76,8 +81,8 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
             matchGroups.Add(mg);
           }
         }
+        await progressOperation.Finish();
       }
-
       var result = new MatchResult(matchGroups);
       return result;
     }
@@ -87,15 +92,24 @@ namespace Mt.MediaFiles.AppEngine.Video.Tasks
       IList<(string, VideoImprintRecord)> result;
       this._executionContext.UpdateStatus("Scanning videos...");
 
-      result = await this._paths
+      var videoPaths = this._paths
+        .Where(p => FileExtensionCheck.IsVideo(this._fileSystem, p))
+        .ToList();
+
+      using(var progressOperation = this._executionContext.StartProgressOperation(videoPaths.Count))
+      {
+        result = await videoPaths
         .ToAsyncEnumerable()
         .SelectAwait(async p =>
         {
           var videoDuration = await this.GetVideoDurationAsync(p);
           var r = await this._imprintBuilder.CreateRecordAsync(0, p, videoDuration);
+          progressOperation.Tick();
           return (p, r);
         })
         .ToListAsync();
+        await progressOperation.Finish();
+      }
 
       return result;
     }

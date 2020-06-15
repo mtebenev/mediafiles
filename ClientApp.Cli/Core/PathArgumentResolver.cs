@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
@@ -46,7 +47,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Core
         throw new InvalidOperationException($"Could not find directory or media root: \"{rootDir}\"");
 
       var result = this._fileSystem.Directory
-        .EnumerateFiles(rootDir)
+        .EnumerateFiles(rootDir, "*", SearchOption.AllDirectories)
         .ToList();
 
       return result;

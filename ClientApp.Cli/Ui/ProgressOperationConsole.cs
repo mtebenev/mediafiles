@@ -1,6 +1,7 @@
 using Luna.ConsoleProgressBar;
 using McMaster.Extensions.CommandLineUtils;
 using Mt.MediaFiles.AppEngine.Tasks;
+using System.Threading.Tasks;
 
 namespace Mt.MediaFiles.ClientApp.Cli.Ui
 {
@@ -44,6 +45,15 @@ namespace Mt.MediaFiles.ClientApp.Cli.Ui
     public void UpdateStatus(string text)
     {
       this._reporter.Output(text);
+    }
+
+    /// <summary>
+    /// IProgressOperation.
+    /// </summary>
+    public async Task Finish()
+    {
+      this._progressBar.Report(1);
+      await Task.Delay(125);
     }
 
     /// <summary>
