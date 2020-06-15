@@ -1,7 +1,6 @@
-using Mt.MediaFiles.AppEngine.Cataloging;
-using Mt.MediaFiles.AppEngine.CatalogStorage;
 using Mt.MediaFiles.ClientApp.Cli.Commands.Catalog;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
+using Mt.MediaFiles.TestUtils;
 using NSubstitute;
 using System;
 using System.IO.Abstractions;
@@ -28,17 +27,18 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands.Catalog
 }";
       var appSettings = JsonSerializer.Deserialize<AppSettings>(configJson.Replace('\'', '\"'), new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
       var mockAppSettingsManager = Substitute.For<IAppSettingsManager>();
+      mockAppSettingsManager.AppSettings.Returns(appSettings);
       var mockEnvironment = Substitute.For<IEnvironment>();
       var mockFs = Substitute.For<IFileSystem>();
 
-      var shellAppContext = new ShellAppContext(
-        mockAppSettingsManager,
-        Substitute.For<ICatalog>(),
-        Substitute.For<ICatalogSettings>());
       var command = new CommandCatalogUse();
       command.CatalogName = "catalog2";
 
-      command.OnExecute(appSettings, shellAppContext, mockEnvironment, mockFs);
+      command.OnExecute(
+        mockAppSettingsManager,
+        new StringConsole(),
+        mockEnvironment,
+        mockFs);
 
       Assert.Equal("catalog2", appSettings.StartupCatalog);
       mockAppSettingsManager.Received().Update();
@@ -60,19 +60,20 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands.Catalog
 }";
       var appSettings = JsonSerializer.Deserialize<AppSettings>(configJson.Replace('\'', '\"'), new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
       var mockAppSettingsManager = Substitute.For<IAppSettingsManager>();
+      mockAppSettingsManager.AppSettings.Returns(appSettings);
       var mockEnvironment = Substitute.For<IEnvironment>();
       var mockFs = Substitute.For<IFileSystem>();
 
-      var shellAppContext = new ShellAppContext(
-        mockAppSettingsManager,
-        Substitute.For<ICatalog>(),
-        Substitute.For<ICatalogSettings>());
       var command = new CommandCatalogUse();
       command.CatalogName = "unknown-catalog";
 
       Assert.Throws<InvalidOperationException>(() =>
       {
-        command.OnExecute(appSettings, shellAppContext, mockEnvironment, mockFs);
+        command.OnExecute(
+          mockAppSettingsManager,
+          new StringConsole(),
+          mockEnvironment,
+          mockFs);
       });
 
       mockAppSettingsManager.DidNotReceive().Update();
@@ -91,18 +92,19 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands.Catalog
 }";
       var appSettings = JsonSerializer.Deserialize<AppSettings>(configJson.Replace('\'', '\"'), new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
       var mockAppSettingsManager = Substitute.For<IAppSettingsManager>();
+      mockAppSettingsManager.AppSettings.Returns(appSettings);
       var mockEnvironment = Substitute.For<IEnvironment>();
       var mockFs = Substitute.For<IFileSystem>();
 
-      var shellAppContext = new ShellAppContext(
-        mockAppSettingsManager,
-        Substitute.For<ICatalog>(),
-        Substitute.For<ICatalogSettings>());
       var command = new CommandCatalogUse();
       command.CatalogName = "new-catalog";
       command.Create = true;
 
-      command.OnExecute(appSettings, shellAppContext, mockEnvironment, mockFs);
+      command.OnExecute(
+        mockAppSettingsManager,
+        new StringConsole(),
+        mockEnvironment,
+        mockFs);
 
       Assert.Equal("new-catalog", appSettings.StartupCatalog);
       Assert.True(appSettings.Catalogs.ContainsKey("new-catalog"));

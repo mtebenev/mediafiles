@@ -16,7 +16,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Shell
     public IShellAppContext ShellAppContext { get; }
   }
 
-  [Command("shell", Description = "Launches the app shell (the default command")]
+  [Command("shell", Description = "Launches the app shell (the default command).")]
   [Subcommand(
     typeof(CommandShellCd),
     typeof(CommandShellCls),

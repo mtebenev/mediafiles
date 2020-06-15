@@ -18,25 +18,26 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Catalog
     public bool Create { get; set; }
 
     public int OnExecute(
-      AppSettings appSettings,
-      ShellAppContext shellAppContext,
+      IAppSettingsManager appSettingsManager,
+      IConsole console,
       IEnvironment environment,
       IFileSystem fileSystem)
     {
+      var appSettings = appSettingsManager.AppSettings;
       if(!appSettings.Catalogs.ContainsKey(this.CatalogName))
       {
         if(!this.Create)
         {
           throw new InvalidOperationException($"Unknown catalog: {this.CatalogName}");
         }
-        shellAppContext.Console.WriteLine($"Creating catalog: {this.CatalogName}");
+        console.WriteLine($"Creating catalog: {this.CatalogName}");
         var catalogSettings = DefaultSettings.CreateCatalogSettings(this.CatalogName, environment, fileSystem);
         appSettings.Catalogs.Add(this.CatalogName, catalogSettings);
       }
 
       appSettings.StartupCatalog = this.CatalogName;
-      shellAppContext.UpdateSettings();
-      shellAppContext.Console.WriteLine($"Startup catalog changed to: {this.CatalogName}");
+      appSettingsManager.Update();
+      console.WriteLine($"Startup catalog changed to: {this.CatalogName}");
 
       return Program.CommandExitResult;
     }

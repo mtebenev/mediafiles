@@ -20,5 +20,22 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands.Catalog
 
       await app.ExecuteAsync(new string[] { "reset" });
     }
+
+    [Fact]
+    public async Task Execute_Use_Command()
+    {
+      var services = TestContainerBuilder
+        .Create()
+        .Build();
+
+      var app = new CommandLineApplication<CommandCatalog>();
+      app.Conventions
+        .UseConstructorInjection(services)
+        .UseDefaultConventions();
+
+      app.Model.Parent = Substitute.For<IMediaFilesApp>();
+
+      await app.ExecuteAsync(new string[] { "use", "default" });
+    }
   }
 }
