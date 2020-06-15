@@ -2,16 +2,15 @@ using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Mt.MediaFiles.AppEngine.Cataloging;
 using Mt.MediaFiles.AppEngine.CatalogStorage;
+using Mt.MediaFiles.AppEngine.Matching;
 using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Video.Tasks;
 using Mt.MediaFiles.ClientApp.Cli.Commands;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
 using Mt.MediaFiles.ClientApp.Cli.Core;
 using Mt.MediaFiles.TestUtils;
 using NSubstitute;
-using System;
 using System.Collections.Generic;
-using System.IO.Abstractions;
-using System.IO.Abstractions.TestingHelpers;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -75,15 +74,34 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test
     [Fact]
     public async Task Execute_Scan_Command()
     {
-      var mockConsole = new StringConsole();
-
       var app = new CommandLineApplication<CommandMediaFiles>();
-      var services = ShellTestContainer.CreateTestContainer();
+      var services = TestContainerBuilder
+        .Create()
+        .AddSingletonMock<ICatalogTaskScanFactory>()
+        .Build();
+
       app.Conventions
         .UseDefaultConventions()
         .UseConstructorInjection(services);
 
       await app.ExecuteAsync(new string[] { "scan", @"x:\folder" });
+    }
+
+    [Fact]
+    public async Task Execute_Search_Vdups_Command()
+    {
+      var app = new CommandLineApplication<CommandMediaFiles>();
+      var services = TestContainerBuilder
+        .Create()
+        .AddSingletonMock<ICatalogTaskSearchVideoDuplicatesFactory>()
+        .AddCatalogTaskResult(new MatchResult(new List<MatchResultGroup>()))
+        .Build();
+
+      app.Conventions
+        .UseDefaultConventions()
+        .UseConstructorInjection(services);
+
+      await app.ExecuteAsync(new string[] { "search-vdups" });
     }
   }
 }

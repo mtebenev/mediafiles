@@ -1,4 +1,7 @@
 using McMaster.Extensions.CommandLineUtils;
+using Mt.MediaFiles.AppEngine.Matching;
+using Mt.MediaFiles.AppEngine.Tasks;
+using Mt.MediaFiles.AppEngine.Video.Tasks;
 using Mt.MediaFiles.ClientApp.Cli.Commands.Shell;
 using Mt.MediaFiles.ClientApp.Cli.Configuration;
 using Mt.MediaFiles.TestUtils;
@@ -44,7 +47,11 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
       mockShellAppContext.Console.Returns(mockConsole);
       mockShellAppContext.CatalogSettings.Returns(appSettings.Catalogs["default"]);
 
-      var container = ShellTestContainer.CreateTestContainer();
+      var container = TestContainerBuilder
+        .Create()
+        .AddSingleton(Substitute.For<ICatalogTaskScanFactory>())
+        .Build();
+
       var app = new CommandLineApplication<CommandShell>();
       app.Conventions
         .UseDefaultConventions()
@@ -52,6 +59,28 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands
       app.Model.ShellAppContext = mockShellAppContext;
 
       await app.ExecuteAsync(new string[] { "scan", @"x:\folder" });
+    }
+
+    [Fact]
+    public async Task Execute_Shell_Search_Vdups_Command()
+    {
+      var containerBuilder = TestContainerBuilder
+        .Create()
+        .AddSingletonMock<ICatalogTaskSearchVideoDuplicatesFactory>()
+        .AddCatalogTaskResult(new MatchResult(new List<MatchResultGroup>()));
+
+      var mockConsole = new StringConsole();
+      var mockShellAppContext = Substitute.For<IShellAppContext>();
+      mockShellAppContext.Console.Returns(mockConsole);
+      mockShellAppContext.Catalog.Returns(containerBuilder.MockCatalog);
+
+      var app = new CommandLineApplication<CommandShell>();
+      app.Conventions
+        .UseDefaultConventions()
+        .UseConstructorInjection(containerBuilder.Build());
+      app.Model.ShellAppContext = mockShellAppContext;
+
+      await app.ExecuteAsync(new string[] { "search-vdups" });
     }
   }
 }
