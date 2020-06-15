@@ -12,7 +12,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   /// Walks through the files starting from the current directory and updates the items.
   /// For now used to retrieve video imprints
   /// </summary>
-  [Command("update", Description = "Updates information about files starting from the current directory")]
+  [Command("update", Description = "Updates information about files starting from the current directory.")]
   [ExperimentalCommand]
   internal class CommandUpdate
   {

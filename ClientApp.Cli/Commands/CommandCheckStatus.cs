@@ -11,7 +11,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
   /// <summary>
   /// Checks the status of the files in the current directory.
   /// </summary>
-  [Command("status", Description = "Checks the status of the files in the current directory")]
+  [Command("status", Description = "Checks the status of the files in the current directory.")]
   [ExperimentalCommand]
   internal class CommandCheckStatus
   {

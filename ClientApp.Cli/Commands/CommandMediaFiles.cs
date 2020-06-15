@@ -29,7 +29,7 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands
     typeof(Commands.CommandServe),
     typeof(Commands.CommandUpdate),
     typeof(Commands.Catalog.CommandCatalog))]
-  [VersionOptionFromMember("--version", MemberName = nameof(GetVersion))]
+  [VersionOptionFromMember("--version", MemberName = nameof(GetVersion), Description = "Show version information.")]
   internal class CommandMediaFiles : IMediaFilesApp
   {
     private readonly IServiceProvider _serviceProvider;
