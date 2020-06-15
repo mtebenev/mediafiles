@@ -83,6 +83,9 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test
         StartupCatalog = "default"
       };
 
+      var mockAppSettingsManager = Substitute.For<IAppSettingsManager>();
+      mockAppSettingsManager.AppSettings.Returns(appSettings);
+
       var mockCatalogFactory = Substitute.For<ICatalogFactory>();
       mockCatalogFactory.OpenCatalogAsync(default, default).ReturnsForAnyArgs(this._mockCatalog);
 
@@ -90,6 +93,8 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test
         .AddSingleton<ICatalogFactory>(mockCatalogFactory)
         .AddSingleton<IDbConnectionSource>(Substitute.For<IDbConnectionSource>())
         .AddSingleton<AppSettings>(appSettings)
+        .AddSingleton<IAppSettingsManager>(mockAppSettingsManager)
+        .AddSingleton<IEnvironment>(Substitute.For<IEnvironment>())
         .AddSingleton<IFileSystem>(new MockFileSystem(new Dictionary<string, MockFileData>(), @"x:\folder"))
         .BuildServiceProvider();
 
