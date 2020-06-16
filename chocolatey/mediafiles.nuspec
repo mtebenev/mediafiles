@@ -10,7 +10,7 @@
     <!-- ============================== -->
 
     <!-- == SOFTWARE SPECIFIC SECTION == -->
-    <title>mediafiles (Install)</title>
+    <title>mediafiles (Portable)</title>
     <authors>Maxim Tebenev</authors>
     <!-- projectUrl is required for the community feed -->
     <projectUrl>https://github.com/mtebenev/mediafiles</projectUrl>
@@ -18,8 +18,8 @@
     <licenseUrl>https://github.com/mtebenev/mediafiles/blob/develop/LICENSE.md</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/mtebenev/mediafiles</projectSourceUrl>
-    <tags>mediafiles, media, video, audio, converter, ffmpeg, flv, mp4, flash, h264</tags>
-    <summary>The tool for cataloging and searching media files.</summary>
+    <tags>mediafiles, search, duplicates, media, video, ffmpeg, flv, mp4, flash, h264</tags>
+    <summary>The tool for cataloging and searching duplicated video files.</summary>
     <description>The mediafiles searches for video duplicates.</description>
     <dependencies>
       <dependency id="ffmpeg" version="4.2.2" />

@@ -24,20 +24,27 @@ namespace Mt.MediaFiles.ClientApp.Cli.Commands.Catalog
       IFileSystem fileSystem)
     {
       var appSettings = appSettingsManager.AppSettings;
-      if(!appSettings.Catalogs.ContainsKey(this.CatalogName))
+      if(string.IsNullOrEmpty(this.CatalogName))
       {
-        if(!this.Create)
-        {
-          throw new InvalidOperationException($"Unknown catalog: {this.CatalogName}");
-        }
-        console.WriteLine($"Creating catalog: {this.CatalogName}");
-        var catalogSettings = DefaultSettings.CreateCatalogSettings(this.CatalogName, environment, fileSystem);
-        appSettings.Catalogs.Add(this.CatalogName, catalogSettings);
+        console.WriteLine($"Startup catalog: {appSettings.StartupCatalog}");
       }
+      else
+      {
+        if(!appSettings.Catalogs.ContainsKey(this.CatalogName))
+        {
+          if(!this.Create)
+          {
+            throw new InvalidOperationException($"Unknown catalog: {this.CatalogName}");
+          }
+          console.WriteLine($"Creating catalog: {this.CatalogName}");
+          var catalogSettings = DefaultSettings.CreateCatalogSettings(this.CatalogName, environment, fileSystem);
+          appSettings.Catalogs.Add(this.CatalogName, catalogSettings);
+        }
 
-      appSettings.StartupCatalog = this.CatalogName;
-      appSettingsManager.Update();
-      console.WriteLine($"Startup catalog changed to: {this.CatalogName}");
+        appSettings.StartupCatalog = this.CatalogName;
+        appSettingsManager.Update();
+        console.WriteLine($"Startup catalog changed to: {this.CatalogName}");
+      }
 
       return Program.CommandExitResult;
     }
