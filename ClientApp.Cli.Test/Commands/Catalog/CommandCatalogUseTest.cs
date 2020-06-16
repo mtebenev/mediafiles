@@ -115,5 +115,38 @@ namespace Mt.MediaFiles.ClientApp.Cli.Test.Commands.Catalog
 
       mockAppSettingsManager.Received().Update();
     }
+
+    [Fact]
+    public void Should_Print_Startup_Catalog()
+    {
+      var configJson = @"{
+  'startupCatalog': 'catalog2',
+  'catalogs': {
+    'catalog1': {
+      'catalogName': 'catalog1'
+    },
+    'catalog2': {
+      'catalogName': 'catalog2'
+    }
+  }
+}";
+      var appSettings = JsonSerializer.Deserialize<AppSettings>(configJson.Replace('\'', '\"'), new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+      var mockAppSettingsManager = Substitute.For<IAppSettingsManager>();
+      mockAppSettingsManager.AppSettings.Returns(appSettings);
+      var mockEnvironment = Substitute.For<IEnvironment>();
+      var mockFs = Substitute.For<IFileSystem>();
+      var mockConsole = new StringConsole();
+
+      var command = new CommandCatalogUse();
+
+      command.OnExecute(
+        mockAppSettingsManager,
+        mockConsole,
+        mockEnvironment,
+        mockFs);
+
+      mockAppSettingsManager.DidNotReceive().Update();
+      Assert.Equal("Startup catalog: catalog2\r\n", mockConsole.GetText());
+    }
   }
 }
