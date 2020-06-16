@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>0.2.0</VersionPrefix>
-    <VersionSuffix>dev</VersionSuffix>
+    <VersionSuffix></VersionSuffix>
     <VersionSuffix Condition="'$(VersionSuffix)'!='' AND '$(BuildNumber)' != ''">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
     <LangVersion>latest</LangVersion>
     <NetCoreTargetFramework>netcoreapp3.1</NetCoreTargetFramework>
