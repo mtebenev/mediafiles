@@ -25,3 +25,16 @@ steps:
     targetPath: '$(Build.ArtifactStagingDirectory)/mediafiles-$(MediaFilesVersion)-win-x64.zip'
     artifact: 'mediafiles-dist'
     publishLocation: 'pipeline'
+- task: PowerShell@2
+  displayName: Build Chocolatey package
+  inputs:
+    targetType: 'inline'
+    script: 'Invoke-Build Build-Package -PackageVersion $(MediaFilesVersion)'
+- task: NuGetCommand@2
+  displayName: Publish to the NuGet feed
+  inputs:
+    command: 'push'
+    packagesToPush: 'artifacts/*.nupkg;'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: 'f16e3e3f-c420-4b68-a707-00a361027c73/d381290c-74c5-412e-8f22-c09bc0b15971'
+    verbosityPush: 'Normal'
